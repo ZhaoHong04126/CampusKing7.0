@@ -444,73 +444,121 @@ window.toggleGeneralSettingsEditMode = function() {
 /* 📌 漸進式探索與模組化自訂 (Progressive Disclosure & Modular UI)              */
 /* ========================================================================== */
 
-// 動態渲染首頁：將主要 App 放在上方，次要收納至工具箱
+// 動態渲染首頁：只產生有被打勾啟用的 App (已移除舊版工具箱邏輯)
 window.renderHomeApps = function() {
     const mainGrid = document.getElementById('main-app-grid');
-    const toolboxGrid = document.getElementById('toolbox-app-grid');
-    if (!mainGrid || !toolboxGrid) return;
+    if (!mainGrid) return;
 
     mainGrid.innerHTML = '';
-    toolboxGrid.innerHTML = '';
-
-    let hasToolboxApps = false;
 
     allAvailableApps.forEach(app => {
-        const appHtml = `
-            <div class="app-item" onclick="switchTab('${app.id}')">
-                <div class="app-icon" style="background: ${app.color};">${app.icon}</div>
-                <div class="app-label">${app.label}</div>
-            </div>
-        `;
-
         if (userPreferences.activeApps.includes(app.id)) {
-            mainGrid.innerHTML += appHtml;
-        } else {
-            toolboxGrid.innerHTML += appHtml;
-            hasToolboxApps = true;
+            mainGrid.innerHTML += `
+                <div class="app-item" onclick="switchTab('${app.id}')">
+                    <div class="app-icon" style="background: ${app.color};">${app.icon}</div>
+                    <div class="app-label">${app.label}</div>
+                </div>
+            `;
         }
     });
-
-    document.getElementById('toolbox-container').style.display = hasToolboxApps ? 'block' : 'none';
 }
 
-// 開啟初次登入的導覽視窗
+// 開啟初次登入的導覽視窗，並動態產生所有 App 的勾選清單
 window.openOnboardingModal = function() {
     document.getElementById('onboarding-modal').style.display = 'flex';
+    const listContainer = document.getElementById('onboarding-app-list');
+    if (!listContainer) return;
+    listContainer.innerHTML = '';
+    
+    allAvailableApps.forEach(app => {
+        listContainer.innerHTML += `
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 8px; background: #f9f9f9; border-radius: 8px; border: 1px solid #eee;">
+                <input type="checkbox" value="${app.id}" class="onboarding-app-checkbox" checked style="width: 18px; height: 18px; accent-color: var(--primary);">
+                <span style="font-size: 1.2rem;">${app.icon}</span>
+                <span style="font-size: 0.9rem; color: #333; font-weight: 500;">${app.label}</span>
+            </label>
+        `;
+    });
 }
 
 // 完成導覽並配置專屬首頁
-window.completeOnboarding = function(goal) {
-    userPreferences.onboarded = true;
-    userPreferences.primaryGoal = goal;
+window.completeOnboarding = function() {
+    const checkboxes = document.querySelectorAll('.onboarding-app-checkbox');
+    const selectedApps = [];
+    checkboxes.forEach(cb => { if (cb.checked) selectedApps.push(cb.value); });
 
-    // 根據使用者的目標情境，配置最相關的首頁模組
-    if (goal === 'grades') {
-        userPreferences.activeApps = ['schedule', 'grade-manager', 'homework', 'learning', 'grade-calc'];
-    } else if (goal === 'finance') {
-        userPreferences.activeApps = ['accounting', 'schedule', 'lottery', 'notes', 'settings'];
-    } else if (goal === 'life') {
-        userPreferences.activeApps = ['calendar', 'schedule', 'anniversary', 'lottery', 'notes', 'settings'];
-    } else {
-        userPreferences.activeApps = allAvailableApps.map(a => a.id);
+    if (selectedApps.length === 0) {
+        if (window.showAlert) showAlert("請至少選擇一個功能喔！");
+        return;
     }
+
+    userPreferences.onboarded = true;
+    userPreferences.primaryGoal = 'custom';
+    userPreferences.activeApps = selectedApps;
 
     saveData();
     document.getElementById('onboarding-modal').style.display = 'none';
     renderHomeApps();
     
-    showAlert("🎉 設定完成！\n我們已為你配置了專屬首頁。\n不常用的功能已幫你收納在下方的「🧰 更多工具箱」中，隨時都能探索！");
+    if (window.showAlert) showAlert("🎉 首頁配置完成！\n日後隨時可以到「⚙️ 個人設定」中重新調整。");
 }
 
-// 收合/展開次級工具箱
-window.toggleToolbox = function() {
-    const grid = document.getElementById('toolbox-app-grid');
-    const icon = document.getElementById('toolbox-toggle-icon');
-    if (grid.style.display === 'none') {
-        grid.style.display = 'grid';
-        icon.innerText = '▲';
-    } else {
-        grid.style.display = 'none';
-        icon.innerText = '▼';
+/* ========================================================================== */
+/* 🧰 工具箱與版面管理 (Toolbox & Layout Manager)                               */
+/* ========================================================================== */
+
+// 開啟設定中的工具箱管理視窗
+window.openAppManager = function() {
+    // 檢查一般設定是否為編輯模式
+    if (typeof isGeneralSettingsEditMode !== 'undefined' && !isGeneralSettingsEditMode) {
+        if (window.showAlert) showAlert("目前為「🔒 唯讀模式」\n若要修改首頁版面，請先點擊上方切換至編輯狀態。");
+        return;
     }
+
+    document.getElementById('app-manager-modal').style.display = 'flex';
+    const listContainer = document.getElementById('app-manager-list');
+    if (!listContainer) return;
+    
+    listContainer.innerHTML = '';
+    
+    allAvailableApps.forEach(app => {
+        const isChecked = userPreferences.activeApps.includes(app.id) ? 'checked' : '';
+        // 渲染清單：包含 Checkbox(控制首頁顯示) 以及 🚀 按鈕(直接開啟)
+        listContainer.innerHTML += `
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #fdfdfd; border-radius: 8px; border: 1px solid #eee;">
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; flex: 1;">
+                    <input type="checkbox" value="${app.id}" class="manager-app-checkbox" ${isChecked} style="width: 18px; height: 18px; accent-color: var(--primary);">
+                    <span style="font-size: 1.2rem;">${app.icon}</span>
+                    <span style="font-size: 0.95rem; color: #333; font-weight: 500;">${app.label}</span>
+                </label>
+                <button onclick="switchTab('${app.id}'); closeAppManager();" style="background: transparent; border: none; font-size: 1.2rem; cursor: pointer; padding: 0 5px;" title="直接開啟">🚀</button>
+            </div>
+        `;
+    });
+}
+
+// 關閉工具箱管理視窗
+window.closeAppManager = function() {
+    document.getElementById('app-manager-modal').style.display = 'none';
+}
+
+// 儲存新的首頁 App 配置
+window.saveAppManager = function() {
+    const checkboxes = document.querySelectorAll('.manager-app-checkbox');
+    const selectedApps = [];
+    
+    checkboxes.forEach(cb => {
+        if (cb.checked) selectedApps.push(cb.value);
+    });
+
+    if (selectedApps.length === 0) {
+        if (window.showAlert) showAlert("請至少保留一個功能在首頁喔！");
+        return;
+    }
+
+    userPreferences.activeApps = selectedApps;
+    saveData();
+    renderHomeApps();
+    closeAppManager();
+    if (window.showAlert) showAlert("首頁模組已更新！", "儲存成功");
 }

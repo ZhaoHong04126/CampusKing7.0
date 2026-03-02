@@ -76,17 +76,8 @@
 						</div>
 					</div>
 				</div>
-
 				<h4 style="margin: 0 15px 10px 15px; color: var(--text-sub);">🌟 我的常用功能</h4>
 				<div class="app-grid" id="main-app-grid"> </div>
-
-				<div id="toolbox-container" style="margin-top: 10px; margin-bottom: 30px; display: none;">
-					<div style="margin: 0 15px; padding: 10px 15px; background: rgba(0,0,0,0.03); border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleToolbox()">
-						<span style="color: #666; font-weight: bold; font-size: 0.95rem;">🧰 更多工具箱</span>
-						<span id="toolbox-toggle-icon" style="color: #999; font-size: 0.8rem;">▼</span>
-					</div>
-					<div class="app-grid" id="toolbox-app-grid" style="display: none; opacity: 0.8; margin-top: 5px;"> </div>
-				</div>
 			</div>
 			<div id="view-schedule" style="display: none;">
 				<div class="week-tabs" style="margin-bottom: 20px;">
@@ -520,6 +511,10 @@
 						<button id="btn-toggle-general-edit" class="btn-icon" onclick="toggleGeneralSettingsEditMode()" style="font-size: 0.85rem; background: transparent; border: 1px solid #ddd; color: #888; transition: all 0.3s; padding: 6px 12px;">🔒 唯讀模式</button>
 					</h2>
 					<div class="settings-list">
+						<div class="settings-item" onclick="openAppManager()">
+							<div><span class="settings-icon">🧰</span>首頁模組與工具箱</div>
+							<span class="settings-arrow">➤</span>
+						</div>
 						<div class="settings-item" onclick="editUserTitle()">
 							<div><span class="settings-icon">🏷️</span>顯示名稱 / 稱號</div>
 							<span id="setting-user-title" class="settings-arrow">同學</span>
@@ -671,13 +666,19 @@
 	<div id="onboarding-modal" class="modal" style="z-index: 3000;">
 		<div class="modal-content" style="text-align: center; padding: 30px 20px; max-width: 350px;">
 			<h2 style="border: none; justify-content: center; margin-bottom: 10px; font-size: 1.4rem;">👋 歡迎來到校園王！</h2>
-			<p style="color: #666; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.5;">為了給你最乾淨俐落的體驗，<br>請告訴我們<b>這學期你最想專注什麼目標？</b></p>
-			
-			<div style="display: flex; flex-direction: column; gap: 12px;">
-				<button class="btn" style="background: #e3f2fd; color: #1565c0; padding: 15px; font-size: 1rem; border-radius: 12px; font-weight: bold; border: 2px solid transparent; transition: 0.2s;" onclick="completeOnboarding('grades')" onmouseover="this.style.borderColor='#1565c0'" onmouseout="this.style.borderColor='transparent'">🎓 拚書卷獎 <span style="font-size:0.8rem; display:block; margin-top:4px; font-weight:normal;">專注課業、成績與排程</span></button>
-				<button class="btn" style="background: #fff8e1; color: #f57f17; padding: 15px; font-size: 1rem; border-radius: 12px; font-weight: bold; border: 2px solid transparent; transition: 0.2s;" onclick="completeOnboarding('finance')" onmouseover="this.style.borderColor='#f57f17'" onmouseout="this.style.borderColor='transparent'">💰 存錢理財 <span style="font-size:0.8rem; display:block; margin-top:4px; font-weight:normal;">專注學期記帳與開源節流</span></button>
-				<button class="btn" style="background: #fce4ec; color: #c2185b; padding: 15px; font-size: 1rem; border-radius: 12px; font-weight: bold; border: 2px solid transparent; transition: 0.2s;" onclick="completeOnboarding('life')" onmouseover="this.style.borderColor='#c2185b'" onmouseout="this.style.borderColor='transparent'">📅 充實生活 <span style="font-size:0.8rem; display:block; margin-top:4px; font-weight:normal;">專注行事曆、紀念日與記事</span></button>
-				<button class="btn" style="background: #f5f5f5; color: #555; padding: 15px; font-size: 1rem; border-radius: 12px; font-weight: bold; border: 2px solid transparent; transition: 0.2s;" onclick="completeOnboarding('all')" onmouseover="this.style.borderColor='#555'" onmouseout="this.style.borderColor='transparent'">🚀 我全都要 <span style="font-size:0.8rem; display:block; margin-top:4px; font-weight:normal;">不隱藏任何功能，全部顯示</span></button>
+			<p style="color: #666; font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5;">為了給你最乾淨俐落的體驗，<br>請勾選這學期想在<b>首頁</b>顯示的功能：<br><span style="font-size: 0.8rem; color: #999;">(未勾選的會自動收納至「更多工具箱」)</span></p>
+            <div id="onboarding-app-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left; margin-bottom: 25px; max-height: 45vh; overflow-y: auto; padding: 5px;"> </div>
+            <button class="btn" style="width: 100%; font-size: 1.1rem; padding: 12px; background: var(--primary); font-weight: bold; border-radius: 12px;" onclick="completeOnboarding()">✅ 完成設定</button>
+		</div>
+	</div>
+	<div id="app-manager-modal" class="modal" style="z-index: 3000;">
+		<div class="modal-content" style="text-align: left; padding: 25px 20px; max-width: 350px;">
+			<h3 style="margin-top: 0; text-align: center; color: var(--primary);">🧰 工具箱與版面設定</h3>
+			<p style="color: #666; font-size: 0.9rem; margin-bottom: 15px; text-align: center;">勾選你想放在首頁的 App：<br><span style="font-size: 0.8rem;">(點擊 🚀 亦可直接開啟隱藏的功能)</span></p>
+			<div id="app-manager-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; max-height: 50vh; overflow-y: auto; padding: 5px;"> </div>
+			<div style="display: flex; gap: 10px;">
+				<button class="btn" style="flex: 2; background: var(--primary);" onclick="saveAppManager()">💾 儲存首頁配置</button>
+				<button class="btn" style="flex: 1; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeAppManager()">取消</button>
 			</div>
 		</div>
 	</div>
