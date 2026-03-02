@@ -1,0 +1,160 @@
+/* 頂部導航列固定於畫面上方 */
+#top-bar {
+    height: 60px;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    padding: 0 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+}
+
+/* 應用程式左上角標題文字樣式 */
+#app-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* 頂部導航列返回上一頁按鈕 */
+#nav-back-btn {
+    padding: 10px;
+    margin-right: 5px;
+    transition: transform 0.2s;
+}
+#nav-back-btn:active {
+    transform: scale(0.8);
+    opacity: 0.8;
+}
+
+
+
+/* 儀表板主要容器，確保佔滿螢幕高度與上方留白 */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    padding-top: 60px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* 主要內容區域，保留底部邊距給導航列 */
+.main-content {
+    flex: 1;
+    padding: 15px;
+    padding-bottom: 80px;
+    max-width: 100%;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+
+
+/* 導航選單容器，採用彈性排版 */
+.nav-menu {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+
+/* 電腦版導航群組，預設手機版隱藏 */
+.desktop-nav-group {
+    display: none;
+}
+
+/* 手機版導航按鈕顯示設定 */
+.mobile-nav-btn {
+    display: flex;
+}
+
+/* 導航群組分隔線 */
+.nav-group-separator {
+    display: contents; 
+}
+
+
+
+/* 電腦版版面配置 (大於768px時的側邊與桌面調整) */
+@media (min-width: 768px) {
+    body { overflow: hidden; padding-bottom: 0; }
+    .dashboard-container { display: grid; grid-template-columns: 1fr; height: 100vh; overflow: hidden; padding-top: 60px; }
+    .user-profile-card { display: block; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0; }
+    .nav-menu { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+    .main-content { height: 100%; overflow-y: auto; padding: 30px 40px; background-color: #f4f7f6; }
+    .desktop-nav-group { display: block; }
+    .mobile-nav-btn { display: none !important; }
+    .nav-group-separator { display: block; margin-top: 10px; border-top: 1px dashed #ddd; padding-top: 10px; }
+}
+
+
+
+/* 首頁內容區塊設定 */
+#view-home {
+    padding-top: 20px;
+    min-height: 80vh;
+}
+
+/* 首頁 App 圖示網格排版 */
+.app-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 20px 10px;
+    padding: 10px;
+    justify-items: center;
+}
+
+/* 電腦版首頁網格配置 */
+@media (min-width: 768px) {
+    .app-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 40px; padding: 40px; }
+    .app-icon { width: 72px; height: 72px; font-size: 2.2rem; border-radius: 22px; }
+    .app-label { font-size: 0.95rem; }
+}
+
+/* 單一 App 按鈕項目 */
+.app-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.1s;
+    width: 70px;
+}
+.app-item:active {
+    transform: scale(0.9);
+}
+
+/* App 圖示樣式設計 */
+.app-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    margin-bottom: 8px;
+    user-select: none;
+}
+
+/* App 名稱標籤樣式 */
+.app-label {
+    font-size: 0.8rem;
+    color: var(--text-main);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    font-weight: 500;
+}

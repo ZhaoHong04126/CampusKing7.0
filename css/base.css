@@ -1,0 +1,115 @@
+/* 設定全域亮色系色彩變數 */
+:root {
+    --primary: #4a90e2;
+    --bg: #f4f7f6;
+    --card: #ffffff;
+    --text-main: #333333;
+    --text-sub: #666666;
+    --border: #eeeeee;
+    --danger: #e74c3c;
+    --warning: #f39c12;
+    --input-bg: #ffffff;
+}
+
+/* 設定深色模式對應的色彩變數 */
+[data-theme="dark"] {
+    --primary: #6ab0ff;   
+    --bg: #2c2c2c;        
+    --card: #424242;      
+    --text-main: #ffffff; 
+    --text-sub: #d0d0d0;  
+    --border: #555555;    
+    --danger: #ff867c;    
+    --warning: #ffd54f;
+    --input-bg: #5a5a5a;  
+}
+
+
+
+/* 頁面共用背景與漸層過渡動畫 */
+body {
+    transition: background 0.5s ease;
+    background-attachment: fixed;
+    background-size: cover;
+    overflow-x: hidden;
+}
+
+/* 首頁專屬背景漸層設定 */
+body[data-page="home"] { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+body.dark-mode[data-page="home"] { background: #1a1a2e; }
+
+/* 課表頁面專屬背景漸層設定 */
+body[data-page="schedule"] { background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); }
+body.dark-mode[data-page="schedule"] { background: #162447; } 
+
+/* 籤筒頁面專屬背景漸層設定 */
+body[data-page="lottery"] { background: linear-gradient(120deg, #fccb90 0%, #d57eeb 100%); }
+body.dark-mode[data-page="lottery"] { background: #2d1b36; }
+
+/* 行事曆頁面專屬背景漸層設定 */
+body[data-page="calendar"] { background: linear-gradient(120deg, #f6d365 0%, #fda085 100%); }
+body.dark-mode[data-page="calendar"] { background: #3e2723; }
+
+/* 成績頁面專屬背景漸層設定 */
+body[data-page="grade-manager"] { background: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%); }
+body.dark-mode[data-page="grade-manager"] { background: #1b2e23; }
+
+/* 記帳頁面專屬背景漸層設定 */
+body[data-page="accounting"] { background: linear-gradient(120deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); }
+body.dark-mode[data-page="accounting"] { background: #331e21; }
+
+/* 筆記頁面專屬背景漸層設定 */
+body[data-page="notes"] { background: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%); }
+body.dark-mode[data-page="notes"] { background: #222; }
+
+/* 紀念日頁面專屬背景漸層設定 */
+body[data-page="anniversary"] { background: linear-gradient(120deg, #ffdde1 0%, #ee9ca7 100%); }
+body.dark-mode[data-page="anniversary"] { background: #3a1c20; }
+
+/* 學習進度頁面專屬背景漸層設定 */
+body[data-page="learning"] { background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%); }
+body.dark-mode[data-page="learning"] { background: #122c2a; }
+
+/* 設定與資訊頁面專屬背景漸層設定 */
+body[data-page="settings"], body[data-page="info"] { background: linear-gradient(to top, #dfe9f3 0%, white 100%); }
+body.dark-mode[data-page="settings"], body.dark-mode[data-page="info"] { background: #121212; }
+
+/* 作業頁面專屬背景漸層設定 */
+body[data-page="homework"] { background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%); }
+body.dark-mode[data-page="homework"] { background: #1e272e; }
+
+/* 成績計算筆記頁面專屬背景漸層設定 */
+body[data-page="grade-calc"] { background: linear-gradient(120deg, #e0c3fc 0%, #c2e9fb 100%); }
+body.dark-mode[data-page="grade-calc"] { background: #2a1b38; }
+
+
+
+/* 區塊標題共用樣式與底部邊框 */
+h2 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    border-bottom: 2px solid var(--bg);
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-main);
+}
+
+/* 大學專屬顯示元素，預設隱藏 */
+.uni-only {
+    display: none;
+}
+
+/* 彈出視窗的放大出現動畫 */
+@keyframes popIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* 共用卡片版型樣式 */
+.card {
+    background: var(--card) !important;
+    color: var(--text-main);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
