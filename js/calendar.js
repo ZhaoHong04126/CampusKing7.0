@@ -126,19 +126,21 @@ function renderCalendarList() {
     const listDiv = document.getElementById('calendar-list');
     if (!listDiv) return;
 
-    calendarEvents.sort((a, b) => {
-        const dateA = new Date(a.date + (a.startTime ? 'T' + a.startTime : 'T00:00'));
-        const dateB = new Date(b.date + (b.startTime ? 'T' + b.startTime : 'T00:00'));
+    // 👇 將使用者的活動打上 isUserEvent 標籤，然後與國定假日陣列合併
+    const userEventsWithFlag = calendarEvents.map((e, i) => ({...e, _originalIndex: i, isUserEvent: true}));
+    const allEvents = [...userEventsWithFlag, ...taiwanHolidays];
+
+    allEvents.sort((a, b) => {
+        const dateA = new Date(a.date + (a.startTime && !a.isAllDay ? 'T' + a.startTime : 'T00:00'));
+        const dateB = new Date(b.date + (b.startTime && !b.isAllDay ? 'T' + b.startTime : 'T00:00'));
         return dateA - dateB;
     });
 
     let html = '';
-    if (calendarEvents.length === 0) {
+    if (allEvents.length === 0) {
         html = '<p style="color:#999; text-align:center;">😴 目前無活動</p>';
     } else {
-        const deleteBtnDisplay = isCalendarEditMode ? 'block' : 'none';
-
-        calendarEvents.forEach((event, index) => {
+        allEvents.forEach((event) => {
             const endDateCheck = event.endDate ? new Date(event.endDate) : new Date(event.date);
             const isPast = endDateCheck < new Date().setHours(0,0,0,0);
             const style = isPast ? 'opacity: 0.5;' : '';
@@ -146,6 +148,9 @@ function renderCalendarList() {
             let timeBadge = '';
             if (!event.isAllDay && event.startTime) {
                 timeBadge = `<span style="background:#e3f2fd; color:#1565c0; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:6px;">${event.startTime}${event.endTime ? '~'+event.endTime : ''}</span>`;
+            } else if (event.isSystemHoliday) {
+                // 🔴 系統假日的紅色徽章
+                timeBadge = `<span style="background:#ffebee; color:#e74c3c; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:6px;">國定假日</span>`;
             } else {
                 timeBadge = `<span style="background:#eee; color:#666; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:6px;">全天</span>`;
             }
@@ -157,25 +162,31 @@ function renderCalendarList() {
                 dateDisplay = `${s} ~ ${e}`;
             }
 
+            // 系統假日不可刪除與編輯
+            const deleteBtnDisplay = (isCalendarEditMode && event.isUserEvent) ? 'block' : 'none';
+            const clickAction = event.isUserEvent ? `onclick="editCalendarEvent(event, ${event._originalIndex})"` : '';
+            const cursorStyle = event.isUserEvent ? 'cursor:pointer;' : 'cursor:default;';
+            const titleColor = event.isSystemHoliday ? 'color:#e74c3c; font-weight:bold;' : '';
+
             html += `
-            <div onclick="editCalendarEvent(event, ${index})" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding:10px 0; ${style}; cursor:pointer;">
+            <div ${clickAction} style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding:10px 0; ${style}; ${cursorStyle}">
                 <div style="text-align:left;">
                     <div style="font-weight:bold; color:var(--primary); font-size:0.9rem; margin-bottom:2px;">
                         ${dateDisplay}
                     </div>
-                    <div style="font-size:1rem; display:flex; align-items:center; flex-wrap:wrap;">
+                    <div style="font-size:1rem; display:flex; align-items:center; flex-wrap:wrap; ${titleColor}">
                         ${timeBadge}
                         <span>${event.title}</span>
                     </div>
                 </div>
-                <button class="btn-delete" onclick="deleteCalendarEvent(${index}); event.stopPropagation();" style="padding:4px 8px; display: ${deleteBtnDisplay};">🗑️</button>
+                <button class="btn-delete" onclick="deleteCalendarEvent(${event._originalIndex}); event.stopPropagation();" style="padding:4px 8px; display: ${deleteBtnDisplay};">🗑️</button>
             </div>`;
         });
     }
     listDiv.innerHTML = html;
 }
 
-// 渲染月曆網格視圖 (Month Grid View)，包含連續色塊與文字排版計算
+// 渲染月曆網格視圖 (Month Grid View)
 function renderMonthGrid() {
     const gridDiv = document.getElementById('calendar-grid');
     const titleDiv = document.getElementById('calendar-month-year');
@@ -217,8 +228,11 @@ function renderMonthGrid() {
     const today = new Date();
     const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
 
-    const eventsWithIndex = calendarEvents.map((e, i) => ({ ...e, _originalIndex: i }));
-    eventsWithIndex.sort((a, b) => {
+    // 👇 月曆視圖同樣進行陣列合併與排序
+    const userEventsWithIndex = calendarEvents.map((e, i) => ({ ...e, _originalIndex: i, isUserEvent: true }));
+    const allEvents = [...userEventsWithIndex, ...taiwanHolidays];
+    
+    allEvents.sort((a, b) => {
         const dateA = new Date(a.date);
         const dateB = new Date(b.date);
         if (dateA.getTime() !== dateB.getTime()) return dateA - dateB;
@@ -236,7 +250,7 @@ function renderMonthGrid() {
         const currentDateStr = `${year}-${mStr}-${dStr}`;
         const currentDayOfWeek = new Date(year, month, d).getDay();
 
-        const dayEvents = eventsWithIndex.filter(e => {
+        const dayEvents = allEvents.filter(e => {
             const start = e.date; 
             const end = e.endDate || e.date;
             return currentDateStr >= start && currentDateStr <= end;
@@ -247,9 +261,13 @@ function renderMonthGrid() {
             const isStart = (e.date === currentDateStr);
             const isEnd = (!e.endDate || e.endDate === currentDateStr || e.endDate < currentDateStr);
             
+            // 決定點擊行為 (系統假日不可點擊修改)
+            const clickAction = e.isUserEvent ? `onclick="editCalendarEvent(event, ${e._originalIndex})"` : `onclick="event.stopPropagation();"`;
+            
             if (e.isAllDay || e.endDate) {
                 let classes = "cal-event-bar ";
-                let inlineStyle = "";
+                // 🔴 系統假日使用紅色色塊
+                let inlineStyle = e.isSystemHoliday ? "background-color: #e74c3c; " : "";
 
                 if (isStart && isEnd) {
                     classes += "single ";
@@ -311,29 +329,16 @@ function renderMonthGrid() {
                         if (currentDayIndex === 0) {
                             showText = true;
                             text = e.startTime ? e.startTime : e.title;
-                            
-                            if (totalDays === 2 && e.startTime) {
-                                text += " " + e.title;
-                            }
+                            if (totalDays === 2 && e.startTime) text += " " + e.title;
                         }
-                        
                         if (totalDays > 2 && currentDayIndex === middleIndex) {
-                            showText = true;
-                            text = e.title;
-                            align = "center";
+                            showText = true; text = e.title; align = "center";
                         }
-
-                        if (currentDayIndex === totalDays - 1) {
-                            if (e.endTime) {
-                                showText = true;
-                                text = e.endTime;
-                                align = "right";
-                            }
+                        if (currentDayIndex === totalDays - 1 && e.endTime) {
+                            showText = true; text = e.endTime; align = "right";
                         }
-
                         if (currentDayOfWeek === 0 && !showText && currentDayIndex !== totalDays - 1) {
-                            showText = true;
-                            text = e.title;
+                            showText = true; text = e.title;
                         }
                     }
                 }
@@ -345,11 +350,14 @@ function renderMonthGrid() {
                     if (align === "right") inlineStyle += " text-align: right;";
                 }
                 
-                eventsHtml += `<div class="${classes}" style="${inlineStyle}" onclick="editCalendarEvent(event, ${e._originalIndex})" title="${e.title}">${displayText}</div>`;
+                eventsHtml += `<div class="${classes}" style="${inlineStyle}" ${clickAction} title="${e.title}">${displayText}</div>`;
             } else {
                 let timeStr = e.startTime ? e.startTime.replace(':','') : '';
-                eventsHtml += `<div class="cal-event-time" onclick="editCalendarEvent(event, ${e._originalIndex})" title="${e.title}">
-                    <span class="time-dot"></span><span style="font-weight:bold; margin-right:4px;">${timeStr}</span>${e.title}
+                const dotColor = e.isSystemHoliday ? `background-color: #e74c3c;` : ``;
+                const textColor = e.isSystemHoliday ? `color: #e74c3c; font-weight: bold;` : ``;
+                
+                eventsHtml += `<div class="cal-event-time" ${clickAction} title="${e.title}" style="${textColor}">
+                    <span class="time-dot" style="${dotColor}"></span><span style="font-weight:bold; margin-right:4px;">${timeStr}</span>${e.title}
                 </div>`;
             }
         });
@@ -524,3 +532,62 @@ function deleteCalendarEvent(index) {
         if(confirm("確定刪除此活動？")) doDelete();
     }
 }
+
+
+
+/* ========================================================================== */
+/* 📌 行事曆通知檢查 (Calendar Notifications)                                   */
+/* ========================================================================== */
+
+window.checkCalendarNotifications = function() {
+    if (typeof calendarEvents === 'undefined' || calendarEvents.length === 0) return;
+
+    // 取得今天與明天的日期字串 (格式: YYYY-MM-DD)
+    const today = new Date();
+    const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+    
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.getFullYear() + '-' + String(tomorrow.getMonth() + 1).padStart(2, '0') + '-' + String(tomorrow.getDate()).padStart(2, '0');
+
+    calendarEvents.forEach(event => {
+        // 判斷是否為「今天」的活動 (包含單日活動，或是跨日活動且今天在期間內)
+        const isToday = event.date === todayStr || (event.endDate && event.date <= todayStr && event.endDate >= todayStr);
+        // 判斷是否為「明天」才開始的活動
+        const isTomorrow = event.date === tomorrowStr;
+
+        if (isToday) {
+            const timeInfo = (!event.isAllDay && event.startTime) ? ` (${event.startTime})` : " (全天)";
+            const msg = `今天有活動：「${event.title}」${timeInfo}，別忘記囉！`;
+            // 使用 event.title + todayStr 作為唯一 ID，確保今天只會提醒一次
+            addNotification("📅 今日活動提醒", msg, "cal_today_" + event.title + todayStr);
+        } 
+        else if (isTomorrow) {
+            const timeInfo = (!event.isAllDay && event.startTime) ? ` (${event.startTime})` : " (全天)";
+            const msg = `明天即將到來：「${event.title}」${timeInfo}，可以提早準備！`;
+            // 使用 event.title + tomorrowStr 作為唯一 ID
+            addNotification("📅 明日活動預告", msg, "cal_tmr_" + event.title + tomorrowStr);
+        }
+    });
+};
+
+
+
+/* ========================================================================== */
+/* 📌 內建中華民國國定假日 (System Holidays)                                    */
+/* ========================================================================== */
+
+// 預先定義的國定假日 (帶有 isSystemHoliday 標記，不會存入資料庫，也不會觸發通知)
+const taiwanHolidays = [
+    // 2026 年
+    { date: "2026-01-01", title: "元旦", isAllDay: true, isSystemHoliday: true },
+    { date: "2026-02-14", endDate: "2026-02-22", title: "農曆春節連假", isAllDay: true, isSystemHoliday: true },
+    { date: "2026-02-27", endDate: "2026-03-01",title: "和平紀念日", isAllDay: true, isSystemHoliday: true },
+    { date: "2026-04-03", endDate: "2026-04-06", title: "兒童節及清明節連假", isAllDay: true, isSystemHoliday: true },
+    { date: "2026-05-01", endDate: "2026-05-03",title: "勞動節連假", isAllDay: true, isSystemHoliday: true },
+    { date: "2026-06-19", endDate: "2026-06-21", title: "端午節連假", isAllDay: true, isSystemHoliday: true },
+    { date: "2026-09-25", endDate:"2026-09-28", title: "中秋節及教師節連假", isAllDay: true, isSystemHoliday: true },
+    { date: "2026-10-09", endDate:"2026-10-11", title: "國慶日連假", isAllDay: true, isSystemHoliday: true },
+    { date: "2026-10-24", endDate:"2026-10-26", title: "光復節連假", isAllDay: true, isSystemHoliday: true },
+    { date: "2026-12-25", endDate: "2026-12-27", title: "行憲紀念日連假", isAllDay: true, isSystemHoliday: true }
+];

@@ -929,3 +929,41 @@ function deleteAccCategory(type, index) {
         }
     });
 }
+
+
+
+/* ========================================================================== */
+/* 📌 記帳通知檢查 (Accounting Notifications)                                   */
+/* ========================================================================== */
+
+window.checkAccountingNotifications = function() {
+    if (typeof accountingList === 'undefined') return;
+
+    // 取得今天的日期字串 (格式: YYYY-MM-DD)
+    const today = new Date();
+    const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+
+    // 1. 檢查今天是否已經有記帳紀錄
+    const hasLoggedToday = accountingList.some(item => item.date === todayStr);
+
+    if (!hasLoggedToday) {
+        // 如果今天還沒記帳，發出提醒
+        const msg = "今天還沒記帳喔！花掉的錢錢變成什麼形狀了？快來記錄一下吧！";
+        // 使用 todayStr 作為 ID，確保今天只會提醒一次
+        addNotification("💰 記帳提醒", msg, "acc_reminder_" + todayStr);
+    } else {
+        // 2. 如果今天有記帳，計算今天的總支出
+        let todayExpense = 0;
+        accountingList.forEach(item => {
+            if (item.date === todayStr && item.type === 'expense') {
+                todayExpense += parseInt(item.amount) || 0;
+            }
+        });
+
+        // 如果今天支出大於 1000 元，發出吃土警告 (你可以依需求修改金額)
+        if (todayExpense >= 1000) {
+            const msg = `今天已經花了 $${todayExpense}，月底要注意吃土危機喔！💸`;
+            addNotification("🚨 支出警告", msg, "acc_warning_" + todayStr);
+        }
+    }
+};

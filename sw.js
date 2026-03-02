@@ -48,3 +48,31 @@ self.addEventListener('fetch', (e) => {
     );
 
 });
+
+
+
+/* ========================================================================== */
+/* 📌 處理系統通知的點擊事件                                                     */
+/* ========================================================================== */
+
+self.addEventListener('notificationclick', function(event) {
+    // 點擊後自動關閉該則手機通知
+    event.notification.close();
+
+    // 讓瀏覽器打開或聚焦到我們的 App
+    event.waitUntil(
+        clients.matchAll({ type: 'window' }).then(windowClients => {
+            // 檢查 App 是否已經在背景開啟了，如果是就把它切換到前景
+            for (var i = 0; i < windowClients.length; i++) {
+                var client = windowClients[i];
+                if (client.url.indexOf('/') !== -1 && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+            // 如果 App 完全沒開，就開一個新的視窗 (首頁)
+            if (clients.openWindow) {
+                return clients.openWindow('/');
+            }
+        })
+    );
+});

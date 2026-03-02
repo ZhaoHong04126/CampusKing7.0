@@ -57,6 +57,11 @@ function parseAndApplyData(parsed) {
             activeApps: allAvailableApps.map(a => a.id)
         };
     }
+    if (parsed.systemNotifications) {
+        systemNotifications = parsed.systemNotifications;
+    } else {
+        systemNotifications = [];
+    }
     
     if (parsed.categoryTargets && Object.keys(parsed.categoryTargets).length > 0) {
         categoryTargets = parsed.categoryTargets;
@@ -166,6 +171,7 @@ function saveData() {
         userTitle: userTitle,
         customPeriods: customPeriods,
         userPreferences: userPreferences,
+        systemNotifications: systemNotifications,
         lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
     };
 

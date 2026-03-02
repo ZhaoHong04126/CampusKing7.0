@@ -112,6 +112,7 @@ function switchTab(tabName, addToHistory = true) {
         'exams-hub', 'grade-manager', 'accounting',
         'notes', 'anniversary', 'learning',
         'lottery', 'homework','grade-calc',
+        'notifications'
     ];
     
     views.forEach(view => {
@@ -156,6 +157,7 @@ function switchTab(tabName, addToHistory = true) {
             case 'learning': pageTitle = "學習進度"; break;
             case 'homework': pageTitle = "作業管理"; break;
             case 'grade-calc': pageTitle = "配分筆記"; break;
+            case 'notifications': pageTitle = "通知中心"; break;
         }
         if (titleEl) titleEl.innerText = pageTitle;
     }
@@ -185,6 +187,7 @@ function switchTab(tabName, addToHistory = true) {
     if (tabName === 'lottery' && typeof renderLottery === 'function') renderLottery();
     if (tabName === 'homework' && typeof renderHomework === 'function') renderHomework();
     if (tabName === 'grade-calc' && typeof renderGradeCalc === 'function') renderGradeCalc();
+    
 }
 
 
@@ -204,7 +207,11 @@ function initUI() {
     loadGrades();
     if (typeof renderWeeklyTable === 'function') renderWeeklyTable();
     if (typeof renderAnalysis === 'function') renderAnalysis();
-    
+    if (typeof checkCalendarNotifications === 'function') checkCalendarNotifications();
+    if (typeof checkHomeworkNotifications === 'function') checkHomeworkNotifications();
+    if (typeof checkAccountingNotifications === 'function') checkAccountingNotifications();
+    if (typeof updateNotificationBtnUI === 'function') updateNotificationBtnUI();
+
     if (typeof renderHomeApps === 'function') renderHomeApps();
     if (!userPreferences.onboarded) {
         openOnboardingModal();
@@ -486,6 +493,8 @@ window.completeOnboarding = function() {
     if (window.showAlert) showAlert("🎉 首頁配置完成！\n日後隨時可以到「⚙️ 個人設定」中重新調整。");
 }
 
+
+
 /* ========================================================================== */
 /* 🧰 工具箱與版面管理 (Toolbox & Layout Manager)                               */
 /* ========================================================================== */
@@ -544,4 +553,205 @@ window.saveAppManager = function() {
     renderHomeApps();
     closeAppManager();
     if (window.showAlert) showAlert("首頁模組已更新！", "儲存成功");
+}
+
+
+
+/* ========================================================================== */
+/* 📌 通知中心邏輯 (Notification Center)                                        */
+/* ========================================================================== */
+
+// 新增一則通知 (加入 id 防重複機制)
+window.addNotification = function(title, message, id = null) {
+    if (id) {
+        const exists = systemNotifications.some(n => n.id === id);
+        if (exists) return; 
+    }
+
+    const now = new Date();
+    const timeStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${(now.getMinutes()<10?'0':'')+now.getMinutes()}`;
+
+    systemNotifications.unshift({
+        id: id || new Date().getTime().toString(), 
+        title: title,
+        message: message,
+        time: timeStr,
+        read: false 
+    });
+
+    saveData(); 
+    renderNotifications();
+
+    if ("Notification" in window && Notification.permission === "granted" && userPreferences.pushEnabled) {
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+            navigator.serviceWorker.ready.then(function(registration) {
+                registration.showNotification(title, {
+                    body: message,
+                    icon: "icon.png",
+                    tag: id,
+                    vibrate: [200, 100, 200]
+                });
+            });
+        } else {
+            new Notification(title, { body: message, tag: id });
+        }
+    }
+}
+
+// 渲染通知列表與導覽列的小紅點
+window.renderNotifications = function() {
+    const listDiv = document.getElementById('notifications-list');
+    const badge = document.getElementById('notification-badge');
+    if (!listDiv) return;
+
+    // 計算未讀數量
+    const unreadCount = systemNotifications.filter(n => !n.read).length;
+
+    // 更新導覽列的小紅點顯示狀態
+    if (badge) {
+        badge.style.display = unreadCount > 0 ? 'block' : 'none';
+    }
+
+    if (systemNotifications.length === 0) {
+        listDiv.innerHTML = '<p style="color:#999; text-align:center; padding: 20px;">目前沒有新通知 🎉</p>';
+        return;
+    }
+
+    let html = '';
+    systemNotifications.forEach((note) => {
+        // 🎨 將未讀背景改為實體的「淺藍色」
+        const bg = note.read ? 'transparent' : '#e3f2fd'; 
+        
+        // 左側的強調線條 (如果覺得加上淺藍色後不需要線條，這行可以刪除，或保留增加層次感)
+        const leftBorder = note.read ? '1px solid #eee' : '4px solid #1565c0'; 
+
+        // 標題旁的小紅點
+        const dot = note.read ? '' : '<span style="display:inline-block; width:8px; height:8px; background:#e74c3c; border-radius:50%; margin-right:8px;"></span>';
+        
+        // 點擊事件與游標樣式
+        const clickEvent = note.read ? '' : `onclick="markSingleNotificationAsRead('${note.id}')" style="cursor: pointer;"`;
+
+        html += `
+        <div ${clickEvent} style="background: ${bg}; border-bottom: 1px solid #eee; border-left: ${leftBorder}; padding: 15px; border-radius: 4px; margin-bottom: 10px; transition: background-color 0.3s, border-left 0.3s;">
+            <div style="display:flex; justify-content:space-between; margin-bottom: 5px;">
+                <span style="font-weight: bold; font-size: 1rem; color: var(--text-main); display:flex; align-items:center;">${dot}${note.title}</span>
+                <span style="font-size: 0.8rem; color: #888;">${note.time}</span>
+            </div>
+            <div style="font-size: 0.9rem; color: var(--text-main); opacity: 0.8; line-height: 1.4;">${note.message}</div>
+        </div>`;
+    });
+    
+    listDiv.innerHTML = html;
+}
+
+// 標記單一通知為已讀
+window.markSingleNotificationAsRead = function(id) {
+    // 找到對應 id 的通知
+    const note = systemNotifications.find(n => n.id === id);
+    if (note && !note.read) {
+        note.read = true; // 改為已讀
+        saveData();       // 存檔 (同步到雲端與 localStorage)
+        renderNotifications(); // 重新渲染畫面 (卡片背景變透明、消除卡片上的小紅點)
+    }
+}
+
+// 清除全部通知
+window.clearAllNotifications = function() {
+    systemNotifications = [];
+    saveData();
+    renderNotifications();
+}
+
+// 標記所有通知為已讀
+window.markNotificationsAsRead = function() {
+    let changed = false;
+    systemNotifications.forEach(n => {
+        if (!n.read) {
+            n.read = true;
+            changed = true;
+        }
+    });
+    if (changed) {
+        saveData();
+        renderNotifications();
+    }
+}
+
+// 切換系統通知 (開啟 / 關閉)
+window.toggleSystemNotification = function() {
+    if (!("Notification" in window)) {
+        showAlert("您目前的瀏覽器不支援系統通知喔！");
+        return;
+    }
+
+    // 1. 如果目前是「開啟」狀態，改為先跳出「詢問確認」視窗
+    if (userPreferences.pushEnabled) {
+        showConfirm("確定要關閉系統通知嗎？\n\n關閉後，重要提醒將只會在 App 內顯示，不會從系統（手機或電腦）彈出。", "🔕 關閉通知").then(ok => {
+            if (ok) {
+                userPreferences.pushEnabled = false;
+                saveData(); // 存檔
+                updateNotificationBtnUI();
+                showAlert("🔕 已暫停系統通知。\n若要再次接收，請點擊按鈕開啟。");
+            }
+        });
+        return;
+    }
+
+    // 2. 如果目前是「關閉」狀態，且瀏覽器已經授權過，就直接開啟
+    if (Notification.permission === "granted") {
+        userPreferences.pushEnabled = true;
+        saveData();
+        updateNotificationBtnUI();
+        showAlert("✅ 系統通知已重新開啟！");
+        return;
+    }
+
+    // 3. 如果連瀏覽器都還沒授權過，就向使用者要求權限
+    if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                userPreferences.pushEnabled = true;
+                saveData();
+                updateNotificationBtnUI();
+                showAlert("✅ 成功開啟系統通知！");
+                
+                // 發送一則測試推播
+                if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.ready.then(function(registration) {
+                        registration.showNotification("設定成功 🎉", {
+                            body: "CampusKing 的重要提醒未來會顯示在這裡！",
+                            icon: "icon.png",
+                            vibrate: [200, 100, 200]
+                        });
+                    });
+                } else {
+                    new Notification("設定成功 🎉", { body: "CampusKing 的重要提醒未來會顯示在這裡！" });
+                }
+            } else {
+                showAlert("❌ 通知權限已被拒絕。若要開啟，請至瀏覽器設定中更改。");
+            }
+        });
+    } else {
+        showAlert("❌ 通知權限已被瀏覽器封鎖。\n請至瀏覽器的網站設定中，手動允許「通知」權限。");
+    }
+}
+
+// 更新按鈕的外觀 (依照目前的開啟/關閉狀態)
+window.updateNotificationBtnUI = function() {
+    const btn = document.getElementById('btn-toggle-push');
+    if (!btn) return;
+    
+    if (userPreferences.pushEnabled) {
+        // 開啟時：按鈕變紅色，提示可以「關閉」
+        btn.innerText = "關閉系統通知";
+        btn.style.background = "#ffebee";
+        btn.style.color = "#e74c3c";
+        btn.style.borderColor = "#e74c3c";
+    } else {
+        // 關閉時：按鈕變藍色，提示可以「開啟」
+        btn.innerText = "開啟系統通知";
+        btn.style.background = "#e3f2fd";
+        btn.style.color = "#1565c0";
+        btn.style.borderColor = "#1565c0";
+    }
 }

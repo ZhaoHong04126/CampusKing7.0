@@ -52,6 +52,10 @@
 		</div>
 		<h1 id="app-title">📅 校園王</h1>
 		<div style="display: flex; align-items: center;">
+			<button id="nav-notifications-btn" onclick="switchTab('notifications')" style="background: transparent; border: none; color: white; font-size: 1.3rem; cursor: pointer; padding: 10px; position: relative;" title="通知中心">
+				🔔
+				<span id="notification-badge" style="display: none; position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background-color: #e74c3c; border-radius: 50%;"></span>
+			</button>
 			<button id="nav-settings-btn" onclick="switchTab('settings')" style="background: transparent; border: none; color: white; font-size: 1.3rem; cursor: pointer; padding: 10px;" title="個人設定">⚙️</button>
 		</div>
 	</nav>
@@ -470,6 +474,16 @@
 					<div id="learning-list" style="min-height: 200px;"> </div>
 					<button class="btn btn-add" onclick="openLearningModal()">+ 新增目標</button>
 				</div>
+			</div>
+			<div id="view-notifications" style="display: none;">
+				<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--bg); padding-bottom: 10px; margin-bottom: 15px;">
+				<h2 style="margin: 0; border: none; padding: 0;">🔔 通知中心</h2>
+				<div style="display: flex; gap: 8px;">
+					<button id="btn-toggle-push" class="btn-icon" onclick="toggleSystemNotification()" style="font-size: 0.85rem; background: #e3f2fd; border: 1px solid #1565c0; color: #1565c0; transition: all 0.3s; padding: 6px 12px; border-radius: 4px;">開啟系統通知</button>
+					<button class="btn-icon" onclick="markNotificationsAsRead()" style="font-size: 0.85rem; background: transparent; border: 1px solid #1565c0; color: #1565c0; transition: all 0.3s; padding: 6px 12px; border-radius: 4px;">全部已讀</button>
+					<button class="btn-icon" onclick="clearAllNotifications()" style="font-size: 0.85rem; background: transparent; border: 1px solid #ddd; color: #888; transition: all 0.3s; padding: 6px 12px; border-radius: 4px;">清除全部</button>
+				</div>
+			</div>
 			</div>
 			<div id="view-settings" style="display: none;">
 				<div class="card">

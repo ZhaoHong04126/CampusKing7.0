@@ -260,3 +260,40 @@ function updateHomeworkSubjectOptions() {
         select.appendChild(opt);
     });
 }
+
+
+
+/* ========================================================================== */
+/* 📌 作業通知檢查 (Homework Notifications)                                     */
+/* ========================================================================== */
+
+window.checkHomeworkNotifications = function() {
+    if (typeof homeworkList === 'undefined' || homeworkList.length === 0) return;
+
+    // 取得今天與明天的日期字串 (格式: YYYY-MM-DD)
+    const today = new Date();
+    const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+    
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.getFullYear() + '-' + String(tomorrow.getMonth() + 1).padStart(2, '0') + '-' + String(tomorrow.getDate()).padStart(2, '0');
+
+    homeworkList.forEach(hw => {
+        // 如果作業已經勾選「完成 (completed)」，就不發送通知
+        if (hw.completed) return;
+
+        if (hw.date === todayStr) {
+            const msg = `【${hw.subject}】的「${hw.title}」今天截止，記得繳交喔！`;
+            addNotification("⚠️ 今日死線提醒", msg, "hw_today_" + hw.title + todayStr);
+        } 
+        else if (hw.date === tomorrowStr) {
+            const msg = `【${hw.subject}】的「${hw.title}」明天截止，準備好了嗎？`;
+            addNotification("⏳ 明日死線預告", msg, "hw_tmr_" + hw.title + tomorrowStr);
+        }
+        else if (hw.date < todayStr) {
+            // 額外加碼：如果日期已經過去了，但還沒打勾，就發送逾期警告
+            const msg = `【${hw.subject}】的「${hw.title}」已經逾期了！快去檢查是否忘記打勾或補交！`;
+            addNotification("🚨 作業逾期警告", msg, "hw_overdue_" + hw.title + hw.date);
+        }
+    });
+};
