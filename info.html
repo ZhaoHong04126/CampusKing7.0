@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>系統資訊 - 校園王</title>
+    <meta name="theme-color" content="#4a90e2">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <style>
+        body { background: linear-gradient(to top, #dfe9f3 0%, white 100%); padding-top: 60px; min-height: 100vh;}
+        body[data-theme="dark"] { background: #121212; color: #fff; }
+    </style>
+    <script>
+        // 載入深色模式偏好
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        });
+    </script>
+</head>
+<body>
+    <nav id="top-bar" style="display: flex;">
+        <div style="display: flex; align-items: center; gap: 5px;">
+            <button onclick="history.back()" style="background: transparent; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 10px;" title="回上一頁">⬅</button>
+        </div>
+        <h1 id="app-title">ℹ️ 系統資訊</h1>
+        <div style="width: 44px;"></div>
+    </nav>
+
+    <div class="dashboard-container" style="display: block; padding: 15px;">
+        <div class="card" style="max-width: 800px; margin: 0 auto;">
+            <h2>🚀 校園王 App 專屬指南 (v9.0)</h2>
+            <div style="background: #e3f2fd; color: #1565c0; padding: 12px; border-radius: 8px; margin: 15px 0; font-size: 0.95rem; border-left: 4px solid #1565c0;">
+                <strong>💡 寫給同學的話：</strong><br>
+                校園王不只是一個工具，而是陪你走過青春的數位手帳。從早八的課表、期中的焦慮，到月底的荷包，我們把大學生活所需的一切，濃縮在這個流暢的 Web OS 裡。
+            </div>
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: var(--primary); border-bottom: 1px dashed #ddd; padding-bottom: 5px; margin-bottom: 10px;">📅 不再跑錯教室的「智慧課表」</h4>
+                <ul style="padding-left: 20px; color: var(--text-sub); font-size: 0.95rem; line-height: 1.6;">
+                    <li><strong>自訂你的作息：</strong>每節課幾點下課自己定！完美支援不同大樓的通勤時間，24 小時制顯示更直覺。</li>
+                    <li><strong>視覺化管理：</strong>為不同課程標上專屬的粉嫩色彩，連堂課會自動合併，一眼就能看懂今天的行程。</li>
+                    <li><strong>一鍵存桌布：</strong>排好課表後，點擊「📷 存成圖片」就能無縫變成手機桌布！</li>
+                </ul>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: var(--primary); border-bottom: 1px dashed #ddd; padding-bottom: 5px; margin-bottom: 10px;">💯 拯救期末焦慮的「成績與作業」</h4>
+                <ul style="padding-left: 20px; color: var(--text-sub); font-size: 0.95rem; line-height: 1.6;">
+                    <li><strong>學分進度條：</strong>GPA 幫你算好算滿，距離畢業還有幾學分？看上方的進度條就對了。</li>
+                    <li><strong>期末配分筆記：</strong>「這科平時佔 30%、期中佔 40%...」把教授的規則記下來，過關目標超清晰！</li>
+                    <li><strong>死線救星：</strong>條列式管理待繳作業與考試，做完一鍵打勾，享受把事情清空的快感。</li>
+                </ul>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: var(--primary); border-bottom: 1px dashed #ddd; padding-bottom: 5px; margin-bottom: 10px;">💰 擺脫月底吃土的「學期記帳」</h4>
+                <ul style="padding-left: 20px; color: var(--text-sub); font-size: 0.95rem; line-height: 1.6;">
+                    <li><strong>極速滑動輸入：</strong>像用 Excel 一樣流暢，一口氣把整天的花費記下來。</li>
+                    <li><strong>甜甜圈圖表：</strong>生活費到底花去哪？一秒看出餐費、網購的比例，幫你抓出漏財兇手。</li>
+                </ul>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: var(--primary); border-bottom: 1px dashed #ddd; padding-bottom: 5px; margin-bottom: 10px;">🛠️ 點綴校園的「貼心小工具」</h4>
+                <ul style="padding-left: 20px; color: var(--text-sub); font-size: 0.95rem; line-height: 1.6;">
+                    <li><strong>🎰 幸運籤筒：</strong>「中午吃學餐還是麥當勞？」讓命運的轉盤幫選擇困難的你決定。</li>
+                    <li><strong>💝 紀念日倒數：</strong>在一起幾天了？距離連假還有多久？通通幫你算好。</li>
+                    <li><strong>🗓️ 連續色塊行事曆：</strong>跨日活動（如迎新、宿營）用絕美色塊連接，媲美原生 iOS 體驗。</li>
+                </ul>
+            </div>
+            <div style="margin-bottom: 0;">
+                <h4 style="color: var(--primary); border-bottom: 1px dashed #ddd; padding-bottom: 5px; margin-bottom: 10px;">🛡️ 默默保護你的「底層魔法」</h4>
+                <ul style="padding-left: 20px; color: var(--text-sub); font-size: 0.95rem; line-height: 1.6;">
+                    <li><strong>防誤觸上鎖：</strong>手機放口袋亂滑？閒置一分鐘自動進入「🔒 唯讀模式」，保護你的資料不被搞砸。</li>
+                    <li><strong>雙重備份：</strong>換手機也不怕！資料除了自動雲端同步，還能一鍵下載「專屬大學回憶包」，把青春穩穩地存在自己電腦裡。</li>
+                    <li><strong>深夜護眼：</strong>完美支援深色模式，半夜趕報告看課表也不刺眼。</li>
+                </ul>
+            </div>
+            <hr style="border:0; border-top:1px solid var(--border); margin:25px 0;">
+            <div style="text-align: center;">
+                <p style="font-size:0.85rem; color: var(--text-sub);">
+                    Designed & Produced by<br>
+                    <strong>Huang Zhaohong</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

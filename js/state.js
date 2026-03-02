@@ -127,7 +127,7 @@ let categoryTargets = { "自由選修": 20 };
 let userPreferences = {
     onboarded: false,
     primaryGoal: 'all', 
-    activeApps: ['schedule', 'grade-manager', 'homework', 'accounting', 'calendar', 'settings']
+    activeApps: ['schedule', 'grade-manager', 'homework', 'accounting', 'calendar']
 };
 
 // 系統所有可用的 App 模組清單
@@ -142,6 +142,4 @@ const allAvailableApps = [
     { id: 'notes', icon: '📝', color: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)', label: '快述記事' },
     { id: 'anniversary', icon: '💝', color: 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)', label: '紀念日' },
     { id: 'learning', icon: '📚', color: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)', label: '學習進度' },
-    { id: 'info', icon: 'ℹ️', color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', label: '系統資訊' },
-    { id: 'settings', icon: '⚙️', color: 'linear-gradient(135deg, #505285 0%, #585e92 12%, #65689f 25%, #7474b0 37%, #7e7ebb 50%, #8389c7 62%, #9795d4 75%, #a2a1dc 87%, #b5aee4 100%)', label: '個人設定' }
 ];

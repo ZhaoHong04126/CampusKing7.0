@@ -107,12 +107,11 @@ function switchTab(tabName, addToHistory = true) {
     
     const views = [
         'home', 'schedule', 'calendar', 
-        'info', 'settings', 'chart', 
-        'credits', 'regular', 'midterm', 
-        'grades', 'exams-hub', 'grade-manager', 
-        'accounting', 'notes', 'anniversary', 
-        'learning', 'lottery', 'homework',
-        'grade-calc',
+        'settings', 'chart', 'credits',
+        'regular', 'midterm', 'grades',
+        'exams-hub', 'grade-manager', 'accounting',
+        'notes', 'anniversary', 'learning',
+        'lottery', 'homework','grade-calc',
     ];
     
     views.forEach(view => {
@@ -152,7 +151,6 @@ function switchTab(tabName, addToHistory = true) {
             case 'accounting': pageTitle = "學期記帳"; break;
             case 'notes': pageTitle = "記事本"; break;
             case 'anniversary': pageTitle = "紀念日"; break;
-            case 'info': pageTitle = "系統資訊"; break;
             case 'settings': pageTitle = "個人設定"; break;
             case 'lottery': pageTitle = "幸運籤筒"; break;
             case 'learning': pageTitle = "學習進度"; break;
@@ -488,7 +486,7 @@ window.completeOnboarding = function(goal) {
 
     // 根據使用者的目標情境，配置最相關的首頁模組
     if (goal === 'grades') {
-        userPreferences.activeApps = ['schedule', 'grade-manager', 'homework', 'learning', 'grade-calc', 'settings'];
+        userPreferences.activeApps = ['schedule', 'grade-manager', 'homework', 'learning', 'grade-calc'];
     } else if (goal === 'finance') {
         userPreferences.activeApps = ['accounting', 'schedule', 'lottery', 'notes', 'settings'];
     } else if (goal === 'life') {
