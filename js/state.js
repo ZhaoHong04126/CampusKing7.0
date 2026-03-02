@@ -8,9 +8,6 @@ let currentUser = null;
 // 是否為註冊模式 (控制登入頁面狀態)
 let isRegisterMode = false;
 
-// 目前顯示的使用者名稱 (預設為同學)
-let userTitle = "同學";
-
 // 儲存學校與科系資訊的物件
 let userSchoolInfo = { school: "", department: "" };
 

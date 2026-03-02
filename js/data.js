@@ -247,9 +247,6 @@ function refreshUI() {
     if (typeof renderGradeCalc === 'function') renderGradeCalc();                           
     if (typeof updateGradeCategoryOptions === 'function') updateGradeCategoryOptions();
 
-    const settingName = document.getElementById('setting-user-title');
-    if (settingName) settingName.innerText = userTitle;
-
     const settingSchool = document.getElementById('setting-school-info');
     if (settingSchool) {
         if (userSchoolInfo.school || userSchoolInfo.department) {

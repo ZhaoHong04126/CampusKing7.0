@@ -271,23 +271,6 @@ function exportSchedule() {
     });
 }
 
-// 修改左上角顯示的稱號或名稱
-function editUserTitle() {
-    if (!isGeneralSettingsEditMode) { 
-        showAlert("目前為「🔒 唯讀模式」\n若要修改，請先切換至編輯狀態。");
-        return;
-    }
-    showPrompt("請輸入要在 APP 中顯示的名稱或稱號", userTitle, "設定顯示名稱")
-    .then(newName => {
-        if (newName && newName.trim() !== "") {
-            userTitle = newName.trim();
-            saveData();
-            refreshUI();
-            showAlert("名稱已更新！");
-        }
-    });
-}
-
 // 修改目前設定的學校與科系資訊
 function editSchoolInfo() {
     if (!isGeneralSettingsEditMode) {
