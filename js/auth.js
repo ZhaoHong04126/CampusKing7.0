@@ -169,8 +169,6 @@ function updateLoginUI(isLoggedIn) {
     const landingPage = document.getElementById('landing-page');
     const dashboard = document.querySelector('.dashboard-container');
     const topBar = document.getElementById('top-bar'); 
-    const userInfo = document.getElementById('user-info');
-    const userPhoto = document.getElementById('user-photo');
 
     console.log("Login Status:", isLoggedIn);
 
@@ -179,16 +177,11 @@ function updateLoginUI(isLoggedIn) {
         if (landingPage) landingPage.style.display = 'none';
         if (dashboard) dashboard.style.display = 'grid';
         if (topBar) topBar.style.display = 'flex'; 
-        if (userInfo) userInfo.style.display = 'flex';
-        if (userPhoto && currentUser) {
-            userPhoto.src = currentUser.photoURL || "https://cdn-icons-png.flaticon.com/512/847/847969.png";
-        }
     } else {
         if (loginOverlay) loginOverlay.style.display = 'none';
         if (landingPage) landingPage.style.display = 'flex';
         if (dashboard) dashboard.style.display = 'none';
         if (topBar) topBar.style.display = 'none';
-        if (userInfo) userInfo.style.display = 'none';
     }
 }
 

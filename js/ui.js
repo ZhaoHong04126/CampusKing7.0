@@ -198,7 +198,6 @@ function switchTab(tabName, addToHistory = true) {
 // 應用程式登入後的初始化設定，顯示專屬按鈕並載入初始資料
 function initUI() {
     loadTheme(); 
-    document.getElementById('user-badge').innerText = '學生';
     
     const uniElements = document.querySelectorAll('.uni-only');
     uniElements.forEach(el => el.style.display = 'table-cell'); 

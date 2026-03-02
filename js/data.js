@@ -247,9 +247,6 @@ function refreshUI() {
     if (typeof renderGradeCalc === 'function') renderGradeCalc();                           
     if (typeof updateGradeCategoryOptions === 'function') updateGradeCategoryOptions();
 
-    const nameDisplay = document.getElementById('user-name-display');
-    if (nameDisplay) nameDisplay.innerText = userTitle;
-
     const settingName = document.getElementById('setting-user-title');
     if (settingName) settingName.innerText = userTitle;
 

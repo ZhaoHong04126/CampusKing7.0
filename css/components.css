@@ -288,56 +288,6 @@ tr:last-child td {
 
 
 
-/* 頂端使用者資訊區塊 (包含大頭貼與文字) */
-#user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* 頂端使用者大頭貼 */
-#user-photo {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(255, 255, 255, 0.8);
-}
-
-/* 頂端使用者名稱與徽章容器 */
-.user-details {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: center;
-}
-
-/* 頂端使用者身分徽章 */
-#user-badge {
-    font-weight: bold;
-    color: white;
-    font-size: 0.85rem;
-    padding: 2px 8px;
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.2);
-}
-
-/* 狀態文字 (例如：未登入、同步中) */
-.status-text {
-    font-size: 0.75rem;
-    color: #a8e6cf;
-    margin-top: 2px;
-}
-
-/* 窄螢幕時隱藏使用者文字細節，僅留大頭貼 */
-@media (max-width: 400px) {
-    .user-details {
-        display: none;
-    }
-}
-
-
-
 /* 週課表網格表格外觀 */
 .weekly-table {
     width: 100%;
