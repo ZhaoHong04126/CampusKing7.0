@@ -25,24 +25,6 @@
 	<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <style>
-        /* 新增：顏色選擇圓點樣式 */
-        .color-swatch {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: transform 0.2s, border-color 0.2s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .color-swatch:active { transform: scale(0.9); }
-        .color-swatch.selected {
-            border-color: #555;
-            transform: scale(1.15);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-    </style>
 </head>
 <body>
 	<nav id="top-bar" style="display: none;">

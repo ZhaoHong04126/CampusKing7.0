@@ -464,3 +464,22 @@ tr.period-time-row:last-child {
 [data-theme="dark"] tr.period-time-row {
     border-bottom: 1px solid #444;
 }
+
+
+
+/* 新增：顏色選擇圓點樣式 */
+.color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s, border-color 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.color-swatch:active { transform: scale(0.9); }
+.color-swatch.selected {
+    border-color: #555;
+    transform: scale(1.15);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
