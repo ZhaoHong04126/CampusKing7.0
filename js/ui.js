@@ -607,16 +607,29 @@ window.toggleMobileMenu = function() {
 let publicNewsList = [];
 
 window.openNewsManagerModal = function() {
-    document.getElementById('news-manager-modal').style.display = 'flex';
-    document.getElementById('news-manager-list').innerHTML = '<p style="text-align:center; color:#999;">載入中...</p>';
-    
-    db.collection("public").doc("landing_news").get().then(doc => {
-        if (doc.exists && doc.data().items) {
-            publicNewsList = doc.data().items;
-        } else {
-            publicNewsList = [];
+    // --- 新增密碼驗證區塊 ---
+    showPrompt("請輸入管理員密碼：", "", "🔒 權限驗證").then(password => {
+        // 如果使用者按了取消或沒有輸入，直接離開
+        if (password === null) return; 
+        
+        // 驗證固定密碼
+        if (password !== "zhao20261150304") { 
+            showAlert("密碼錯誤，您沒有權限存取！", "❌ 拒絕存取");
+            return;
         }
-        renderNewsManagerList();
+
+        // --- 密碼正確，執行原本開啟 Modal 的邏輯 ---
+        document.getElementById('news-manager-modal').style.display = 'flex';
+        document.getElementById('news-manager-list').innerHTML = '<p style="text-align:center; color:#999;">載入中...</p>';
+        
+        db.collection("public").doc("landing_news").get().then(doc => {
+            if (doc.exists && doc.data().items) {
+                publicNewsList = doc.data().items;
+            } else {
+                publicNewsList = [];
+            }
+            renderNewsManagerList();
+        });
     });
 }
 
