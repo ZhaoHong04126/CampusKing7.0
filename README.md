@@ -1,13 +1,12 @@
 # 👑 校園王 (CampusKing) - 數位學園
 
-![Version](https://img.shields.io/badge/Version-9.2%20Dashboard-blue.svg)
-![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20PWA-success.svg)
+![Version](https://img.shields.io/badge/Version-v3.0.0-blue.svg)![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20PWA-success.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 **校園王 (CampusKing)** 是一款專為大學生打造的「全方位校園生活儀表板」。
 告別散落各處的筆記與試算表，我們將課表、成績、記帳、行事曆與學習計畫完美整合在一個現代化、高質感的雲端 SaaS 介面中。
 
-## ✨ 系統亮點 (v9.2 全新架構)
+## ✨ 系統亮點 (v3.0.0 全新架構)
 
 在最新的 v9.2 版本中，我們迎來了史詩級的介面革新！捨棄了傳統的 App 網格設計，全面升級為**專業級雙欄儀表板 (Dashboard)**，提供更直覺、更流暢的操作體驗。
 
@@ -45,3 +44,22 @@
 2. 確保你在 `js/firebase.js` 中填入了你專屬的 Firebase 設定金鑰。
 3. 透過 VS Code 的 Live Server 或部署至任何靜態網頁伺服器（如 GitHub Pages, Vercel）。
 4. 開啟 `index.html` 即可看到專屬的數位學園入口！
+
+## 🏷️ 版本控制規範 (Semantic Versioning)
+
+本專案開發嚴格遵循 [語意化版本控制 (SemVer)](https://semver.org/lang/zh-TW/) 規範。
+標準版本號命名格式為：**`v主版號.次版號.修訂號` (vMajor.Minor.Patch)**，例如 `v3.0.0`。
+
+### 📌 版本號更新規則
+* **🔴 主版號 (Major)**：當有重大架構翻新、UI 全面改版，或產生不相容的資料庫結構 (Schema) 變更時增加（例如：`v3.0.0` -> `v4.0.0`，這時次版號與修訂號歸零）。
+* **🟢 次版號 (Minor)**：當新增向下相容的新功能（例如：新增「番茄鐘」模組）時增加（例如：`v3.0.0` -> `v3.1.0`，這時修訂號歸零）。
+* **🟡 修訂號 (Patch)**：當進行向下相容的 Bug 修復或畫面微調時增加（例如：修復課表跑版問題，`v3.1.0` -> `v3.1.1`）。
+
+### 🚀 先行版 (Pre-release) 與測試標籤
+在正式版本釋出前，為了進行階段性測試，我們會在版本號後方加上特定的標籤：
+* **`-alpha` (內部測試版)**：新功能剛開發完成，可能還存在較多 Bug，僅供開發者內部測試。*(範例：`v3.1.0-alpha.1`)*
+* **`-beta` (公開測試版)**：核心功能已穩定，開放給部分使用者試用並收集回饋、抓取潛在 Bug。*(範例：`v3.1.0-beta.2`)*
+* **`-rc` (候選版 Release Candidate)**：幾乎沒有已知的嚴重 Bug，預計成為最終正式版的候選名單，做最後的觀察。*(範例：`v3.1.0-rc.1`)*
+
+> **💡 開發架構提示：**
+> 為確保系統穩定性，本專案的「前端介面版本 (UI Version)」與「本地資料庫結構版本 (Data Schema Version)」採分離設計。日常的功能迭代只需推進 UI 版本號；僅在資料結構發生必須轉換的重大變更時，才需升級底層的 Data Version。

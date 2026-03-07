@@ -6,7 +6,7 @@
 function loadData() {
     if (!currentUser) return;
     const uid = currentUser.uid;
-    const dbKey = 'CampusKing_v6.0_' + uid;
+    const dbKey = 'CampusKing_v3.0.0_' + uid;
     const savedData = localStorage.getItem(dbKey);
 
     if (savedData) {
@@ -170,7 +170,7 @@ function saveData() {
         lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
     };
 
-    const dbKey = 'CampusKing_v6.0_' + currentUser.uid;
+    const dbKey = 'CampusKing_v3.0.0_' + currentUser.uid;
     const localObj = JSON.parse(JSON.stringify(storageObj)); 
     delete localObj.lastUpdated; 
     localStorage.setItem(dbKey, JSON.stringify(localObj));
@@ -198,7 +198,7 @@ function syncFromCloud(uid) {
             
             parseAndApplyData(cloudData);
             
-            const dbKey = 'CampusKing_v6.0_' + uid;
+            const dbKey = 'CampusKing_v3.0.0_' + uid;
             localStorage.setItem(dbKey, JSON.stringify(cloudData));
 
             refreshUI();
@@ -213,6 +213,8 @@ function syncFromCloud(uid) {
         if(statusBtn) statusBtn.innerText = "離線";
     });
 }
+
+
 
 /* ========================================================================== */
 /* 📌 畫面刷新與狀態更新 (UI Refresh & State Update)                            */
@@ -268,6 +270,8 @@ function updateCategorySettings(category, type, value) {
     saveData();
     if (typeof renderAnalysis === 'function') renderAnalysis();
 }
+
+
 
 /* ========================================================================== */
 /* 📌 本地備份與還原功能 (Local Backup & Restore)                               */
