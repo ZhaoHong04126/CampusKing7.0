@@ -1,9 +1,9 @@
-const CACHE_NAME = 'CampusKing_v9.1_'; 
+const CACHE_NAME = 'CampusKing_v9.2_'; 
 
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
-	'./info.html',
+    './app.html',
     './manifest.json',
 	'./css/base.css',
 	'./css/layout.css',
@@ -49,11 +49,6 @@ self.addEventListener('fetch', (e) => {
 
 });
 
-
-
-/* ========================================================================== */
-/* 📌 處理系統通知的點擊事件                                                     */
-/* ========================================================================== */
 
 self.addEventListener('notificationclick', function(event) {
     // 點擊後自動關閉該則手機通知
