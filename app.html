@@ -531,6 +531,10 @@
 							<div><span class="settings-icon">🌙</span>深色模式</div>
 							<span id="theme-status" class="settings-arrow" style="font-size: 0.8rem; font-weight: bold;">OFF</span>
 						</div>
+						<div id="admin-news-btn" class="settings-item" onclick="openNewsManagerModal()" style="display: none;">
+							<div><span class="settings-icon">📢</span>管理首頁動態 (管理員專屬)</div>
+							<span class="settings-arrow">➤</span>
+						</div>
 					</div>
 				</div>
 				<div class="card">
@@ -932,6 +936,33 @@
 			</div>
 			<button class="btn" style="background:var(--primary);" onclick="addLearningTask()">+ 開始</button>
 			<button class="btn" style="background:transparent; color:#666; border:1px solid #ddd; margin-top:10px;" onclick="closeLearningModal()">取消</button>
+		</div>
+	</div>
+	<div id="news-manager-modal" class="modal">
+		<div class="modal-content" style="text-align: left; max-width: 400px;">
+			<h3 style="text-align: center; margin-top:0;">📢 管理首頁動態</h3>
+			<div id="news-manager-list" style="margin-bottom: 20px; max-height: 200px; overflow-y: auto;">載入中...</div>
+			<hr style="border:0; border-top:1px dashed #ddd; margin: 15px 0;">
+			<h4 style="margin: 0 0 10px 0; color: var(--primary);">新增一則動態</h4>
+			<div class="input-group">
+				<label>標籤名稱 (例如：更新、功能)</label>
+				<input type="text" id="input-news-tag" class="login-input" placeholder="例如：更新">
+			</div>
+            <div class="input-group">
+				<label>標籤顏色</label>
+				<select id="input-news-color" class="login-input" style="padding: 10px;">
+					<option value="update">🟡 黃色 (更新/修復)</option>
+					<option value="feature">🟢 綠色 (新功能)</option>
+					<option value="security">🔴 紅色 (重大/安全)</option>
+                    <option value="info">🔵 藍色 (一般資訊)</option>
+				</select>
+			</div>
+			<div class="input-group">
+				<label>動態內容</label>
+				<input type="text" id="input-news-content" class="login-input" placeholder="輸入動態內容...">
+			</div>
+			<button class="btn" style="width: 100%; background: var(--primary);" onclick="addPublicNews()">+ 發佈動態</button>
+			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeNewsManagerModal()">關閉</button>
 		</div>
 	</div>
     <div id="custom-modal" class="modal" style="z-index: 9999;">

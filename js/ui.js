@@ -597,3 +597,92 @@ window.toggleMobileMenu = function() {
         overlay.classList.add('show');
     }
 }
+
+
+
+/* ========================================================================== */
+/* 📌 首頁動態管理員 (Landing Page News CMS)                                  */
+/* ========================================================================== */
+
+let publicNewsList = [];
+
+window.openNewsManagerModal = function() {
+    document.getElementById('news-manager-modal').style.display = 'flex';
+    document.getElementById('news-manager-list').innerHTML = '<p style="text-align:center; color:#999;">載入中...</p>';
+    
+    db.collection("public").doc("landing_news").get().then(doc => {
+        if (doc.exists && doc.data().items) {
+            publicNewsList = doc.data().items;
+        } else {
+            publicNewsList = [];
+        }
+        renderNewsManagerList();
+    });
+}
+
+window.closeNewsManagerModal = function() {
+    document.getElementById('news-manager-modal').style.display = 'none';
+}
+
+function renderNewsManagerList() {
+    const listDiv = document.getElementById('news-manager-list');
+    if (publicNewsList.length === 0) {
+        listDiv.innerHTML = '<p style="color:#999; text-align:center;">目前無動態，趕快新增一則吧！</p>';
+        return;
+    }
+    let html = '';
+    publicNewsList.forEach((item, index) => {
+        html += `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding: 10px 0; border-bottom: 1px solid #eee;">
+            <div>
+                <span style="background: ${item.bgColor}; color: ${item.color}; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin-right: 5px; font-weight: bold;">${item.tag}</span>
+                <span style="font-size: 0.9rem; color: var(--text-main);">${item.content}</span>
+            </div>
+            <button onclick="deletePublicNews(${index})" style="background:transparent; border:none; color:#e74c3c; cursor:pointer; font-size: 1.1rem;">🗑️</button>
+        </div>`;
+    });
+    listDiv.innerHTML = html;
+}
+
+window.addPublicNews = function() {
+    const tag = document.getElementById('input-news-tag').value.trim();
+    const colorType = document.getElementById('input-news-color').value;
+    const content = document.getElementById('input-news-content').value.trim();
+
+    if (!tag || !content) {
+        showAlert("請輸入標籤名稱與內容！");
+        return;
+    }
+
+    let bgColor, color;
+    if (colorType === 'update') { bgColor = 'rgba(241, 196, 15, 0.3)'; color = '#f39c12'; }
+    else if (colorType === 'feature') { bgColor = 'rgba(46, 204, 113, 0.3)'; color = '#27ae60'; }
+    else if (colorType === 'security') { bgColor = 'rgba(231, 76, 60, 0.3)'; color = '#e74c3c'; }
+    else { bgColor = 'rgba(52, 152, 219, 0.3)'; color = '#2980b9'; }
+
+    publicNewsList.unshift({ tag, bgColor, color, content });
+
+    db.collection("public").doc("landing_news").set({
+        items: publicNewsList,
+        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        document.getElementById('input-news-tag').value = '';
+        document.getElementById('input-news-content').value = '';
+        renderNewsManagerList();
+        showAlert("✨ 動態已成功發佈！登出回首頁即可看到。");
+    });
+}
+
+window.deletePublicNews = function(index) {
+    showConfirm("確定要刪除這則首頁動態嗎？").then(ok => {
+        if(ok) {
+            publicNewsList.splice(index, 1);
+            db.collection("public").doc("landing_news").set({
+                items: publicNewsList,
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                renderNewsManagerList();
+            });
+        }
+    });
+}

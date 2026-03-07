@@ -7,12 +7,12 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/landing.css">
 </head>
 <body>
-
     <div class="split-layout" id="landing-page">
         <div class="mobile-header">
             <div class="brand-logo">
@@ -21,63 +21,41 @@
             </div>
             <button class="btn-login-trigger" onclick="openLoginModal()">登 入</button>
         </div>
-
         <div class="left-panel">
             <div class="brand-logo desktop-logo">
                 <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png" width="32" height="32" alt="Logo">
                 CampusKing
             </div>
-            
             <div class="hero-text">
                 <h1>掌握校園生活，<br>從這裡開始。</h1>
                 <p>課表、成績、記帳、作業追蹤，專為學生打造的極致數位助理。</p>
             </div>
-
-            <div class="news-widget">
+            <div class="news-widget" id="dynamic-news-widget">
                 <h3>✨ 最新系統動態</h3>
-                <div class="news-item">
-                    <span class="news-tag" style="background: rgba(46, 204, 113, 0.3); color: #84fab0;">功能</span>
-                    <div class="news-content">GPA 自動計算與配分筆記上線，搶救期末不焦慮！</div>
-                </div>
-                <div class="news-item">
-                    <span class="news-tag" style="background: rgba(241, 196, 15, 0.3); color: #ffeaa7;">更新</span>
-                    <div class="news-content">智慧色彩課表，支援自訂節次與「圖片匯出」功能。</div>
-                </div>
-                <div class="news-item">
-                    <span class="news-tag" style="background: rgba(231, 76, 60, 0.3); color: #ff9a9e;">安全</span>
-                    <div class="news-content">雲端/本地雙重備份機制運作中，畢業前資料不遺失。</div>
-                </div>
+                <div id="news-loading" style="font-size: 0.9rem; opacity: 0.8;">載入中...</div>
             </div>
         </div>
-
         <div class="right-panel">
             <div class="login-wrapper">
                 <button class="btn-close-modal" onclick="closeLoginModal()">✖</button>
-                
                 <h2>歡迎使用 👋</h2>
                 <p class="subtitle">登入以存取您的專屬數位學園</p>
-
                 <div class="input-group">
                     <label>電子信箱</label>
                     <input type="email" id="email" placeholder="student@example.com">
                 </div>
-                
                 <div class="input-group">
                     <label>密碼</label>
                     <input type="password" id="password" placeholder="請輸入6位數以上密碼">
                 </div>
-
                 <div class="login-options">
                     <label style="display:flex; align-items:center; cursor:pointer;">
                         <input type="checkbox" style="margin-right: 8px; width:16px; height:16px; accent-color: var(--primary);"> 保持登入
                     </label>
                     <a onclick="forgotPassword()">忘記密碼？</a>
                 </div>
-
                 <button class="btn-main" onclick="handleLogin()" id="btn-submit">登 入</button>
-
                 <div class="divider">或使用其他方式快速開始</div>
-
                 <div class="social-login">
                     <button class="btn-social" onclick="loginWithGoogle()">
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
@@ -87,7 +65,6 @@
                         👻 訪客試用
                     </button>
                 </div>
-
                 <div class="toggle-mode">
                     <span id="toggle-text" style="color: var(--text-muted); font-weight: normal;">還沒有帳號？</span>
                     <span onclick="registerAccount()" id="toggle-btn">立即註冊</span>
@@ -95,10 +72,27 @@
             </div>
         </div>
     </div>
-
     <script src="js/firebase.js"></script>
-
     <script>
+        db.collection("public").doc("landing_news").get().then(doc => {
+            const container = document.getElementById('dynamic-news-widget');
+            if (doc.exists && doc.data().items && doc.data().items.length > 0) {
+                let html = '<h3>✨ 最新系統動態</h3>';
+                doc.data().items.forEach(item => {
+                    html += `
+                    <div class="news-item">
+                        <span class="news-tag" style="background: ${item.bgColor}; color: ${item.color};">${item.tag}</span>
+                        <div class="news-content">${item.content}</div>
+                    </div>`;
+                });
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = '<h3>✨ 最新系統動態</h3><div class="news-item"><div class="news-content">目前沒有最新動態。</div></div>';
+            }
+        }).catch(err => {
+            document.getElementById('news-loading').innerText = "無法載入最新動態";
+        });
+        
         auth.onAuthStateChanged((user) => {
             if (user) window.location.href = 'app.html';
         });
