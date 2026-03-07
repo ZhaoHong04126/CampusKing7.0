@@ -2,7 +2,6 @@ const CACHE_NAME = 'CampusKing_v9.1_';
 
 const ASSETS_TO_CACHE = [
     './',
-    './app.html',
     './index.html',
 	'./info.html',
     './manifest.json',

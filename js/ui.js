@@ -86,40 +86,18 @@ window.closeCustomModal = function(result) {
 /* 📌 路由與導航控制 (Routing & Navigation)                                     */
 /* ========================================================================== */
 
-<<<<<<< HEAD
 // 監聽瀏覽器上一頁/下一頁事件 (保留此功能以支援手機實體返回鍵)
 window.addEventListener('popstate', (event) => {
     const targetView = event.state ? event.state.view : 'schedule';
     switchTab(targetView, false);
 });
 
-=======
-// 監聽瀏覽器上一頁/下一頁事件，並切換對應的視圖
-window.addEventListener('popstate', (event) => {
-    const targetView = event.state ? event.state.view : 'home';
-    switchTab(targetView, false);
-});
-
-// 左上角返回按鈕的功能，若無歷史紀錄則返回首頁
-function goBack() {
-    if (window.history.state && window.history.state.view !== 'home') {
-        window.history.back();
-    } else {
-        switchTab('home');
-    }
-}
-
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
 // 核心頁面切換函式，隱藏其他頁面並更新 URL History 與頁面標題
 function switchTab(tabName, addToHistory = true) {
     if (typeof exitAllEditModes === 'function') exitAllEditModes();
     
     const views = [
-<<<<<<< HEAD
         'schedule', 'calendar', 
-=======
-        'home', 'schedule', 'calendar', 
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
         'settings', 'chart', 'credits',
         'regular', 'midterm', 'grades',
         'exams-hub', 'grade-manager', 'accounting',
@@ -145,7 +123,6 @@ function switchTab(tabName, addToHistory = true) {
     const targetBtn = document.getElementById('btn-' + tabName);
     if (targetBtn) targetBtn.classList.add('active');
 
-<<<<<<< HEAD
     const titleEl = document.getElementById('app-title');
     
     if (tabName === 'schedule') {
@@ -153,23 +130,6 @@ function switchTab(tabName, addToHistory = true) {
     } else {
         let pageTitle = "校園王";
         switch(tabName) {
-=======
-    const backBtn = document.getElementById('nav-back-btn');
-    const homeBtn = document.getElementById('nav-home-btn');
-    const titleEl = document.getElementById('app-title');
-    
-    if (tabName === 'home') {
-        if (backBtn) backBtn.style.display = 'none';
-        if (homeBtn) homeBtn.style.display = 'none';
-        if (titleEl) titleEl.innerText = '📅 校園王';
-    } else {
-        if (backBtn) backBtn.style.display = 'block';
-        if (homeBtn) homeBtn.style.display = 'block';
-        
-        let pageTitle = "校園王";
-        switch(tabName) {
-            case 'schedule': pageTitle = "我的課表"; break;
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
             case 'calendar': pageTitle = "學期行事曆"; break;
             case 'grade-manager': pageTitle = "成績管理"; break;
             case 'accounting': pageTitle = "學期記帳"; break;
@@ -186,17 +146,10 @@ function switchTab(tabName, addToHistory = true) {
     }
 
     if (addToHistory) {
-<<<<<<< HEAD
         if (tabName !== 'schedule') {
             history.pushState({ view: tabName }, null, `#${tabName}`);
         } else {
             history.pushState({ view: 'schedule' }, null, './');
-=======
-        if (tabName !== 'home') {
-            history.pushState({ view: tabName }, null, `#${tabName}`);
-        } else {
-            history.pushState({ view: 'home' }, null, './');
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
         }
     }
 
@@ -218,14 +171,11 @@ function switchTab(tabName, addToHistory = true) {
     if (tabName === 'homework' && typeof renderHomework === 'function') renderHomework();
     if (tabName === 'grade-calc' && typeof renderGradeCalc === 'function') renderGradeCalc();
     
-<<<<<<< HEAD
     // 切換頁面後，若是手機版則自動收起側邊欄
     const sidebar = document.getElementById('sidebar');
     if (sidebar && sidebar.classList.contains('show')) {
         if (typeof toggleMobileMenu === 'function') toggleMobileMenu();
     }
-=======
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
 }
 
 
@@ -249,14 +199,6 @@ function initUI() {
     if (typeof checkHomeworkNotifications === 'function') checkHomeworkNotifications();
     if (typeof checkAccountingNotifications === 'function') checkAccountingNotifications();
     if (typeof updateNotificationBtnUI === 'function') updateNotificationBtnUI();
-<<<<<<< HEAD
-=======
-
-    if (typeof renderHomeApps === 'function') renderHomeApps();
-    if (!userPreferences.onboarded) {
-        openOnboardingModal();
-    }
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
 }
 
 // 切換深色與淺色主題，並將設定存入 LocalStorage
@@ -342,41 +284,6 @@ function editSchoolInfo() {
     });
 }
 
-<<<<<<< HEAD
-=======
-// 廣告落地頁點擊登入按鈕時，讓畫面平滑滾動到特色說明區塊
-function scrollToFeatures() {
-    const section = document.getElementById('features');
-    if (section) {
-        section.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start' 
-        });
-    }
-}
-
-// 開啟系統登入介面的半透明視窗
-function openLoginModal() {
-    const modal = document.getElementById('login-overlay');
-    if (modal) {
-        modal.style.display = 'flex';
-        modal.style.opacity = '0';
-        setTimeout(() => {
-            modal.style.transition = 'opacity 0.3s';
-            modal.style.opacity = '1';
-        }, 10);
-    }
-}
-
-// 關閉系統登入介面的視窗
-function closeLoginModal() {
-    const modal = document.getElementById('login-overlay');
-    if (modal) {
-        modal.style.display = 'none';
-    }
-}
-
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
 
 
 /* ========================================================================== */
@@ -458,11 +365,7 @@ window.toggleGeneralSettingsEditMode = function() {
             btn.style.background = "transparent";
         }
     } else {
-<<<<<<< HEAD
         showConfirm("確定要開啟編輯模式嗎？\n\n開啟後您可以修改學校與科系資訊。", "✏️ 進入編輯模式").then(ok => {
-=======
-        showConfirm("確定要開啟編輯模式嗎？\n\n開啟後您可以修改顯示名稱與科系資訊等設定。", "✏️ 進入編輯模式").then(ok => {
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
             if (ok) {
                 isGeneralSettingsEditMode = true;
                 if (btn) {
@@ -479,136 +382,6 @@ window.toggleGeneralSettingsEditMode = function() {
 
 
 /* ========================================================================== */
-<<<<<<< HEAD
-=======
-/* 📌 漸進式探索與模組化自訂 (Progressive Disclosure & Modular UI)              */
-/* ========================================================================== */
-
-// 動態渲染首頁：只產生有被打勾啟用的 App (已移除舊版工具箱邏輯)
-window.renderHomeApps = function() {
-    const mainGrid = document.getElementById('main-app-grid');
-    if (!mainGrid) return;
-
-    mainGrid.innerHTML = '';
-
-    allAvailableApps.forEach(app => {
-        if (userPreferences.activeApps.includes(app.id)) {
-            mainGrid.innerHTML += `
-                <div class="app-item" onclick="switchTab('${app.id}')">
-                    <div class="app-icon" style="background: ${app.color};">${app.icon}</div>
-                    <div class="app-label">${app.label}</div>
-                </div>
-            `;
-        }
-    });
-}
-
-// 開啟初次登入的導覽視窗，並動態產生所有 App 的勾選清單
-window.openOnboardingModal = function() {
-    document.getElementById('onboarding-modal').style.display = 'flex';
-    const listContainer = document.getElementById('onboarding-app-list');
-    if (!listContainer) return;
-    listContainer.innerHTML = '';
-    
-    allAvailableApps.forEach(app => {
-        listContainer.innerHTML += `
-            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 8px; background: #f9f9f9; border-radius: 8px; border: 1px solid #eee;">
-                <input type="checkbox" value="${app.id}" class="onboarding-app-checkbox" checked style="width: 18px; height: 18px; accent-color: var(--primary);">
-                <span style="font-size: 1.2rem;">${app.icon}</span>
-                <span style="font-size: 0.9rem; color: #333; font-weight: 500;">${app.label}</span>
-            </label>
-        `;
-    });
-}
-
-// 完成導覽並配置專屬首頁
-window.completeOnboarding = function() {
-    const checkboxes = document.querySelectorAll('.onboarding-app-checkbox');
-    const selectedApps = [];
-    checkboxes.forEach(cb => { if (cb.checked) selectedApps.push(cb.value); });
-
-    if (selectedApps.length === 0) {
-        if (window.showAlert) showAlert("請至少選擇一個功能喔！");
-        return;
-    }
-
-    userPreferences.onboarded = true;
-    userPreferences.primaryGoal = 'custom';
-    userPreferences.activeApps = selectedApps;
-
-    saveData();
-    document.getElementById('onboarding-modal').style.display = 'none';
-    renderHomeApps();
-    
-    if (window.showAlert) showAlert("🎉 首頁配置完成！\n日後隨時可以到「⚙️ 個人設定」中重新調整。");
-}
-
-
-
-/* ========================================================================== */
-/* 🧰 工具箱與版面管理 (Toolbox & Layout Manager)                               */
-/* ========================================================================== */
-
-// 開啟設定中的工具箱管理視窗
-window.openAppManager = function() {
-    // 檢查一般設定是否為編輯模式
-    if (typeof isGeneralSettingsEditMode !== 'undefined' && !isGeneralSettingsEditMode) {
-        if (window.showAlert) showAlert("目前為「🔒 唯讀模式」\n若要修改首頁版面，請先點擊上方切換至編輯狀態。");
-        return;
-    }
-
-    document.getElementById('app-manager-modal').style.display = 'flex';
-    const listContainer = document.getElementById('app-manager-list');
-    if (!listContainer) return;
-    
-    listContainer.innerHTML = '';
-    
-    allAvailableApps.forEach(app => {
-        const isChecked = userPreferences.activeApps.includes(app.id) ? 'checked' : '';
-        // 渲染清單：包含 Checkbox(控制首頁顯示) 以及 🚀 按鈕(直接開啟)
-        listContainer.innerHTML += `
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #fdfdfd; border-radius: 8px; border: 1px solid #eee;">
-                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; flex: 1;">
-                    <input type="checkbox" value="${app.id}" class="manager-app-checkbox" ${isChecked} style="width: 18px; height: 18px; accent-color: var(--primary);">
-                    <span style="font-size: 1.2rem;">${app.icon}</span>
-                    <span style="font-size: 0.95rem; color: #333; font-weight: 500;">${app.label}</span>
-                </label>
-                <button onclick="switchTab('${app.id}'); closeAppManager();" style="background: transparent; border: none; font-size: 1.2rem; cursor: pointer; padding: 0 5px;" title="直接開啟">🚀</button>
-            </div>
-        `;
-    });
-}
-
-// 關閉工具箱管理視窗
-window.closeAppManager = function() {
-    document.getElementById('app-manager-modal').style.display = 'none';
-}
-
-// 儲存新的首頁 App 配置
-window.saveAppManager = function() {
-    const checkboxes = document.querySelectorAll('.manager-app-checkbox');
-    const selectedApps = [];
-    
-    checkboxes.forEach(cb => {
-        if (cb.checked) selectedApps.push(cb.value);
-    });
-
-    if (selectedApps.length === 0) {
-        if (window.showAlert) showAlert("請至少保留一個功能在首頁喔！");
-        return;
-    }
-
-    userPreferences.activeApps = selectedApps;
-    saveData();
-    renderHomeApps();
-    closeAppManager();
-    if (window.showAlert) showAlert("首頁模組已更新！", "儲存成功");
-}
-
-
-
-/* ========================================================================== */
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
 /* 📌 通知中心邏輯 (Notification Center)                                        */
 /* ========================================================================== */
 
@@ -805,7 +578,6 @@ window.updateNotificationBtnUI = function() {
         btn.style.color = "#1565c0";
         btn.style.borderColor = "#1565c0";
     }
-<<<<<<< HEAD
 }
 
 
@@ -824,6 +596,4 @@ window.toggleMobileMenu = function() {
         sidebar.classList.add('show');
         overlay.classList.add('show');
     }
-=======
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
 }

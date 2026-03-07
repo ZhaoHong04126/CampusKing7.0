@@ -120,7 +120,6 @@ let categoryTargets = { "自由選修": 20 };
 
 
 /* ========================================================================== */
-<<<<<<< HEAD
 /* 📌 使用者偏好設定 (User Preferences)                                         */
 /* ========================================================================== */
 
@@ -128,28 +127,3 @@ let categoryTargets = { "自由選修": 20 };
 let userPreferences = {
     pushEnabled: false
 };
-=======
-/* 📌 使用者偏好與模組自訂 (User Preferences & Modular UI)                      */
-/* ========================================================================== */
-
-// 紀錄使用者的導覽狀態與自訂首頁配置
-let userPreferences = {
-    onboarded: false,
-    primaryGoal: 'all', 
-    activeApps: ['schedule', 'grade-manager', 'homework', 'accounting', 'calendar']
-};
-
-// 系統所有可用的 App 模組清單
-const allAvailableApps = [
-    { id: 'schedule', icon: '📅', color: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', label: '課表' },
-    { id: 'lottery', icon: '🎰', color: 'linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%)', label: '幸運籤筒' },
-    { id: 'calendar', icon: '🗓️', color: 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)', label: '行事曆' },
-    { id: 'grade-manager', icon: '💯', color: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', label: '成績管理' },
-    { id: 'grade-calc', icon: '🧮', color: 'linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%)', label: '配分筆記' },
-    { id: 'homework', icon: '🎒', color: 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)', label: '作業成績' },
-    { id: 'accounting', icon: '💰', color: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', label: '學期記帳' },
-    { id: 'notes', icon: '📝', color: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)', label: '快述記事' },
-    { id: 'anniversary', icon: '💝', color: 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)', label: '紀念日' },
-    { id: 'learning', icon: '📚', color: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)', label: '學習進度' },
-];
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966

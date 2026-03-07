@@ -28,10 +28,7 @@
 
 /* 頁面共用背景與漸層過渡動畫 */
 body {
-<<<<<<< HEAD
     margin: 0;
-=======
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
     transition: background 0.5s ease;
     background-attachment: fixed;
     background-size: cover;
@@ -116,7 +113,6 @@ h2 {
     background: var(--card) !important;
     color: var(--text-main);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-<<<<<<< HEAD
 }
 
 
@@ -151,6 +147,4 @@ h2 {
 /* 深色模式下，滑鼠懸浮在拉桿上時的變化 */
 [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
     background: rgba(150, 150, 150, 0.8);
-=======
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
 }

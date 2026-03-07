@@ -482,7 +482,6 @@ tr.period-time-row:last-child {
     border-color: #555;
     transform: scale(1.15);
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-<<<<<<< HEAD
 }
 
 /* 表單基礎文字輸入框 (供 app.html 內多處彈出視窗使用) */
@@ -501,6 +500,4 @@ tr.period-time-row:last-child {
     background: white; 
     border-color: var(--primary);
     box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
-=======
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
 }

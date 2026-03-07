@@ -10,7 +10,6 @@ function loadData() {
     const savedData = localStorage.getItem(dbKey);
 
     if (savedData) {
-<<<<<<< HEAD
         // 本地有資料：先快速渲染畫面，再於背景同步雲端
         parseAndApplyData(JSON.parse(savedData));
         refreshUI();
@@ -27,51 +26,22 @@ function loadData() {
             refreshUI();
         }
     }
-=======
-        parseAndApplyData(JSON.parse(savedData));
-    } else {
-        initDefaultData();
-    }
-    if (navigator.onLine) {
-        syncFromCloud(uid);
-    }
-    refreshUI();
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
 }
 
 // 解析從本地或雲端取得的資料物件，並指派給全域變數
 function parseAndApplyData(parsed) {
     allData = parsed.allData || {};
     semesterList = parsed.semesterList || ["114-2"];
-<<<<<<< HEAD
     
-=======
-    userTitle = parsed.userTitle || (currentUser && currentUser.displayName ? currentUser.displayName : "同學");
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
     currentSemester = parsed.currentSemester || semesterList[0];
     graduationTarget = parsed.graduationTarget || 128;
     periodTimesConfig = parsed.periodTimesConfig || {};
 
-<<<<<<< HEAD
     if (parsed.paymentMethods) paymentMethods = parsed.paymentMethods;
     if (parsed.accCategories) accCategories = parsed.accCategories;
     if (parsed.periodConfig) periodConfig = parsed.periodConfig;
     if (parsed.userSchoolInfo) userSchoolInfo = parsed.userSchoolInfo;
     
-=======
-    if (parsed.paymentMethods) {
-        paymentMethods = parsed.paymentMethods;
-    }
-    if (parsed.accCategories) {
-        accCategories = parsed.accCategories;
-    }
-    if (parsed.periodConfig) {
-        periodConfig = parsed.periodConfig;
-    }
-    if (parsed.userSchoolInfo) {
-        userSchoolInfo = parsed.userSchoolInfo;
-    }
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
     if (parsed.customPeriods) {
         customPeriods = parsed.customPeriods;
     } else {
@@ -81,19 +51,9 @@ function parseAndApplyData(parsed) {
     if (parsed.userPreferences) {
         userPreferences = parsed.userPreferences;
     } else {
-<<<<<<< HEAD
         userPreferences = { pushEnabled: false };
     }
     
-=======
-        // 相容舊用戶：預設為已完成導覽並顯示全部
-        userPreferences = {
-            onboarded: true,
-            primaryGoal: 'all',
-            activeApps: allAvailableApps.map(a => a.id)
-        };
-    }
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
     if (parsed.systemNotifications) {
         systemNotifications = parsed.systemNotifications;
     } else {
@@ -113,13 +73,7 @@ function parseAndApplyData(parsed) {
         Object.keys(allData).forEach(sem => {
             if (allData[sem].grades) {
                 allData[sem].grades.forEach(g => {
-<<<<<<< HEAD
                     if (g.category === "自由") g.category = "自由選修";
-=======
-                    if (g.category === "自由") {
-                        g.category = "自由選修";
-                    }
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
                 });
             }
         });
@@ -131,15 +85,9 @@ function parseAndApplyData(parsed) {
 // 若完全無資料時，初始化預設的學期與結構
 function initDefaultData() {
     semesterList = ["114-1"];
-<<<<<<< HEAD
     currentSemester = "114-1"; // 👈 將這裡統一改為 114-1，避免與 semesterList 衝突
     allData = {
         "114-1": { // 👈 這裡也改為 114-1
-=======
-    currentSemester = "114-2";
-    allData = {
-        "114-2": {
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
             schedule: JSON.parse(JSON.stringify(defaultSchedule)),
             grades: [],
             regularExams: {},
@@ -165,10 +113,7 @@ function loadSemesterData(sem) {
         endDate: "",        
         homework: [],       
         gradeCalcNotes: [], 
-<<<<<<< HEAD
         learning: []
-=======
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
     };
 
     weeklySchedule = allData[sem].schedule;             
@@ -219,10 +164,6 @@ function saveData() {
         periodTimesConfig: periodTimesConfig,
         paymentMethods: paymentMethods,
         accCategories: accCategories,
-<<<<<<< HEAD
-=======
-        userTitle: userTitle,
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
         customPeriods: customPeriods,
         userPreferences: userPreferences,
         systemNotifications: systemNotifications,
@@ -273,11 +214,6 @@ function syncFromCloud(uid) {
     });
 }
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
 /* ========================================================================== */
 /* 📌 畫面刷新與狀態更新 (UI Refresh & State Update)                            */
 /* ========================================================================== */
@@ -318,11 +254,6 @@ function refreshUI() {
             settingSchool.innerText = '未設定';
         }
     }
-<<<<<<< HEAD
-=======
-
-    if (typeof renderHomeApps === 'function') renderHomeApps();
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
 }
 
 // 更新單一學分分類目標的數值 (如必修、選修) 並存檔
@@ -338,11 +269,6 @@ function updateCategorySettings(category, type, value) {
     if (typeof renderAnalysis === 'function') renderAnalysis();
 }
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
 /* ========================================================================== */
 /* 📌 本地備份與還原功能 (Local Backup & Restore)                               */
 /* ========================================================================== */
@@ -399,10 +325,6 @@ function exportDataToFile() {
         periodConfig: periodConfig,
         paymentMethods: paymentMethods,
         accCategories: accCategories,
-<<<<<<< HEAD
-=======
-        userTitle: userTitle,
->>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
         customPeriods: customPeriods
     };
 
