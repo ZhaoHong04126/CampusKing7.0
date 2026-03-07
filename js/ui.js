@@ -683,6 +683,10 @@ window.addPublicNews = function() {
         document.getElementById('input-news-content').value = '';
         renderNewsManagerList();
         showAlert("✨ 動態已成功發佈！登出回首頁即可看到。");
+    }).catch((error) => {
+        // 👇 這段是新增的，用來捕捉並顯示 Firebase 的錯誤
+        console.error("發佈動態失敗：", error);
+        showAlert("❌ 發佈失敗！這通常是 Firebase 資料庫權限不足的問題。\n請檢查 Firestore Security Rules。\n\n錯誤細節: " + error.message, "系統錯誤");
     });
 }
 
