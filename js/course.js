@@ -216,6 +216,7 @@ function addCourse() {
 
     let count = 0;
     for (let i = idxStart; i <= idxEnd; i++) {
+        const p = customPeriods[i];
         const timeObj = getPeriodTimes()[p];
         const autoTime = timeObj ? timeObj.start : "";
 

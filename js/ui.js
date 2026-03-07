@@ -130,7 +130,7 @@ function switchTab(tabName, addToHistory = true) {
     } else {
         let pageTitle = "校園王";
         switch(tabName) {
-            case 'calendar': pageTitle = "學期行事曆"; break;
+            case 'calendar': pageTitle = "行事曆"; break;
             case 'grade-manager': pageTitle = "成績管理"; break;
             case 'accounting': pageTitle = "學期記帳"; break;
             case 'notes': pageTitle = "記事本"; break;

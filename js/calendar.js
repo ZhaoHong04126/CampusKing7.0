@@ -126,9 +126,8 @@ function renderCalendarList() {
     const listDiv = document.getElementById('calendar-list');
     if (!listDiv) return;
 
-    // 👇 將使用者的活動打上 isUserEvent 標籤，然後與國定假日陣列合併
     const userEventsWithFlag = calendarEvents.map((e, i) => ({...e, _originalIndex: i, isUserEvent: true}));
-    const allEvents = [...userEventsWithFlag, ...taiwanHolidays];
+    const allEvents = [...userEventsWithFlag];
 
     allEvents.sort((a, b) => {
         const dateA = new Date(a.date + (a.startTime && !a.isAllDay ? 'T' + a.startTime : 'T00:00'));
@@ -150,7 +149,7 @@ function renderCalendarList() {
                 timeBadge = `<span style="background:#e3f2fd; color:#1565c0; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:6px;">${event.startTime}${event.endTime ? '~'+event.endTime : ''}</span>`;
             } else if (event.isSystemHoliday) {
                 // 🔴 系統假日的紅色徽章
-                timeBadge = `<span style="background:#ffebee; color:#e74c3c; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:6px;">國定假日</span>`;
+                timeBadge = `<span style="background:#e3f2fd; color:#1565c0; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:6px;">國定假日</span>`;
             } else {
                 timeBadge = `<span style="background:#eee; color:#666; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:6px;">全天</span>`;
             }
@@ -166,7 +165,7 @@ function renderCalendarList() {
             const deleteBtnDisplay = (isCalendarEditMode && event.isUserEvent) ? 'block' : 'none';
             const clickAction = event.isUserEvent ? `onclick="editCalendarEvent(event, ${event._originalIndex})"` : '';
             const cursorStyle = event.isUserEvent ? 'cursor:pointer;' : 'cursor:default;';
-            const titleColor = event.isSystemHoliday ? 'color:#e74c3c; font-weight:bold;' : '';
+            const titleColor = event.isSystemHoliday ? 'color:#1565c0; font-weight:bold;' : '';
 
             html += `
             <div ${clickAction} style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding:10px 0; ${style}; ${cursorStyle}">
@@ -266,8 +265,8 @@ function renderMonthGrid() {
             
             if (e.isAllDay || e.endDate) {
                 let classes = "cal-event-bar ";
-                // 🔴 系統假日使用紅色色塊
-                let inlineStyle = e.isSystemHoliday ? "background-color: #e74c3c; " : "";
+                // 🔵 系統假日使用藍色色塊
+                let inlineStyle = e.isSystemHoliday ? "background-color: #1565c0; " : "";
 
                 if (isStart && isEnd) {
                     classes += "single ";
@@ -353,8 +352,8 @@ function renderMonthGrid() {
                 eventsHtml += `<div class="${classes}" style="${inlineStyle}" ${clickAction} title="${e.title}">${displayText}</div>`;
             } else {
                 let timeStr = e.startTime ? e.startTime.replace(':','') : '';
-                const dotColor = e.isSystemHoliday ? `background-color: #e74c3c;` : ``;
-                const textColor = e.isSystemHoliday ? `color: #e74c3c; font-weight: bold;` : ``;
+                const dotColor = e.isSystemHoliday ? `background-color: #1565c0;` : ``;
+                const textColor = e.isSystemHoliday ? `color: #1565c0; font-weight: bold;` : ``;
                 
                 eventsHtml += `<div class="cal-event-time" ${clickAction} title="${e.title}" style="${textColor}">
                     <span class="time-dot" style="${dotColor}"></span><span style="font-weight:bold; margin-right:4px;">${timeStr}</span>${e.title}
