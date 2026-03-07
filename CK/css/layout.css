@@ -1,0 +1,294 @@
+<<<<<<< HEAD
+/* ========================================================================== */
+/* 📌 頂部導航列 (Top Navigation Bar)                                         */
+/* ========================================================================== */
+=======
+/* 頂部導航列固定於畫面上方 */
+>>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
+#top-bar {
+    height: 60px;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    padding: 0 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+}
+
+<<<<<<< HEAD
+=======
+/* 應用程式左上角標題文字樣式 */
+>>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
+#app-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+<<<<<<< HEAD
+/* ========================================================================== */
+/* 📌 主版面容器 (Main Layout Containers)                                     */
+/* ========================================================================== */
+=======
+/* 頂部導航列返回上一頁按鈕 */
+#nav-back-btn {
+    padding: 10px;
+    margin-right: 5px;
+    transition: transform 0.2s;
+}
+#nav-back-btn:active {
+    transform: scale(0.8);
+    opacity: 0.8;
+}
+
+
+
+/* 儀表板主要容器，確保佔滿螢幕高度與上方留白 */
+>>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    padding-top: 60px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+<<<<<<< HEAD
+=======
+/* 主要內容區域，保留底部邊距給導航列 */
+>>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
+.main-content {
+    flex: 1;
+    padding: 15px;
+    padding-bottom: 80px;
+    max-width: 100%;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+<<<<<<< HEAD
+/* ========================================================================== */
+/* 📌 側邊欄抽屜 (Sidebar & Mobile Drawer)                                    */
+/* ========================================================================== */
+
+/* 手機版漢堡選單按鈕顯示控制 */
+@media (min-width: 900px) {
+    #mobile-menu-btn { display: none !important; }
+}
+
+/* 側邊欄：手機版抽屜樣式 (預設隱藏在畫面左外側) */
+.desktop-sidebar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 60px;
+    left: -300px;
+    width: 260px;
+    height: calc(100vh - 60px);
+    background: white;
+    z-index: 2000;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 2px 0 12px rgba(0,0,0,0.15);
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.desktop-sidebar.show {
+    left: 0;
+}
+
+/* 側邊欄遮罩：手機版專用 (點擊空白處關閉) */
+#sidebar-overlay {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 60px);
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s;
+}
+#sidebar-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 左側導覽按鈕樣式 */
+.sidebar-nav { display: flex; flex-direction: column; gap: 8px; }
+
+.nav-item {
+    background: transparent; border: none; padding: 12px 15px; text-align: left;
+    border-radius: 10px; font-size: 0.95rem; color: var(--text-sub);
+    cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 12px;
+}
+.nav-item:hover {
+    background: #f4f7f6; color: var(--primary); transform: translateX(5px);
+}
+.nav-item.active {
+    background: #e3f2fd; color: var(--primary); font-weight: bold; border-left: 4px solid var(--primary); border-top-left-radius: 0; border-bottom-left-radius: 0;
+}
+
+/* 深色模式適配 */
+[data-theme="dark"] .desktop-sidebar { background: var(--card); border-right-color: var(--border); }
+[data-theme="dark"] .nav-item:hover { background: rgba(255,255,255,0.05); }
+[data-theme="dark"] .nav-item.active { background: rgba(106, 176, 255, 0.15); color: #6ab0ff; border-left-color: #6ab0ff; }
+
+/* ========================================================================== */
+/* 📌 電腦版雙欄適應 (Desktop RWD)                                            */
+/* ========================================================================== */
+
+/* 當螢幕寬度大於 900px (平板/電腦) 時，啟動雙欄排版並取消抽屜效果 */
+@media (min-width: 900px) {
+    body { overflow: hidden; padding-bottom: 0; }
+
+    .dashboard-container {
+        display: flex;
+        flex-direction: row;
+        height: 100vh;
+        padding-top: 60px;
+        overflow: hidden;
+    }
+
+    /* 側邊欄樣式 (覆蓋 fixed 變成固定並排) */
+    .desktop-sidebar {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 280px;
+        min-width: 280px;
+        height: auto;
+        background: white;
+        border-right: 1px solid var(--border);
+        padding: 25px 20px;
+        box-shadow: none;
+        transition: none;
+    }
+    
+    /* 電腦版不需要半透明遮罩 */
+    #sidebar-overlay {
+        display: none !important;
+    }
+
+    /* 右側主內容區自適應填滿剩餘空間 */
+    .main-content {
+        flex: 1;
+        padding: 30px 40px;
+        overflow-y: auto;
+        height: 100%; 
+        min-height: 0;
+        padding-bottom: 20px;
+    }
+=======
+
+
+/* 導航選單容器，採用彈性排版 */
+.nav-menu {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+
+/* 電腦版導航群組，預設手機版隱藏 */
+.desktop-nav-group {
+    display: none;
+}
+
+/* 手機版導航按鈕顯示設定 */
+.mobile-nav-btn {
+    display: flex;
+}
+
+/* 導航群組分隔線 */
+.nav-group-separator {
+    display: contents; 
+}
+
+
+
+/* 電腦版版面配置 (大於768px時的側邊與桌面調整) */
+@media (min-width: 768px) {
+    body { overflow: hidden; padding-bottom: 0; }
+    .dashboard-container { display: grid; grid-template-columns: 1fr; height: 100vh; overflow: hidden; padding-top: 60px; }
+    .user-profile-card { display: block; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0; }
+    .nav-menu { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+    .main-content { height: 100%; overflow-y: auto; padding: 30px 40px; background-color: #f4f7f6; }
+    .desktop-nav-group { display: block; }
+    .mobile-nav-btn { display: none !important; }
+    .nav-group-separator { display: block; margin-top: 10px; border-top: 1px dashed #ddd; padding-top: 10px; }
+}
+
+
+
+/* 首頁內容區塊設定 */
+#view-home {
+    padding-top: 20px;
+    min-height: 80vh;
+}
+
+/* 首頁 App 圖示網格排版 */
+.app-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 20px 10px;
+    padding: 10px;
+    justify-items: center;
+}
+
+/* 電腦版首頁網格配置 */
+@media (min-width: 768px) {
+    .app-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 40px; padding: 40px; }
+    .app-icon { width: 72px; height: 72px; font-size: 2.2rem; border-radius: 22px; }
+    .app-label { font-size: 0.95rem; }
+}
+
+/* 單一 App 按鈕項目 */
+.app-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.1s;
+    width: 70px;
+}
+.app-item:active {
+    transform: scale(0.9);
+}
+
+/* App 圖示樣式設計 */
+.app-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    margin-bottom: 8px;
+    user-select: none;
+}
+
+/* App 名稱標籤樣式 */
+.app-label {
+    font-size: 0.8rem;
+    color: var(--text-main);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    font-weight: 500;
+>>>>>>> 806d1aba001b89e81acc6ae4ed35451b34c23966
+}
