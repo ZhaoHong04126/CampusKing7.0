@@ -59,7 +59,7 @@ function deleteAccount() {
 
             db.collection("users").doc(uid).delete()
             .then(() => {
-                const dbKey = 'CampusKing_v3.1.1_' + uid;
+                const dbKey = 'CampusKing_v3.2.0_' + uid;
                 localStorage.removeItem(dbKey);
                 return currentUser.delete();
             })

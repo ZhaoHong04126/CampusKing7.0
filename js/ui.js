@@ -387,8 +387,8 @@ window.toggleGeneralSettingsEditMode = function() {
 /* 📌 通知中心邏輯 (Notification Center)                                        */
 /* ========================================================================== */
 
-// 新增一則通知 (加入 id 防重複機制)
-window.addNotification = function(title, message, id = null) {
+// 新增一則通知 (加入 id 防重複機制與 type 顏色分類)
+window.addNotification = function(title, message, id = null, type = 'info') {
     if (id) {
         const exists = systemNotifications.some(n => n.id === id);
         if (exists) return; 
@@ -401,6 +401,7 @@ window.addNotification = function(title, message, id = null) {
         id: id || new Date().getTime().toString(), 
         title: title,
         message: message,
+        type: type,
         time: timeStr,
         read: false 
     });
@@ -445,16 +446,15 @@ window.renderNotifications = function() {
 
     let html = '';
     systemNotifications.forEach((note) => {
-        // 🎨 將未讀背景改為實體的「淺藍色」
-        const bg = note.read ? 'transparent' : '#e3f2fd'; 
-        
-        // 左側的強調線條 (如果覺得加上淺藍色後不需要線條，這行可以刪除，或保留增加層次感)
-        const leftBorder = note.read ? '1px solid #eee' : '4px solid #1565c0'; 
+        let typeColor = '#1565c0';
+        let typeBg = '#e3f2fd';
+        if (note.type === 'success') { typeColor = '#2ecc71'; typeBg = '#e8f5e9'; }
+        else if (note.type === 'warning') { typeColor = '#f39c12'; typeBg = '#fff8e1'; }
+        else if (note.type === 'danger') { typeColor = '#e74c3c'; typeBg = '#ffebee'; }
 
-        // 標題旁的小紅點
-        const dot = note.read ? '' : '<span style="display:inline-block; width:8px; height:8px; background:#e74c3c; border-radius:50%; margin-right:8px;"></span>';
-        
-        // 點擊事件與游標樣式
+        const bg = note.read ? 'transparent' : typeBg; 
+        const leftBorder = note.read ? '1px solid #eee' : `4px solid ${typeColor}`; 
+        const dot = note.read ? '' : `<span style="display:inline-block; width:8px; height:8px; background:${typeColor}; border-radius:50%; margin-right:8px;"></span>`;
         const clickEvent = note.read ? '' : `onclick="markSingleNotificationAsRead('${note.id}')" style="cursor: pointer;"`;
 
         html += `
@@ -609,18 +609,14 @@ window.toggleMobileMenu = function() {
 let publicNewsList = [];
 
 window.openNewsManagerModal = function() {
-    // --- 新增密碼驗證區塊 ---
     showPrompt("請輸入管理員密碼：", "", "🔒 權限驗證").then(password => {
-        // 如果使用者按了取消或沒有輸入，直接離開
         if (password === null) return; 
         
-        // 驗證固定密碼
         if (password !== "zhao20261150304") { 
             showAlert("密碼錯誤，您沒有權限存取！", "❌ 拒絕存取");
             return;
         }
 
-        // --- 密碼正確，執行原本開啟 Modal 的邏輯 ---
         document.getElementById('news-manager-modal').style.display = 'flex';
         document.getElementById('news-manager-list').innerHTML = '<p style="text-align:center; color:#999;">載入中...</p>';
         
@@ -686,7 +682,6 @@ window.addPublicNews = function() {
         renderNewsManagerList();
         showAlert("✨ 動態已成功發佈！登出回首頁即可看到。");
     }).catch((error) => {
-        // 👇 這段是新增的，用來捕捉並顯示 Firebase 的錯誤
         console.error("發佈動態失敗：", error);
         showAlert("❌ 發佈失敗！這通常是 Firebase 資料庫權限不足的問題。\n請檢查 Firestore Security Rules。\n\n錯誤細節: " + error.message, "系統錯誤");
     });
@@ -729,6 +724,7 @@ window.closeBroadcastModal = function() {
 
 // 【管理員專用】發送廣播至 Firebase
 window.sendBroadcast = function() {
+    const type = document.getElementById('input-broadcast-color').value;
     const title = document.getElementById('input-broadcast-title').value.trim();
     const content = document.getElementById('input-broadcast-content').value.trim();
 
@@ -739,17 +735,15 @@ window.sendBroadcast = function() {
 
     showConfirm(`確定要發送這則推播給「所有使用者」嗎？\n\n標題：${title}`, "📡 發送確認").then(ok => {
         if (ok) {
-            // 產生唯一 ID
             const broadcastId = "broadcast_" + new Date().getTime();
 
-            // 抓取雲端目前的廣播陣列，並把新的加進去 (保留最近 20 筆)
             db.collection("public").doc("broadcasts").get().then(doc => {
                 let items = [];
                 if (doc.exists && doc.data().items) {
                     items = doc.data().items;
                 }
                 
-                items.unshift({ id: broadcastId, title: title, message: content, time: new Date().toISOString() });
+                items.unshift({ id: broadcastId, title: title, message: content,type: type, time: new Date().toISOString() });
                 if (items.length > 20) items = items.slice(0, 20);
 
                 db.collection("public").doc("broadcasts").set({
@@ -772,11 +766,9 @@ window.checkSystemBroadcasts = function() {
     db.collection("public").doc("broadcasts").get().then(doc => {
         if (doc.exists && doc.data().items) {
             const broadcasts = doc.data().items;
-            // 反向迴圈，讓越舊的廣播先推入陣列 (保持時間順序的正確性)
             for (let i = broadcasts.length - 1; i >= 0; i--) {
                 const b = broadcasts[i];
-                // addNotification 內部會自動檢查 b.id，如果收過就不會重複加入
-                addNotification("📢 " + b.title, b.message, b.id);
+                addNotification("📢 " + b.title, b.message, b.id, b.type || 'info');
             }
         }
     }).catch(e => console.log("讀取系統廣播失敗 (可忽略):", e));

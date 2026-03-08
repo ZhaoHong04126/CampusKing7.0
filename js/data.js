@@ -6,7 +6,7 @@
 function loadData() {
     if (!currentUser) return;
     const uid = currentUser.uid;
-    const dbKey = 'CampusKing_v3.1.1_' + uid;
+    const dbKey = 'CampusKing_v3.2.0_' + uid;
     const savedData = localStorage.getItem(dbKey);
 
     if (savedData) {
@@ -170,7 +170,7 @@ function saveData() {
         lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
     };
 
-    const dbKey = 'CampusKing_v3.1.1_' + currentUser.uid;
+    const dbKey = 'CampusKing_v3.2.0_' + currentUser.uid;
     const localObj = JSON.parse(JSON.stringify(storageObj)); 
     delete localObj.lastUpdated; 
     localStorage.setItem(dbKey, JSON.stringify(localObj));
@@ -198,7 +198,7 @@ function syncFromCloud(uid) {
             
             parseAndApplyData(cloudData);
             
-            const dbKey = 'CampusKing_v3.1.1_' + uid;
+            const dbKey = 'CampusKing_v3.2.0_' + uid;
             localStorage.setItem(dbKey, JSON.stringify(cloudData));
 
             refreshUI();

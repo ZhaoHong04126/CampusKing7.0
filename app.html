@@ -999,7 +999,16 @@
 		<div class="modal-content" style="text-align: left; max-width: 400px;">
 			<h3 style="text-align: center; margin-top:0;">📡 發送系統推播</h3>
 			<p style="text-align: center; color: #888; font-size: 0.85rem; margin-bottom: 15px;">此通知將會發送給所有註冊的使用者。</p>
-			<div class="input-group">
+            <div class="input-group">
+				<label>推播類型 (標籤顏色)</label>
+				<select id="input-broadcast-color" class="login-input" style="padding: 10px;">
+					<option value="info">🔵 藍色 (一般資訊)</option>
+					<option value="success">🟢 綠色 (新功能/成功)</option>
+					<option value="warning">🟡 黃色 (提醒/更新)</option>
+					<option value="danger">🔴 紅色 (重大/警告)</option>
+				</select>
+			</div>
+            <div class="input-group">
 				<label>通知標題</label>
 				<input type="text" id="input-broadcast-title" class="login-input" placeholder="例如：系統維護通知、新功能上線">
 			</div>
