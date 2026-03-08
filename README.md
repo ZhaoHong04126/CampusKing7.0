@@ -84,7 +84,8 @@
 ```text
 CampusKing/
 │
-├── index.html          # 系統入口 (System Entry)
+├── index.html          # 落地窗口
+├── app.html            # 系統入口 (System Entry)
 ├── manifest.json       # PWA 設定檔 (PWA Configuration)
 ├── sw.js               # Service Worker (離線支援)
 │
