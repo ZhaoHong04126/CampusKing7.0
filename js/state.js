@@ -17,9 +17,8 @@ let userSchoolInfo = { school: "", department: "" };
 /* 📌 學期與時間設定 (Semester & Time Settings)                                 */
 /* ========================================================================== */
 
-// 目前選擇的星期 (預設為今天，若週日0則轉為1)
+// 目前選擇的星期 (預設為今天)
 let currentDay = new Date().getDay();
-if (currentDay === 0 || currentDay === 6) currentDay = 1;
 
 // 目前選擇的學期代號
 let currentSemester = "114-1";
