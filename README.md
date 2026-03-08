@@ -1,6 +1,6 @@
 # 👑 校園王 (CampusKing) - 數位學園
 
-![Version](https://img.shields.io/badge/Version-v3.1.0-blue.svg)![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20PWA-success.svg)
+![Version](https://img.shields.io/badge/Version-v3.1.1-blue.svg)![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20PWA-success.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 **校園王 (CampusKing)** 是一款專為大學生打造的「全方位校園生活儀表板」。
