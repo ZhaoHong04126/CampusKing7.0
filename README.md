@@ -1,12 +1,12 @@
 # 👑 校園王 (CampusKing) - 數位學園
 
-![Version](https://img.shields.io/badge/Version-v3.0.0-blue.svg)![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20PWA-success.svg)
+![Version](https://img.shields.io/badge/Version-v3.0.1-blue.svg)![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20PWA-success.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 **校園王 (CampusKing)** 是一款專為大學生打造的「全方位校園生活儀表板」。
 告別散落各處的筆記與試算表，我們將課表、成績、記帳、行事曆與學習計畫完美整合在一個現代化、高質感的雲端 SaaS 介面中。
 
-## ✨ 系統亮點 (v3.0.0 全新架構)
+## ✨ 系統亮點 (v3.0.1 全新架構)
 
 在最新的 v9.2 版本中，我們迎來了史詩級的介面革新！捨棄了傳統的 App 網格設計，全面升級為**專業級雙欄儀表板 (Dashboard)**，提供更直覺、更流暢的操作體驗。
 
@@ -63,3 +63,22 @@
 
 > **💡 開發架構提示：**
 > 為確保系統穩定性，本專案的「前端介面版本 (UI Version)」與「本地資料庫結構版本 (Data Schema Version)」採分離設計。日常的功能迭代只需推進 UI 版本號；僅在資料結構發生必須轉換的重大變更時，才需升級底層的 Data Version。
+
+### git commit 寫法
+本專案建議遵循 [約定式提交 (Conventional Commits)](https://www.conventionalcommits.org/zh-hant/v1.0.0/) 規範，讓版本紀錄更易讀，並能對應版本號的升級。
+
+**提交訊息格式：**
+`<類型>(<範圍範圍，可選>): <描述> (<版本號，可選>)`
+
+**常用類型 (Type) 對照表：**
+* **`feat`** (Feature)：新增向下相容的新功能（通常對應版本號 `Minor` 更新）。
+* **`fix`** (Bug Fix)：修復系統錯誤或跑版問題（通常對應版本號 `Patch` 更新）。
+* **`docs`** (Documentation)：僅修改文件（如 `README.md`）。
+* **`style`** (Style)：程式碼格式微調（不影響程式碼運行的變動，如空白鍵、縮排、缺少分號等）。
+* **`refactor`** (Refactor)：程式碼重構（既不修復 Bug 也不新增功能的程式碼變動）。
+* **`chore`** (Chore)：建置程序或輔助工具的變動（如更新依賴套件）。
+
+**範例：**
+* `feat: 新增番茄鐘學習模組 (v3.1.0)`
+* `fix: 修正週末課表會強制跳轉至星期一的顯示錯誤 (v3.0.1)`
+* `docs: 更新 README 中的版本控制與 commit 規範`
