@@ -1,4 +1,4 @@
-const CACHE_NAME = 'CampusKing_v3.0.1_'; 
+const CACHE_NAME = 'CampusKing_v3.0.2_'; 
 
 const ASSETS_TO_CACHE = [
     './',

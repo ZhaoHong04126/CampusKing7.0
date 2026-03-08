@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="css/landing.css">
 </head>
 <body>
-    <div class="split-layout" id="landing-page">
+    <div class="split-layout" id="landing-page"style="opacity: 0; transition: opacity 0.3s;">
         <div class="mobile-header">
             <div class="brand-logo">
                 <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png" width="28" height="28" alt="Logo">
@@ -53,7 +53,7 @@
                 </div>
                 <div class="login-options">
                     <label style="display:flex; align-items:center; cursor:pointer;">
-                        <input type="checkbox" style="margin-right: 8px; width:16px; height:16px; accent-color: var(--primary);"> 保持登入
+                        <input type="checkbox" id="chk-remember" style="margin-right: 8px; width:16px; height:16px; accent-color: var(--primary);" checked> 保持登入
                     </label>
                     <a onclick="forgotPassword()">忘記密碼？</a>
                 </div>
@@ -97,17 +97,33 @@
         });
         
         auth.onAuthStateChanged((user) => {
-            if (user) window.location.href = 'app.html';
+            if (user) {
+                window.location.href = 'app.html';
+            } else {
+                // 確認未登入後，才將畫面淡入顯示
+                document.getElementById('landing-page').style.opacity = '1';
+            }
         });
 
         function handleLogin() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const remember = document.getElementById('chk-remember').checked;
+
             if (!email || !password) {
                 alert("請輸入 Email 和密碼");
                 return;
             }
-            auth.signInWithEmailAndPassword(email, password)
+
+            // 根據是否勾選「保持登入」來設定 Firebase 的 Session 狀態
+            const persistenceType = remember
+                ? firebase.auth.Auth.Persistence.LOCAL    // 關閉瀏覽器後依然保持登入
+                : firebase.auth.Auth.Persistence.SESSION; // 關閉瀏覽器分頁後自動登出
+
+            auth.setPersistence(persistenceType)
+                .then(() => {
+                    return auth.signInWithEmailAndPassword(email, password);
+                })
                 .catch(e => alert("登入失敗：" + e.message));
         }
 
