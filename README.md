@@ -78,3 +78,53 @@
 * `feat: 新增番茄鐘學習模組 (v3.1.0)`
 * `fix: 修正週末課表會強制跳轉至星期一的顯示錯誤 (v3.0.1)`
 * `docs: 更新 README 中的版本控制與 commit 規範`
+
+## 📂 專案結構 (Project Structure)
+
+```text
+CampusKing/
+│
+├── index.html          # 系統入口 (System Entry)
+├── manifest.json       # PWA 設定檔 (PWA Configuration)
+├── sw.js               # Service Worker (離線支援)
+│
+├── css/                # 樣式表 (Stylesheets)
+│   ├── base.css        # 全域變數、Reset、字體設定
+│   ├── layout.css      # 版面配置、Grid 系統
+│   ├── components.css  # [UI元件] 按鈕、卡片、Modal 視窗
+│   ├── landing.css     # 登入頁與廣告宣傳頁樣式
+│   ├── auth.css        # 登入表單樣式
+│   ├── dashboard.css   # 桌面與主要 APP 共用樣式
+│   ├── settings.css    # 設定頁面樣式
+│   └── calendar.css    # 行事曆專屬樣式
+│
+└── js/                 # 腳本邏輯 (Scripts)
+    ├── [核心系統]
+    ├── firebase.js     # Firebase 初始化與連線設定
+    ├── auth.js         # 使用者身分驗證邏輯
+    ├── state.js        # 全域變數與狀態管理
+    ├── main.js         # 系統啟動入口、狀態監聽
+    ├── ui.js           # 路由控制、視窗管理、通知元件
+    ├── data.js         # 資料庫存取 (CRUD) 封裝
+    │
+    ├── [功能 APP]
+    ├── course.js       # 課表功能 (含連堂處理、色彩標記)
+    ├── grade.js        # 成績功能 (GPA計算、圖表)
+    ├── gradecalc.js    # 配分筆記本功能
+    ├── homework.js     # 作業成績功能
+    ├── accounting.js   # 記帳功能 (收支統計)
+    ├── calendar.js     # 行事曆功能
+    ├── lottery.js      # 幸運籤筒功能
+    ├── learning.js     # 學習進度追蹤
+    ├── notes.js        # 快述記事本
+    ├── anniversary.js  # 紀念日倒數
+    └── semester.js     # 學期設定與管理
+
+
+```
+
+## 👨‍💻 關於作者 (Developer)
+
+- 這是我在校園生活中，為了解決自己與身邊同學的痛點而誕生的心血結晶。
+
+- Produced by **Huang Zhaohong**
