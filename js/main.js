@@ -10,8 +10,11 @@ auth.onAuthStateChanged((user) => {
         initUI();
 
         if (user.uid === '8OeziUfXrKXot4l60U2keePhOwS2') {
-            const adminBtn = document.getElementById('admin-news-btn');
+            const adminBtn = document.getElementById('admin-news-btn'); // 原本在設定頁的按鈕
             if (adminBtn) adminBtn.style.display = 'flex';
+            
+            const adminNav = document.getElementById('admin-nav-section'); // 新增的左側選單
+            if (adminNav) adminNav.style.display = 'block';
         }
 
         const hash = window.location.hash.replace('#', '');

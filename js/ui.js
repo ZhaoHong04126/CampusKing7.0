@@ -103,7 +103,7 @@ function switchTab(tabName, addToHistory = true) {
         'exams-hub', 'grade-manager', 'accounting',
         'notes', 'anniversary', 'learning',
         'lottery', 'homework','grade-calc',
-        'notifications'
+        'notifications', 'admin'
     ];
     
     views.forEach(view => {
@@ -141,6 +141,7 @@ function switchTab(tabName, addToHistory = true) {
             case 'homework': pageTitle = "作業管理"; break;
             case 'grade-calc': pageTitle = "配分筆記"; break;
             case 'notifications': pageTitle = "通知中心"; break;
+            case 'admin': pageTitle = "系統管理台"; break;
         }
         if (titleEl) titleEl.innerText = pageTitle;
     }
