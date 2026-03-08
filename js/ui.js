@@ -199,6 +199,7 @@ function initUI() {
     if (typeof checkCalendarNotifications === 'function') checkCalendarNotifications();
     if (typeof checkHomeworkNotifications === 'function') checkHomeworkNotifications();
     if (typeof checkAccountingNotifications === 'function') checkAccountingNotifications();
+    if (typeof checkSystemBroadcasts === 'function') checkSystemBroadcasts();
     if (typeof updateNotificationBtnUI === 'function') updateNotificationBtnUI();
 }
 
@@ -703,4 +704,80 @@ window.deletePublicNews = function(index) {
             });
         }
     });
+}
+
+/* ---- 📌 全域推播廣播系統 (System Broadcast)---- */
+
+// 【管理員專用】開啟廣播視窗
+window.openBroadcastModal = function() {
+    showPrompt("請輸入管理員密碼：", "", "🔒 權限驗證").then(password => {
+        if (password === null) return; 
+        if (password !== "zhao20261150304") { 
+            showAlert("密碼錯誤，您沒有權限存取！", "❌ 拒絕存取");
+            return;
+        }
+        document.getElementById('broadcast-manager-modal').style.display = 'flex';
+        document.getElementById('input-broadcast-title').value = '';
+        document.getElementById('input-broadcast-content').value = '';
+    });
+}
+
+// 【管理員專用】關閉廣播視窗
+window.closeBroadcastModal = function() {
+    document.getElementById('broadcast-manager-modal').style.display = 'none';
+}
+
+// 【管理員專用】發送廣播至 Firebase
+window.sendBroadcast = function() {
+    const title = document.getElementById('input-broadcast-title').value.trim();
+    const content = document.getElementById('input-broadcast-content').value.trim();
+
+    if (!title || !content) {
+        showAlert("請輸入標題與內容！");
+        return;
+    }
+
+    showConfirm(`確定要發送這則推播給「所有使用者」嗎？\n\n標題：${title}`, "📡 發送確認").then(ok => {
+        if (ok) {
+            // 產生唯一 ID
+            const broadcastId = "broadcast_" + new Date().getTime();
+
+            // 抓取雲端目前的廣播陣列，並把新的加進去 (保留最近 20 筆)
+            db.collection("public").doc("broadcasts").get().then(doc => {
+                let items = [];
+                if (doc.exists && doc.data().items) {
+                    items = doc.data().items;
+                }
+                
+                items.unshift({ id: broadcastId, title: title, message: content, time: new Date().toISOString() });
+                if (items.length > 20) items = items.slice(0, 20);
+
+                db.collection("public").doc("broadcasts").set({
+                    items: items,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => {
+                    closeBroadcastModal();
+                    showAlert("🚀 廣播已成功寫入資料庫！\n使用者下次登入或重整時將會收到通知。");
+                }).catch(error => {
+                    console.error("廣播發送失敗：", error);
+                    showAlert("❌ 發送失敗，請檢查權限：" + error.message, "系統錯誤");
+                });
+            });
+        }
+    });
+}
+
+// 【全體使用者】讀取雲端的廣播紀錄並推入通知中心
+window.checkSystemBroadcasts = function() {
+    db.collection("public").doc("broadcasts").get().then(doc => {
+        if (doc.exists && doc.data().items) {
+            const broadcasts = doc.data().items;
+            // 反向迴圈，讓越舊的廣播先推入陣列 (保持時間順序的正確性)
+            for (let i = broadcasts.length - 1; i >= 0; i--) {
+                const b = broadcasts[i];
+                // addNotification 內部會自動檢查 b.id，如果收過就不會重複加入
+                addNotification("📢 " + b.title, b.message, b.id);
+            }
+        }
+    }).catch(e => console.log("讀取系統廣播失敗 (可忽略):", e));
 }

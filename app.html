@@ -579,8 +579,9 @@
 								<div>🔥 Firebase 連線：<span style="color:#2ecc71; font-weight:bold;">正常</span></div>
 							</div>
 						</div>
-						<div class="card" style="flex: 1; min-width: 250px; border: 1px dashed #ddd; background: transparent; display: flex; align-items: center; justify-content: center;">
-							<span style="color: #aaa; font-size: 0.9rem;">+ 開發中模組 (如：推播廣播)</span>
+						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; cursor: pointer; background: #fafafa; transition: 0.2s;" onclick="openBroadcastModal()" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
+							<h3 style="color: #9b59b6; margin: 0 0 10px 0; font-size: 1.1rem;">📡 發送系統推播</h3>
+							<p style="font-size: 0.85rem; color: #666; line-height: 1.4;">發送全域通知給所有使用者。通知將直接發送至他們的通知中心裡。</p>
 						</div>
 					</div>
 				</div>
@@ -994,8 +995,24 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeNewsManagerModal()">關閉</button>
 		</div>
 	</div>
-	
-    
+	<div id="broadcast-manager-modal" class="modal">
+		<div class="modal-content" style="text-align: left; max-width: 400px;">
+			<h3 style="text-align: center; margin-top:0;">📡 發送系統推播</h3>
+			<p style="text-align: center; color: #888; font-size: 0.85rem; margin-bottom: 15px;">此通知將會發送給所有註冊的使用者。</p>
+			<div class="input-group">
+				<label>通知標題</label>
+				<input type="text" id="input-broadcast-title" class="login-input" placeholder="例如：系統維護通知、新功能上線">
+			</div>
+			<div class="input-group">
+				<label>通知內容</label>
+				<textarea id="input-broadcast-content" class="login-input" placeholder="輸入要廣播的詳細內容..." style="height: 100px; resize: none;"></textarea>
+			</div>
+			<button class="btn" style="width: 100%; background: #9b59b6;" onclick="sendBroadcast()">🚀 立即發送全域推播</button>
+			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeBroadcastModal()">取消</button>
+		</div>
+	</div>
+
+
 	<script>
         // 顏色選擇輔助函式 (全域)
         window.selectColor = function(hex, element) {
