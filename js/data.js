@@ -6,7 +6,7 @@
 function loadData() {
     if (!currentUser) return;
     const uid = currentUser.uid;
-    const dbKey = 'CampusKing_v3.0.0_' + uid;
+    const dbKey = 'CampusKing_v3.1.0_' + uid;
     const savedData = localStorage.getItem(dbKey);
 
     if (savedData) {
@@ -170,7 +170,7 @@ function saveData() {
         lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
     };
 
-    const dbKey = 'CampusKing_v3.0.0_' + currentUser.uid;
+    const dbKey = 'CampusKing_v3.1.0_' + currentUser.uid;
     const localObj = JSON.parse(JSON.stringify(storageObj)); 
     delete localObj.lastUpdated; 
     localStorage.setItem(dbKey, JSON.stringify(localObj));
@@ -198,15 +198,19 @@ function syncFromCloud(uid) {
             
             parseAndApplyData(cloudData);
             
-            const dbKey = 'CampusKing_v3.0.0_' + uid;
+            const dbKey = 'CampusKing_v3.1.0_' + uid;
             localStorage.setItem(dbKey, JSON.stringify(cloudData));
 
             refreshUI();
-            if(statusBtn) statusBtn.innerText = '學生';
+            if(statusBtn) {
+                statusBtn.innerText = (uid === '8OeziUfXrKXot4l60U2keePhOwS2') ? '👑 管理員' : '學生';
+            }
         } else {
             console.log("☁️ 此帳號尚無雲端資料，將自動上傳本地資料...");
             saveData();
-            if(statusBtn) statusBtn.innerText = '學生';
+            if(statusBtn) {
+                statusBtn.innerText = (uid === '8OeziUfXrKXot4l60U2keePhOwS2') ? '👑 管理員' : '學生';
+            }
         }
     }).catch((error) => {
         console.error("同步失敗:", error);

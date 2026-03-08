@@ -1,6 +1,6 @@
 # 👑 校園王 (CampusKing) - 數位學園
 
-![Version](https://img.shields.io/badge/Version-v3.0.1-blue.svg)![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20PWA-success.svg)
+![Version](https://img.shields.io/badge/Version-v3.1.0-blue.svg)![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20PWA-success.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 **校園王 (CampusKing)** 是一款專為大學生打造的「全方位校園生活儀表板」。
@@ -60,7 +60,7 @@
 > **💡 開發架構提示：**
 > 為確保系統穩定性，本專案的「前端介面版本 (UI Version)」與「本地資料庫結構版本 (Data Schema Version)」採分離設計。日常的功能迭代只需推進 UI 版本號；僅在資料結構發生必須轉換的重大變更時，才需升級底層的 Data Version。
 
-### git commit 寫法
+    ### git commit 寫法
 本專案建議遵循 [約定式提交 (Conventional Commits)](https://www.conventionalcommits.org/zh-hant/v1.0.0/) 規範，讓版本紀錄更易讀，並能對應版本號的升級。
 
 **提交訊息格式：**
