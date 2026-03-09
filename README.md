@@ -60,7 +60,7 @@
 > **💡 開發架構提示：**
 > 為確保系統穩定性，本專案的「前端介面版本 (UI Version)」與「本地資料庫結構版本 (Data Schema Version)」採分離設計。日常的功能迭代只需推進 UI 版本號；僅在資料結構發生必須轉換的重大變更時，才需升級底層的 Data Version。
 
-    ### git commit 寫法
+### git commit 寫法
 本專案建議遵循 [約定式提交 (Conventional Commits)](https://www.conventionalcommits.org/zh-hant/v1.0.0/) 規範，讓版本紀錄更易讀，並能對應版本號的升級。
 
 **提交訊息格式：**
@@ -116,8 +116,6 @@ CampusKing/
     ├── accounting.js   # 記帳功能 (收支統計)
     ├── calendar.js     # 行事曆功能
     ├── lottery.js      # 幸運籤筒功能
-    ├── learning.js     # 學習進度追蹤
-    ├── notes.js        # 快述記事本
     ├── anniversary.js  # 紀念日倒數
     └── semester.js     # 學期設定與管理
 
