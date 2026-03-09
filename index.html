@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="css/landing.css">
 </head>
 <body>
-    <div class="split-layout" id="landing-page"style="opacity: 0; transition: opacity 0.3s;">
+    <div class="split-layout" id="landing-page" style="opacity: 0; transition: opacity 0.3s;">
         <div class="mobile-header">
             <div class="brand-logo">
                 <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png" width="28" height="28" alt="Logo">
@@ -27,13 +27,17 @@
                 CampusKing
             </div>
             <div class="hero-text">
-                <h1>掌握校園生活，<br>從這裡開始。</h1>
-                <p>課表、成績、記帳、作業追蹤，專為學生打造的極致數位助理。</p>
+                <h1>你的專屬校園生存<br>導航系統</h1>
             </div>
-            <div class="news-widget" id="dynamic-news-widget">
+            
+            <div class="news-widget-mini" onclick="document.getElementById('dynamic-news-widget').classList.toggle('show')">
+                <span class="pulse-dot"></span> 系統最新動態公告
+            </div>
+            <div class="news-widget hidden" id="dynamic-news-widget">
                 <h3>✨ 最新系統動態</h3>
                 <div id="news-loading" style="font-size: 0.9rem; opacity: 0.8;">載入中...</div>
             </div>
+
             <div style="position: absolute; bottom: 20px; left: 0; width: 100%; text-align: center; font-size: 0.85rem; opacity: 0.6; pointer-events: none;">
                 &copy; 2026 CampusKing. All rights reserved.
             </div>
@@ -41,33 +45,37 @@
         <div class="right-panel">
             <div class="login-wrapper">
                 <button class="btn-close-modal" onclick="closeLoginModal()">✖</button>
-                <h2>歡迎使用 👋</h2>
-                <p class="subtitle">登入以存取您的專屬數位學園</p>
-                <div class="input-group">
-                    <label>電子信箱</label>
-                    <input type="email" id="email" placeholder="student@example.com">
-                </div>
-                <div class="input-group">
-                    <label>密碼</label>
-                    <input type="password" id="password" placeholder="請輸入6位數以上密碼">
-                </div>
-                <div class="login-options">
-                    <label style="display:flex; align-items:center; cursor:pointer;">
-                        <input type="checkbox" id="chk-remember" style="margin-right: 8px; width:16px; height:16px; accent-color: var(--primary);" checked> 保持登入
-                    </label>
-                    <a onclick="forgotPassword()">忘記密碼？</a>
-                </div>
-                <button class="btn-main" onclick="handleLogin()" id="btn-submit">登 入</button>
-                <div class="divider">或使用其他方式快速開始</div>
-                <div class="social-login">
-                    <button class="btn-social" onclick="loginWithGoogle()">
-                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
-                        Google
+                <h2>歡迎使用 👑</h2>
+                <p class="subtitle">一鍵登入，即刻開啟你的校園霸業</p>
+                
+                <div class="primary-actions">
+                    <button class="btn-massive btn-google-massive" onclick="loginWithGoogle()">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="24">
+                        使用 Google 一鍵登入
                     </button>
-                    <button class="btn-social" onclick="loginAnonymously()">
-                        👻 訪客試用
+                    <button class="btn-massive btn-guest-massive" onclick="loginAnonymously()">
+                        👻 免裝備新手試用體驗
                     </button>
                 </div>
+
+                <div class="divider">或使用傳統信箱登入</div>
+
+                <div class="secondary-login">
+                    <div class="input-group">
+                        <input type="email" id="email" placeholder="電子信箱">
+                    </div>
+                    <div class="input-group" style="margin-bottom: 10px;">
+                        <input type="password" id="password" placeholder="密碼 (至少6位數)">
+                    </div>
+                    <div class="login-options">
+                        <label style="display:flex; align-items:center; cursor:pointer;">
+                            <input type="checkbox" id="chk-remember" style="margin-right: 8px; width:16px; height:16px; accent-color: var(--primary);" checked> 保持登入
+                        </label>
+                        <a onclick="forgotPassword()">忘記密碼？</a>
+                    </div>
+                    <button class="btn-main-outline" onclick="handleLogin()" id="btn-submit">信箱登入</button>
+                </div>
+
                 <div class="toggle-mode">
                     <span id="toggle-text" style="color: var(--text-muted); font-weight: normal;">還沒有帳號？</span>
                     <span onclick="registerAccount()" id="toggle-btn">立即註冊</span>
