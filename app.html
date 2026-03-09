@@ -63,10 +63,8 @@
                 
                 <div style="font-size: 0.75rem; color: #999; margin: 15px 0 5px 10px; font-weight: bold;">小工具</div>
                 <button class="nav-item" id="btn-grade-calc" onclick="switchTab('grade-calc')">🧮 配分筆記</button>
-                <button class="nav-item" id="btn-notes" onclick="switchTab('notes')">📝 快速記事</button>
                 <button class="nav-item" id="btn-lottery" onclick="switchTab('lottery')">🎰 幸運籤筒</button>
                 <button class="nav-item" id="btn-anniversary" onclick="switchTab('anniversary')">💝 紀念日倒數</button>
-                <button class="nav-item" id="btn-learning" onclick="switchTab('learning')">📚 學習目標</button>
 
                 <div style="font-size: 0.75rem; color: #999; margin: 15px 0 5px 10px; font-weight: bold;">系統</div>
                 <button class="nav-item" id="btn-settings" onclick="switchTab('settings')">⚙️ 個人設定</button>
@@ -448,25 +446,11 @@
 					</div>
 				</div>
 			</div>
-            <div id="view-notes" style="display: none;">
-				<div class="card">
-					<h2>📝 快速記事本</h2>
-					<div id="notes-list" style="min-height: 200px;"> </div>
-					<button class="btn btn-add" onclick="openNoteModal()">+ 新增記事</button>
-				</div>
-			</div>
             <div id="view-anniversary" style="display: none;">
 				<div class="card">
 					<h2>💝 紀念日 & 倒數</h2>
 					<div id="anniversary-list" style="min-height: 200px;"> </div>
 					<button class="btn btn-add" onclick="openAnniversaryModal()">+ 新增紀念日</button>
-				</div>
-			</div>
-            <div id="view-learning" style="display: none;">
-				<div class="card">
-					<h2>📚 本學期讀書計畫</h2>
-					<div id="learning-list" style="min-height: 200px;"> </div>
-					<button class="btn btn-add" onclick="openLearningModal()">+ 新增目標</button>
 				</div>
 			</div>
             <div id="view-notifications" style="display: none;">
@@ -566,12 +550,8 @@
 			<div id="view-admin" style="display: none;">
 				<div class="card">
 					<h2 style="border-bottom-color: #fad390;">👑 系統管理台 (Admin Dashboard)</h2>
-					<p style="color: #888; font-size: 0.9rem; margin-top: 5px;">歡迎回來，管理員。您可以在此掌控校園王系統的全域設定與公告。</p>
+					<p style="color: #888; font-size: 0.9rem; margin-top: 5px;">管理員您好，您可以在此掌控校園王系統的全域設定與公告。</p>
 					<div style="display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
-						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; cursor: pointer; background: #fafafa; transition: 0.2s;" onclick="openNewsManagerModal()" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
-							<h3 style="color: var(--primary); margin: 0 0 10px 0; font-size: 1.1rem;">📢 首頁動態發布</h3>
-							<p style="font-size: 0.85rem; color: #666; line-height: 1.4;">新增或刪除在登入頁面顯示的最新更新、系統公告與維護通知。</p>
-						</div>
 						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; background: #fafafa;">
 							<h3 style="color: #2ecc71; margin: 0 0 10px 0; font-size: 1.1rem;">📊 系統狀態</h3>
 							<div style="font-size: 0.85rem; color: #666; line-height: 1.6;">
@@ -579,9 +559,27 @@
 								<div>🔥 Firebase 連線：<span style="color:#2ecc71; font-weight:bold;">正常</span></div>
 							</div>
 						</div>
+						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; cursor: pointer; background: #fafafa; transition: 0.2s;" onclick="openNewsManagerModal()" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
+							<h3 style="color: var(--primary); margin: 0 0 10px 0; font-size: 1.1rem;">📢 首頁動態發布</h3>
+							<p style="font-size: 0.85rem; color: #666; line-height: 1.4;">新增或刪除在登入頁面顯示的最新更新、系統公告與維護通知。</p>
+						</div>
 						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; cursor: pointer; background: #fafafa; transition: 0.2s;" onclick="openBroadcastModal()" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
 							<h3 style="color: #9b59b6; margin: 0 0 10px 0; font-size: 1.1rem;">📡 發送系統推播</h3>
 							<p style="font-size: 0.85rem; color: #666; line-height: 1.4;">發送全域通知給所有使用者。通知將直接發送至他們的通知中心裡。</p>
+						</div>
+					</div>
+					<div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
+						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; background: #fafafa; box-shadow: none;">
+							<h3 style="color: var(--primary); margin: 0 0 10px 0; font-size: 1.05rem; border-bottom: 2px dashed #ddd; padding-bottom: 8px;">📢 目前的首頁動態</h3>
+							<div id="admin-display-news" style="max-height: 350px; overflow-y: auto; padding-right: 5px;">
+								<p style="text-align:center; color:#999; font-size:0.9rem; margin-top:20px;">載入中...</p>
+							</div>
+						</div>
+						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; background: #fafafa; box-shadow: none;">
+							<h3 style="color: #9b59b6; margin: 0 0 10px 0; font-size: 1.05rem; border-bottom: 2px dashed #ddd; padding-bottom: 8px;">📡 已發送的系統推播</h3>
+							<div id="admin-display-broadcasts" style="max-height: 350px; overflow-y: auto; padding-right: 5px;">
+								<p style="text-align:center; color:#999; font-size:0.9rem; margin-top:20px;">載入中...</p>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -918,16 +916,6 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeAccountingModal()">關閉</button>
 		</div>
 	</div>
-    <div id="note-modal" class="modal">
-		<div class="modal-content" style="text-align: left;">
-			<h3 style="text-align: center; margin-top:0;">✏️ 新增記事</h3>
-			<div class="input-group">
-				<textarea id="input-note-content" placeholder="在這裡寫下任何事情..." style="width: 100%; height: 120px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; resize: none; font-size: 1rem;"></textarea>
-			</div>
-			<button class="btn" style="width: 100%; background: #333;" onclick="addNote()">+ 儲存筆記</button>
-			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeNoteModal()">取消</button>
-		</div>
-	</div>
     <div id="anniversary-modal" class="modal">
 		<div class="modal-content">
 			<h3 style="text-align: center; margin-top:0;">📅 新增紀念日</h3>
@@ -941,20 +929,6 @@
 			</div>
 			<button class="btn" style="width: 100%; background: var(--primary);" onclick="addAnniversary()">+ 確定新增</button>
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeAnniversaryModal()">取消</button>
-		</div>
-	</div>
-    <div id="learning-modal" class="modal">
-		<div class="modal-content" style="text-align: left;">
-			<h3 style="text-align: center;">📚 設定目標</h3>
-			<div class="input-group"><label>科目</label><input type="text" id="input-learn-subject"></div>
-			<div class="input-group"><label>內容</label><input type="text" id="input-learn-content"></div>
-			<div style="display:flex; gap:10px;">
-				<div class="input-group"><label>目前</label><input type="number" id="input-learn-current" value="0"></div>
-				<div class="input-group"><label>目標</label><input type="number" id="input-learn-total"></div>
-				<div class="input-group"><label>單位</label><input type="text" id="input-learn-unit" value="頁"></div>
-			</div>
-			<button class="btn" style="background:var(--primary);" onclick="addLearningTask()">+ 開始</button>
-			<button class="btn" style="background:transparent; color:#666; border:1px solid #ddd; margin-top:10px;" onclick="closeLearningModal()">取消</button>
 		</div>
 	</div>
 	<div id="custom-modal" class="modal" style="z-index: 9999;">
@@ -1045,9 +1019,7 @@
 	<script src="js/main.js"></script>
 	<script src="js/calendar.js"></script>
 	<script src="js/accounting.js"></script>
-	<script src="js/notes.js"></script>
 	<script src="js/anniversary.js"></script>
-	<script src="js/learning.js"></script>
 	<script src="js/lottery.js"></script>
 	<script src="js/homework.js"></script>
 	<script src="js/gradecalc.js"></script>

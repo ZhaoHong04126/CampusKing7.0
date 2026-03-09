@@ -108,12 +108,10 @@ function loadSemesterData(sem) {
         midtermExams: {},   
         calendarEvents: [], 
         accounting: [],     
-        notes: [],          
         startDate: "",      
         endDate: "",        
         homework: [],       
         gradeCalcNotes: [], 
-        learning: []
     };
 
     weeklySchedule = allData[sem].schedule;             
@@ -122,11 +120,9 @@ function loadSemesterData(sem) {
     midtermExams = allData[sem].midtermExams || {};     
     calendarEvents = allData[sem].calendarEvents || []; 
     accountingList = allData[sem].accounting || [];     
-    quickNotes = allData[sem].notes || [];              
     anniversaryList = allData[sem].anniversaries || []; 
     homeworkList = allData[sem].homework || [];         
     gradeCalcNotes = allData[sem].gradeCalcNotes || []; 
-    learningList = allData[sem].learning || [];         
     lotteryList = allData[sem].lottery || JSON.parse(JSON.stringify(defaultLotteryData));
     semesterStartDate = allData[sem].startDate || "";
     semesterEndDate = allData[sem].endDate || "";
@@ -144,11 +140,9 @@ function saveData() {
         midtermExams: midtermExams,                 
         calendarEvents: calendarEvents,             
         accounting: accountingList,                 
-        notes: quickNotes,                          
         anniversaries: anniversaryList,             
         startDate: semesterStartDate,               
         endDate: semesterEndDate,                   
-        learning: learningList,                     
         homework: homeworkList,                     
         gradeCalcNotes: gradeCalcNotes,             
     };
@@ -244,7 +238,6 @@ function refreshUI() {
     if (typeof renderCategorySettingsInputs === 'function') renderCategorySettingsInputs(); 
     if (typeof renderCreditSettings === 'function') renderCreditSettings();                 
     if (typeof renderAccounting === 'function') renderAccounting();                         
-    if (typeof renderNotes === 'function') renderNotes();                                   
     if (typeof renderAnniversaries === 'function') renderAnniversaries();                   
     if (typeof renderSemesterSettings === 'function') renderSemesterSettings();             
     if (typeof renderLottery === 'function') renderLottery();                               

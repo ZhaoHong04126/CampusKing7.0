@@ -101,9 +101,8 @@ function switchTab(tabName, addToHistory = true) {
         'settings', 'chart', 'credits',
         'regular', 'midterm', 'grades',
         'exams-hub', 'grade-manager', 'accounting',
-        'notes', 'anniversary', 'learning',
-        'lottery', 'homework','grade-calc',
-        'notifications', 'admin'
+        'anniversary', 'lottery', 'homework',
+        'grade-calc','notifications', 'admin'
     ];
     
     views.forEach(view => {
@@ -133,11 +132,9 @@ function switchTab(tabName, addToHistory = true) {
             case 'calendar': pageTitle = "行事曆"; break;
             case 'grade-manager': pageTitle = "成績管理"; break;
             case 'accounting': pageTitle = "學期記帳"; break;
-            case 'notes': pageTitle = "記事本"; break;
             case 'anniversary': pageTitle = "紀念日"; break;
             case 'settings': pageTitle = "個人設定"; break;
             case 'lottery': pageTitle = "幸運籤筒"; break;
-            case 'learning': pageTitle = "學習進度"; break;
             case 'homework': pageTitle = "作業管理"; break;
             case 'grade-calc': pageTitle = "配分筆記"; break;
             case 'notifications': pageTitle = "通知中心"; break;
@@ -167,10 +164,13 @@ function switchTab(tabName, addToHistory = true) {
         if (typeof switchAccTab === 'function') switchAccTab('summary');
         else if (typeof renderAccounting === 'function') renderAccounting();
     }
-    if (tabName === 'learning' && typeof renderLearning === 'function') renderLearning();
     if (tabName === 'lottery' && typeof renderLottery === 'function') renderLottery();
     if (tabName === 'homework' && typeof renderHomework === 'function') renderHomework();
     if (tabName === 'grade-calc' && typeof renderGradeCalc === 'function') renderGradeCalc();
+    if (tabName === 'admin') {
+        if (typeof renderAdminNewsDisplay === 'function') renderAdminNewsDisplay();
+        if (typeof renderAdminBroadcastDisplay === 'function') renderAdminBroadcastDisplay();
+    }
     
     // 切換頁面後，若是手機版則自動收起側邊欄
     const sidebar = document.getElementById('sidebar');
@@ -643,13 +643,22 @@ function renderNewsManagerList() {
     }
     let html = '';
     publicNewsList.forEach((item, index) => {
+        let timeString = '';
+        if (item.time) {
+            const d = new Date(item.time);
+            timeString = `${d.getMonth()+1}/${d.getDate()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+        }
+
         html += `
         <div style="display:flex; justify-content:space-between; align-items:center; padding: 10px 0; border-bottom: 1px solid #eee;">
-            <div>
-                <span style="background: ${item.bgColor}; color: ${item.color}; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin-right: 5px; font-weight: bold;">${item.tag}</span>
-                <span style="font-size: 0.9rem; color: var(--text-main);">${item.content}</span>
+            <div style="flex: 1; padding-right: 10px;">
+                <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                    <span style="background: ${item.bgColor}; color: ${item.color}; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin-right: 8px; font-weight: bold;">${item.tag}</span>
+                    <span style="font-size: 0.75rem; color: #aaa;">${timeString}</span>
+                </div>
+                <div style="font-size: 0.9rem; color: var(--text-main);">${item.content}</div>
             </div>
-            <button onclick="deletePublicNews(${index})" style="background:transparent; border:none; color:#e74c3c; cursor:pointer; font-size: 1.1rem;">🗑️</button>
+            <button onclick="deletePublicNews(${index})" style="background:transparent; border:none; color:#e74c3c; cursor:pointer; font-size: 1.1rem; padding: 5px;">🗑️</button>
         </div>`;
     });
     listDiv.innerHTML = html;
@@ -671,7 +680,8 @@ window.addPublicNews = function() {
     else if (colorType === 'security') { bgColor = 'rgba(231, 76, 60, 0.3)'; color = '#e74c3c'; }
     else { bgColor = 'rgba(52, 152, 219, 0.3)'; color = '#2980b9'; }
 
-    publicNewsList.unshift({ tag, bgColor, color, content });
+    // 加入 ISO 格式的時間紀錄
+publicNewsList.unshift({ tag, bgColor, color, content, time: new Date().toISOString() });
 
     db.collection("public").doc("landing_news").set({
         items: publicNewsList,
@@ -680,11 +690,13 @@ window.addPublicNews = function() {
         document.getElementById('input-news-tag').value = '';
         document.getElementById('input-news-content').value = '';
         renderNewsManagerList();
+        if (typeof renderAdminNewsDisplay === 'function') renderAdminNewsDisplay();
         showAlert("✨ 動態已成功發佈！登出回首頁即可看到。");
     }).catch((error) => {
         console.error("發佈動態失敗：", error);
         showAlert("❌ 發佈失敗！這通常是 Firebase 資料庫權限不足的問題。\n請檢查 Firestore Security Rules。\n\n錯誤細節: " + error.message, "系統錯誤");
     });
+
 }
 
 window.deletePublicNews = function(index) {
@@ -751,6 +763,7 @@ window.sendBroadcast = function() {
                     lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                 }).then(() => {
                     closeBroadcastModal();
+                    if (typeof renderAdminBroadcastDisplay === 'function') renderAdminBroadcastDisplay();
                     showAlert("🚀 廣播已成功寫入資料庫！\n使用者下次登入或重整時將會收到通知。");
                 }).catch(error => {
                     console.error("廣播發送失敗：", error);
@@ -772,4 +785,75 @@ window.checkSystemBroadcasts = function() {
             }
         }
     }).catch(e => console.log("讀取系統廣播失敗 (可忽略):", e));
+}
+
+/* ---- 📌 管理台：渲染 首頁動態 與 系統推播 展示區 ---- */
+
+window.renderAdminNewsDisplay = function() {
+    const displayDiv = document.getElementById('admin-display-news');
+    if (!displayDiv) return;
+
+    db.collection("public").doc("landing_news").get().then(doc => {
+        if (doc.exists && doc.data().items && doc.data().items.length > 0) {
+            const newsItems = doc.data().items;
+            let html = '';
+            newsItems.forEach((item) => {
+                let timeHtml = '';
+                if (item.time) {
+                    const timeString = new Date(item.time).toLocaleString('zh-TW', { 
+                        month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' 
+                    });
+                    timeHtml = `<span style="font-size: 0.75rem; color: #999; margin-left: auto;">${timeString}</span>`;
+                }
+
+                html += `
+                <div style="padding: 12px 10px; border-bottom: 1px solid #eaeaea; display: flex; flex-direction: column; gap: 5px;">
+                    <div style="display: flex; align-items: center;">
+                        <span style="background: ${item.bgColor}; color: ${item.color}; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;">${item.tag}</span>
+                        ${timeHtml}
+                    </div>
+                    <div style="font-size: 0.9rem; color: var(--text-main); line-height: 1.4; margin-top: 4px;">${item.content}</div>
+                </div>`;
+            });
+            displayDiv.innerHTML = html;
+        } else {
+            displayDiv.innerHTML = '<p style="color:#999; text-align:center; padding:20px;">目前無動態資料</p>';
+        }
+    }).catch(e => {
+        displayDiv.innerHTML = '<p style="color:#e74c3c; text-align:center;">讀取失敗，請檢查網路狀態。</p>';
+    });
+}
+
+window.renderAdminBroadcastDisplay = function() {
+    const displayDiv = document.getElementById('admin-display-broadcasts');
+    if (!displayDiv) return;
+
+    db.collection("public").doc("broadcasts").get().then(doc => {
+        if (doc.exists && doc.data().items && doc.data().items.length > 0) {
+            const broadcasts = doc.data().items;
+            let html = '';
+            broadcasts.forEach((b) => {
+                let borderColor = '#1565c0'; // 預設藍色
+                if (b.type === 'success') borderColor = '#2ecc71';
+                else if (b.type === 'warning') borderColor = '#f39c12';
+                else if (b.type === 'danger') borderColor = '#e74c3c';
+
+                const timeString = new Date(b.time).toLocaleString('zh-TW', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
+
+                html += `
+                <div style="padding: 10px 12px; margin-bottom: 10px; background: white; border-radius: 8px; border-left: 4px solid ${borderColor}; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 4px;">
+                        <div style="font-weight: bold; font-size: 0.95rem; color: var(--text-main);">${b.title}</div>
+                        <div style="font-size: 0.75rem; color: #999; white-space: nowrap; margin-left: 10px;">${timeString}</div>
+                    </div>
+                    <div style="font-size: 0.85rem; color: #666; line-height: 1.4;">${b.message}</div>
+                </div>`;
+            });
+            displayDiv.innerHTML = html;
+        } else {
+            displayDiv.innerHTML = '<p style="color:#999; text-align:center; padding:20px;">目前無推播紀錄</p>';
+        }
+    }).catch(e => {
+        displayDiv.innerHTML = '<p style="color:#e74c3c; text-align:center;">讀取失敗，請檢查網路狀態。</p>';
+    });
 }

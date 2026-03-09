@@ -50,9 +50,7 @@ function addNewSemester() {
                     midtermExams: {},
                     calendarEvents: [],
                     accounting: [],
-                    notes: [],
                     anniversaries: [],
-                    learning: [],
                 };
             }
 

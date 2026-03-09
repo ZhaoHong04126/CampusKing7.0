@@ -1,4 +1,4 @@
-const CACHE_NAME = 'CampusKing_v3.2.0_'; 
+const CACHE_NAME = 'CampusKing_v3.2.1_'; 
 
 const ASSETS_TO_CACHE = [
     './',
@@ -24,9 +24,7 @@ const ASSETS_TO_CACHE = [
 	'./js/main.js',
 	'./js/calendar.js',
 	'./js/accounting.js',
-	'./js/notes.js',
 	'./js/anniversary.js',
-	'./js/learning.js',
 	'./js/lottery.js',
 	'./js/homework.js',
 	'./js/gradecalc.js',

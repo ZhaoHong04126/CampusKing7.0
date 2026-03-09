@@ -71,17 +71,11 @@ let calendarEvents = [];
 // 當前學期的記帳資料
 let accountingList = [];
 
-// 快速筆記的資料列表
-let quickNotes = [];
-
 // 學期成績計算的筆記資料
 let gradeCalcNotes = [];
 
 // 紀念日追蹤的資料列表
 let anniversaryList = [];
-
-// 學習計畫與進度的資料列表
-let learningList = [];
 
 // 籤筒模組的資料列表
 let lotteryList = [];
