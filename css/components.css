@@ -304,14 +304,10 @@ tr:last-child td {
 }
 
 /* 課表格子的過渡動畫 */
-.weekly-table td {
-    transition: background 0.2s;
-}
+.weekly-table td { transition: background 0.2s; }
 
 /* 課表格子的懸浮變暗效果 */
-.weekly-table td:hover {
-    filter: brightness(0.95);
-}
+.weekly-table td:hover { filter: brightness(0.95); }
 
 
 
@@ -328,9 +324,7 @@ tr:last-child td {
 }
 
 /* 分頁區塊滾動條自訂樣式 */
-.week-tabs::-webkit-scrollbar {
-    height: 6px;
-}
+.week-tabs::-webkit-scrollbar { height: 6px; }
 
 /* 分頁區塊滾動條軌道自訂樣式 */
 .week-tabs::-webkit-scrollbar-track {
@@ -346,9 +340,7 @@ tr:last-child td {
 }
 
 /* 分頁區塊滾動條拉桿懸浮樣式 */
-.week-tabs::-webkit-scrollbar-thumb:hover {
-    background: #aab2b8;
-}
+.week-tabs::-webkit-scrollbar-thumb:hover { background: #aab2b8; }
 
 /* 單一切換分頁按鈕 */
 .tab-btn {
@@ -404,26 +396,18 @@ tr:last-child td {
 }
 
 /* 課表單格滑鼠懸浮效果 */
-#weekly-schedule-body td:hover {
-    background-color: #fafafa;
-}
+#weekly-schedule-body td:hover { background-color: #fafafa; }
 
 /* 課表選取中格子的滑鼠懸浮效果 */
-#weekly-schedule-body td.cell-selected:hover {
-    background-color: #b2dfdb;
-}
+#weekly-schedule-body td.cell-selected:hover { background-color: #b2dfdb; }
 
 
 
 /* 表格列的底線分隔 */
-tr.period-time-row {
-    border-bottom: 1px solid var(--border);
-}
+tr.period-time-row { border-bottom: 1px solid var(--border); }
 
 /* 移除最後一列的底線分隔 */
-tr.period-time-row:last-child {
-    border-bottom: none;
-}
+tr.period-time-row:last-child { border-bottom: none; }
 
 /* 讓輸入框自動撐滿所在欄位 (td) 的寬度，不會破版 */
 .period-name-input, .period-time-input {
@@ -441,9 +425,7 @@ tr.period-time-row:last-child {
 }
 
 /* 取消原本特別寫死的高度，讓時間輸入框保持簡潔 */
-.period-time-input {
-    font-weight: normal;
-}
+.period-time-input { font-weight: normal; }
 
 /* 點擊時的發光效果 */
 .period-name-input:focus, .period-time-input:focus {
@@ -461,9 +443,7 @@ tr.period-time-row:last-child {
 }
 
 /* 深色模式適配：表格列底線 */
-[data-theme="dark"] tr.period-time-row {
-    border-bottom: 1px solid #444;
-}
+[data-theme="dark"] tr.period-time-row { border-bottom: 1px solid #444; }
 
 
 

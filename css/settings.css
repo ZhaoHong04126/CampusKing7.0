@@ -1,17 +1,3 @@
-/* 資訊頁面(Info)內的無序列表縮排與邊距 */
-#view-info ul {
-    padding-left: 20px;
-    margin: 10px 0;
-}
-
-/* 資訊頁面(Info)內的列表項目文字顏色與底距 */
-#view-info li {
-    margin-bottom: 8px;
-    color: var(--text-sub);
-}
-
-
-
 /* 設定頁面的列表容器，採垂直彈性排版 */
 .settings-list {
     display: flex;
@@ -32,23 +18,13 @@
 }
 
 /* 移除設定清單最後一個項目的底線 */
-.settings-item:last-child {
-    border-bottom: none;
-}
+.settings-item:last-child { border-bottom: none; }
 
 /* 設定項目點擊時的背景回饋效果 */
-.settings-item:active {
-    background-color: #f9f9f9;
-}
+.settings-item:active { background-color: #f9f9f9; }
 
 /* 設定項目的左側圖示間距與大小 */
-.settings-icon {
-    margin-right: 10px;
-    font-size: 1.2rem;
-}
+.settings-icon { margin-right: 10px; font-size: 1.2rem; }
 
 /* 設定項目的右側箭頭圖示顏色與大小 */
-.settings-arrow {
-    color: #ccc;
-    font-size: 0.9rem;
-}
+.settings-arrow { color: #ccc; font-size: 0.9rem; }

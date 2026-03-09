@@ -59,17 +59,9 @@ body.dark-mode[data-page="grade-manager"] { background: #1b2e23; }
 body[data-page="accounting"] { background: linear-gradient(120deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); }
 body.dark-mode[data-page="accounting"] { background: #331e21; }
 
-/* 筆記頁面專屬背景漸層設定 */
-body[data-page="notes"] { background: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%); }
-body.dark-mode[data-page="notes"] { background: #222; }
-
 /* 紀念日頁面專屬背景漸層設定 */
 body[data-page="anniversary"] { background: linear-gradient(120deg, #ffdde1 0%, #ee9ca7 100%); }
 body.dark-mode[data-page="anniversary"] { background: #3a1c20; }
-
-/* 學習進度頁面專屬背景漸層設定 */
-body[data-page="learning"] { background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%); }
-body.dark-mode[data-page="learning"] { background: #122c2a; }
 
 /* 設定與資訊頁面專屬背景漸層設定 */
 body[data-page="settings"], body[data-page="info"] { background: linear-gradient(to top, #dfe9f3 0%, white 100%); }
@@ -95,11 +87,6 @@ h2 {
     justify-content: space-between;
     align-items: center;
     color: var(--text-main);
-}
-
-/* 大學專屬顯示元素，預設隱藏 */
-.uni-only {
-    display: none;
 }
 
 /* 彈出視窗的放大出現動畫 */
