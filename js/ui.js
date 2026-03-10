@@ -125,9 +125,9 @@ function switchTab(tabName, addToHistory = true) {
     const titleEl = document.getElementById('app-title');
     
     if (tabName === 'schedule') {
-        if (titleEl) titleEl.innerText = '📅 校園王';
+        if (titleEl) titleEl.innerText = '大學神隊友';
     } else {
-        let pageTitle = "校園王";
+        let pageTitle = "大學神隊友";
         switch(tabName) {
             case 'calendar': pageTitle = "行事曆"; break;
             case 'grade-manager': pageTitle = "成績管理"; break;
@@ -607,7 +607,7 @@ window.toggleMobileMenu = function() {
 /* ========================================================================== */
 
 let publicNewsList = [];
-
+// 管理員前置作業(輸入密碼認證)
 window.openNewsManagerModal = function() {
     showPrompt("請輸入管理員密碼：", "", "🔒 權限驗證").then(password => {
         if (password === null) return; 
@@ -634,7 +634,7 @@ window.openNewsManagerModal = function() {
 window.closeNewsManagerModal = function() {
     document.getElementById('news-manager-modal').style.display = 'none';
 }
-
+// 管理員撰寫動態
 function renderNewsManagerList() {
     const listDiv = document.getElementById('news-manager-list');
     if (publicNewsList.length === 0) {
@@ -663,7 +663,7 @@ function renderNewsManagerList() {
     });
     listDiv.innerHTML = html;
 }
-
+// 發布動態
 window.addPublicNews = function() {
     const tag = document.getElementById('input-news-tag').value.trim();
     const colorType = document.getElementById('input-news-color').value;
@@ -681,7 +681,7 @@ window.addPublicNews = function() {
     else { bgColor = 'rgba(52, 152, 219, 0.3)'; color = '#2980b9'; }
 
     // 加入 ISO 格式的時間紀錄
-publicNewsList.unshift({ tag, bgColor, color, content, time: new Date().toISOString() });
+    publicNewsList.unshift({ tag, bgColor, color, content, time: new Date().toISOString() });
 
     db.collection("public").doc("landing_news").set({
         items: publicNewsList,
@@ -698,7 +698,7 @@ publicNewsList.unshift({ tag, bgColor, color, content, time: new Date().toISOStr
     });
 
 }
-
+// 刪除動態
 window.deletePublicNews = function(index) {
     showConfirm("確定要刪除這則首頁動態嗎？").then(ok => {
         if(ok) {
