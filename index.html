@@ -4,13 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>校園王 | CampusKing</title>
-
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/landing.css">
+    <style>
+        /* 新增：左側核心功能亮點區塊的樣式 */
+        .feature-highlights {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 400px;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
+            border-radius: 16px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        .feature-item:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.25);
+        }
+        .feature-icon {
+            font-size: 1.8rem;
+        }
+        .feature-text strong {
+            display: block;
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+        .feature-text small {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+    </style>
 </head>
 <body>
     <div class="split-layout" id="landing-page" style="opacity: 0; transition: opacity 0.3s;">
@@ -28,16 +63,31 @@
             </div>
             <div class="hero-text">
                 <h1>你的專屬校園生存<br>導航系統</h1>
+                <p class="hero-subtitle" style="font-size: 1.15rem; margin-top: 15px; font-weight: 500;">你的課表、社團、校園生活，一站搞定</p>
             </div>
-            
-            <div class="news-widget-mini" onclick="document.getElementById('dynamic-news-widget').classList.toggle('show')">
-                <span class="pulse-dot"></span> 系統最新動態公告
+            <div class="feature-highlights">
+                <div class="feature-item">
+                    <span class="feature-icon">🛡️</span>
+                    <div class="feature-text">
+                        <strong>選課避雷指南</strong>
+                        <small>學長姐真實評價，輕鬆避開雷課拿高分</small>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📅</span>
+                    <div class="feature-text">
+                        <strong>學生活動行事曆</strong>
+                        <small>校園大小事與社團活動，一手掌握不錯過</small>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">💰</span>
+                    <div class="feature-text">
+                        <strong>學生專屬記帳</strong>
+                        <small>輕鬆管理生活費與各項開銷，月底不再吃土</small>
+                    </div>
+                </div>
             </div>
-            <div class="news-widget hidden" id="dynamic-news-widget">
-                <h3>✨ 最新系統動態</h3>
-                <div id="news-loading" style="font-size: 0.9rem; opacity: 0.8;">載入中...</div>
-            </div>
-
             <div style="position: absolute; bottom: 20px; left: 0; width: 100%; text-align: center; font-size: 0.85rem; opacity: 0.6; pointer-events: none;">
                 &copy; 2026 CampusKing. All rights reserved.
             </div>
@@ -45,9 +95,8 @@
         <div class="right-panel">
             <div class="login-wrapper">
                 <button class="btn-close-modal" onclick="closeLoginModal()">✖</button>
-                <h2>歡迎使用 👑</h2>
-                <p class="subtitle">一鍵登入，即刻開啟你的校園霸業</p>
-                
+                <h2>準備好稱霸校園了嗎？ 👑</h2>
+                <p class="subtitle">一鍵登入，全面掌握你的校園生活</p>
                 <div class="primary-actions">
                     <button class="btn-massive btn-google-massive" onclick="loginWithGoogle()">
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="24">
@@ -57,9 +106,7 @@
                         👻 免裝備新手試用體驗
                     </button>
                 </div>
-
-                <div class="divider">或使用傳統信箱登入</div>
-
+                <div class="divider">或使用 Email 登入</div>
                 <div class="secondary-login">
                     <div class="input-group">
                         <input type="email" id="email" placeholder="電子信箱">
@@ -75,40 +122,20 @@
                     </div>
                     <button class="btn-main-outline" onclick="handleLogin()" id="btn-submit">信箱登入</button>
                 </div>
-
                 <div class="toggle-mode">
-                    <span id="toggle-text" style="color: var(--text-muted); font-weight: normal;">還沒有帳號？</span>
-                    <span onclick="registerAccount()" id="toggle-btn">立即註冊</span>
+                    <span id="toggle-text" style="color: var(--text-muted); font-weight: normal;">還不是校園王？</span>
+                    <span onclick="registerAccount()" id="toggle-btn">立即加入行列</span>
                 </div>
             </div>
         </div>
     </div>
+    
     <script src="js/firebase.js"></script>
     <script>
-        db.collection("public").doc("landing_news").get().then(doc => {
-            const container = document.getElementById('dynamic-news-widget');
-            if (doc.exists && doc.data().items && doc.data().items.length > 0) {
-                let html = '<h3>✨ 最新系統動態</h3>';
-                doc.data().items.forEach(item => {
-                    html += `
-                    <div class="news-item">
-                        <span class="news-tag" style="background: ${item.bgColor}; color: ${item.color};">${item.tag}</span>
-                        <div class="news-content">${item.content}</div>
-                    </div>`;
-                });
-                container.innerHTML = html;
-            } else {
-                container.innerHTML = '<h3>✨ 最新系統動態</h3><div class="news-item"><div class="news-content">目前沒有最新動態。</div></div>';
-            }
-        }).catch(err => {
-            document.getElementById('news-loading').innerText = "無法載入最新動態";
-        });
-        
         auth.onAuthStateChanged((user) => {
             if (user) {
                 window.location.href = 'app.html';
             } else {
-                // 確認未登入後，才將畫面淡入顯示
                 document.getElementById('landing-page').style.opacity = '1';
             }
         });
@@ -123,10 +150,9 @@
                 return;
             }
 
-            // 根據是否勾選「保持登入」來設定 Firebase 的 Session 狀態
             const persistenceType = remember
-                ? firebase.auth.Auth.Persistence.LOCAL    // 關閉瀏覽器後依然保持登入
-                : firebase.auth.Auth.Persistence.SESSION; // 關閉瀏覽器分頁後自動登出
+                ? firebase.auth.Auth.Persistence.LOCAL
+                : firebase.auth.Auth.Persistence.SESSION;
 
             auth.setPersistence(persistenceType)
                 .then(() => {
@@ -163,12 +189,10 @@
             }
         }
 
-        // 開啟手機版登入視窗
         function openLoginModal() {
             document.querySelector('.right-panel').classList.add('show-modal');
         }
 
-        // 關閉手機版登入視窗
         function closeLoginModal() {
             document.querySelector('.right-panel').classList.remove('show-modal');
         }
