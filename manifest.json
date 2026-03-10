@@ -1,6 +1,6 @@
 {
   "name": "大學神隊友",
-  "short_name": "大學神隊友",
+  "short_name": "校園小幫手",
   "start_url": "./index.html",
   "description": "你的專屬大學生活導航系統：課表、行事曆、記帳一站搞定。",
   "display": "standalone",

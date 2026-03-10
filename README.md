@@ -1,9 +1,9 @@
-# 👑 校園王 (CampusKing) - 數位學園
+# 大學神隊友 - 數位學園
 
-![Version](https://img.shields.io/badge/Version-v3.2.0-blue.svg)![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20PWA-success.svg)
+![Version](https://img.shields.io/badge/Version-v3.4.0-blue.svg)![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20PWA-success.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-**校園王 (CampusKing)** 是一款專為大學生打造的「全方位校園生活儀表板」。
+**大學神隊友APP** 是一款專為大學生打造的「全方位校園生活儀表板」。
 告別散落各處的筆記與試算表，我們將課表、成績、記帳、行事曆與學習計畫完美整合在一個現代化、高質感的雲端 SaaS 介面中。
 
 ## 📊 核心管理模組
@@ -13,19 +13,19 @@
 * **🎒 作業與小考 (Homework)：** 集中管理各科作業繳交期限與得分。
 * **💰 學期記帳 (Accounting)：** 專為學生設計的收支追蹤，包含圓餅圖與折線圖收支分析。
 * **🗓️ 專屬行事曆 (Calendar)：** 整合校園活動與個人行程，支援月曆與清單雙視圖。
+* **🏃 自主學習活動 (Self-Study)：** 記錄參與講座與活動時數，滿 18 小時自動結算兌換 1 學分並同步至成績單。
 
 ### 🧰 實用小工具
 * **🧮 配分筆記：** 記錄各科教授的計分方式與目標分數。
-* **📝 快速記事：** 靈感與待辦事項隨手記。
 * **🎰 幸運籤筒：** 解決「午餐吃什麼」的千古難題。
-* **💝 紀念日：** 倒數重要日子，不再忘記。
-* **📚 學習目標：** 量化你的讀書計畫進度。
+* **💝 紀念日：** 倒數重要日子與目標，不再忘記。
 
 ### ⚙️ 系統特性
 * **雙頁面架構：** 獨立的入口落地頁 (`index.html`) 與主系統 (`app.html`)，載入更輕快。
-* **響應式設計 (RWD)：** 電腦版顯示專業側邊欄，手機版自動轉換為滑出式抽屜選單。
 * **雲端同步：** 整合 Firebase Auth 與 Firestore，資料即時備份不遺失。
 * **本地備份還原：** 支援將大學回憶打包匯出為 JSON 檔，隨時無縫還原。
+* **👑 系統管理台 (Admin Dashboard)：** 管理員專屬後台，支援全域系統推播與首頁動態發布。
+* **🚦 分階段發布與維護 (Feature Flags & Kill Switch)：** 支援「管理員內部測試 / 全站公開」雙重模組開關，以及一鍵阻擋一般使用者的「全站維護模式」，打造企業級安全架構。
 
 ## 🛠️ 技術架構
 
@@ -102,10 +102,10 @@ CampusKing/
 └── js/                 # 腳本邏輯 (Scripts)
     ├── [核心系統]
     ├── firebase.js     # Firebase 初始化與連線設定
-    ├── auth.js         # 使用者身分驗證邏輯
+    ├── auth.js         # 使用者身分驗證與登出邏輯
     ├── state.js        # 全域變數與狀態管理
     ├── main.js         # 系統啟動入口、狀態監聽
-    ├── ui.js           # 路由控制、視窗管理、通知元件
+    ├── ui.js           # 路由控制、視窗管理、通知元件、後台功能開關
     ├── data.js         # 資料庫存取 (CRUD) 封裝
     │
     ├── [功能 APP]
@@ -117,8 +117,8 @@ CampusKing/
     ├── calendar.js     # 行事曆功能
     ├── lottery.js      # 幸運籤筒功能
     ├── anniversary.js  # 紀念日倒數
-    └── semester.js     # 學期設定與管理
-
+    ├── semester.js     # 學期設定與管理
+    └── selfstudy.js    # 🏃 自主學習活動 (時數轉換學分)
 
 ```
 
