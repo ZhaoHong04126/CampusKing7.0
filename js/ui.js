@@ -125,9 +125,9 @@ function switchTab(tabName, addToHistory = true) {
     const titleEl = document.getElementById('app-title');
     
     if (tabName === 'schedule') {
-        if (titleEl) titleEl.innerText = '大學神隊友';
+        if (titleEl) titleEl.innerText = '課表';
     } else {
-        let pageTitle = "大學神隊友";
+        let pageTitle = "https://github.com/ZhaoHong04126/CampusKing";
         switch(tabName) {
             case 'calendar': pageTitle = "行事曆"; break;
             case 'grade-manager': pageTitle = "成績管理"; break;
