@@ -1,4 +1,4 @@
-const CACHE_NAME = 'CampusKing_v3.3.2_'; 
+const CACHE_NAME = 'CampusKing_v3.4.0_'; 
 
 const ASSETS_TO_CACHE = [
     './',
@@ -28,6 +28,7 @@ const ASSETS_TO_CACHE = [
 	'./js/lottery.js',
 	'./js/homework.js',
 	'./js/gradecalc.js',
+    './js/selfstudy.js',
 ];
 
 self.addEventListener('install', (e) => {

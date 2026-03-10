@@ -63,6 +63,7 @@
                 
                 <div style="font-size: 0.75rem; color: #999; margin: 15px 0 5px 10px; font-weight: bold;">小工具</div>
                 <button class="nav-item" id="btn-lottery" onclick="switchTab('lottery')">🎰 幸運籤筒</button>
+				<button class="nav-item" id="btn-self-study" onclick="switchTab('self-study')">🏃 自主學習活動</button>
                 <button class="nav-item" id="btn-grade-calc" onclick="switchTab('grade-calc')">🧮 配分筆記</button>
                 <button class="nav-item" id="btn-grade-manager" onclick="switchTab('grade-manager')">💯 成績與學分</button>
                 <button class="nav-item" id="btn-homework" onclick="switchTab('homework')">🎒 作業與小考</button>
@@ -332,6 +333,32 @@
 					</div>
 				</div>
 			</div>
+			<div id="view-self-study" style="display: none;">
+				<div class="card" style="text-align: center; padding: 30px 20px;">
+					<h2 style="justify-content: center; border:none; margin-bottom: 20px;">🏃 自主學習進度</h2>
+					<div style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+						<div style="flex: 1;">
+							<div style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">累計時數</div>
+							<div id="self-study-total-hours" style="font-size: 2rem; font-weight: bold; color: var(--primary);"> 0 </div>
+						</div>
+						<div style="flex: 1; border-left: 1px solid #eee; border-right: 1px solid #eee;">
+							<div style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">可得學分</div>
+							<div id="self-study-credits" style="font-size: 2rem; font-weight: bold; color: #2ecc71;"> 0 </div>
+						</div>
+						<div style="flex: 1;">
+							<div style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">距離下學分還需</div>
+							<div id="self-study-hours-left" style="font-size: 2rem; font-weight: bold; color: #e74c3c;"> 18 </div>
+						</div>
+					</div>
+					<button class="btn" onclick="syncSelfStudyToGrades()" style="background:#e8f5e9; color:#2e7d32; font-weight:bold;">🔄 結算並同步至成績單</button>
+					<p style="font-size: 0.8rem; color: #999; margin-top: 10px;">(每滿 18 小時可兌換 1 學分)</p>
+				</div>
+				<div class="card">
+					<h2>📝 活動紀錄</h2>
+					<div id="self-study-list" style="min-height: 150px;"></div>
+					<button class="btn btn-add" onclick="openSelfStudyModal()">+ 新增活動紀錄</button>
+				</div>
+			</div>
             <div id="view-grade-calc" style="display: none;">
 				<div class="card">
 					<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
@@ -549,39 +576,67 @@
 					</div>
 				</div>
 			</div>
+
 			<div id="view-admin" style="display: none;">
+				<style>
+					.admin-toggle-switch { position: relative; display: inline-block; width: 46px; height: 24px; flex-shrink: 0; }
+					.admin-toggle-switch input { opacity: 0; width: 0; height: 0; }
+					.admin-toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; border-radius: 24px; transition: .4s; }
+					.admin-toggle-slider:before { position: absolute; content: ''; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; border-radius: 50%; transition: .4s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+					.admin-toggle-switch input:checked + .admin-toggle-slider:before { transform: translateX(22px); }
+					
+					/* 區分兩種開關的顏色 */
+					.admin-toggle-switch input:checked + .admin-toggle-slider.admin-mode { background-color: #3498db; /* 藍色: 管理員用 */ }
+					.admin-toggle-switch input:checked + .admin-toggle-slider.public-mode { background-color: #2ecc71; /* 綠色: 公開用 */ }
+				</style>
+
 				<div class="card">
 					<h2 style="border-bottom-color: #fad390;">👑 系統管理台 (Admin Dashboard)</h2>
 					<p style="color: #888; font-size: 0.9rem; margin-top: 5px;">管理員您好，您可以在此掌控校園王系統的全域設定與公告。</p>
+					<div class="card" style="border: 2px solid #e74c3c; background: #fff5f5; margin-top: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(231, 76, 60, 0.1);">
+						<h3 style="color: #c0392b; margin: 0 0 10px 0; font-size: 1.2rem;">🚨 系統全域維護模式 (Kill Switch)</h3>
+						<p style="font-size: 0.9rem; color: #e74c3c; line-height: 1.5; margin-bottom: 15px;">開啟後，除了您的管理員帳號外，所有學生將被強制阻擋在「系統維護中」的畫面，無法操作任何功能。</p>
+						<button id="btn-maintenance-mode" class="btn" style="background: #e74c3c; width: 100%; font-weight: bold; font-size: 1.05rem;" onclick="toggleMaintenanceMode()">載入狀態中...</button>
+					</div>
 					<div style="display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
 						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; background: #fafafa;">
 							<h3 style="color: #2ecc71; margin: 0 0 10px 0; font-size: 1.1rem;">📊 系統狀態</h3>
 							<div style="font-size: 0.85rem; color: #666; line-height: 1.6;">
-								<div>⚙️ 前端版本：<b>v3.0.1</b></div>
+								<div>⚙️ 前端版本：<b>v3.1.0</b></div>
 								<div>🔥 Firebase 連線：<span style="color:#2ecc71; font-weight:bold;">正常</span></div>
 							</div>
 						</div>
 						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; cursor: pointer; background: #fafafa; transition: 0.2s;" onclick="openNewsManagerModal()" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
 							<h3 style="color: var(--primary); margin: 0 0 10px 0; font-size: 1.1rem;">📢 首頁動態發布</h3>
-							<p style="font-size: 0.85rem; color: #666; line-height: 1.4;">新增或刪除在登入頁面顯示的最新更新、系統公告與維護通知。</p>
+							<p style="font-size: 0.85rem; color: #666; line-height: 1.4;">新增或刪除在登入頁面顯示的最新更新、系統公告。</p>
 						</div>
 						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; cursor: pointer; background: #fafafa; transition: 0.2s;" onclick="openBroadcastModal()" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
 							<h3 style="color: #9b59b6; margin: 0 0 10px 0; font-size: 1.1rem;">📡 發送系統推播</h3>
-							<p style="font-size: 0.85rem; color: #666; line-height: 1.4;">發送全域通知給所有使用者。通知將直接發送至他們的通知中心裡。</p>
+							<p style="font-size: 0.85rem; color: #666; line-height: 1.4;">發送全域通知給所有使用者。直接推播至通知中心。</p>
+						</div>
+						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; background: #fffcf3; width: 100%;">
+							<h3 style="color: #f39c12; margin: 0 0 10px 0; font-size: 1.1rem;">🔧 模組功能開關 (分階段發布)</h3>
+							<p style="font-size: 0.85rem; color: #666; line-height: 1.4; margin-bottom: 5px;">【① 藍色】僅控制您自己(管理員)是否能使用。<br>【② 綠色】控制全站一般學生是否能使用。</p>
+							<div style="border-top: 1px dashed #ddd; padding-top: 5px;">
+								<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0 5px 0; border-bottom: 2px solid #eee; font-size: 0.85rem; color: #888; font-weight: bold; text-align: center;">
+									<div style="flex: 1; text-align: left;">模組名稱</div>
+									<div style="display: flex; gap: 15px; width: 110px; justify-content: center;">
+										<div style="width: 46px; color: #3498db;">① 管理員</div>
+										<div style="width: 46px; color: #2ecc71;">② 全公開</div>
+									</div>
+								</div>
+								<div id="admin-dual-switches-container"> </div>
+							</div>
 						</div>
 					</div>
 					<div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
 						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; background: #fafafa; box-shadow: none;">
 							<h3 style="color: var(--primary); margin: 0 0 10px 0; font-size: 1.05rem; border-bottom: 2px dashed #ddd; padding-bottom: 8px;">📢 目前的首頁動態</h3>
-							<div id="admin-display-news" style="max-height: 350px; overflow-y: auto; padding-right: 5px;">
-								<p style="text-align:center; color:#999; font-size:0.9rem; margin-top:20px;">載入中...</p>
-							</div>
+							<div id="admin-display-news" style="max-height: 350px; overflow-y: auto; padding-right: 5px;"></div>
 						</div>
 						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; background: #fafafa; box-shadow: none;">
 							<h3 style="color: #9b59b6; margin: 0 0 10px 0; font-size: 1.05rem; border-bottom: 2px dashed #ddd; padding-bottom: 8px;">📡 已發送的系統推播</h3>
-							<div id="admin-display-broadcasts" style="max-height: 350px; overflow-y: auto; padding-right: 5px;">
-								<p style="text-align:center; color:#999; font-size:0.9rem; margin-top:20px;">載入中...</p>
-							</div>
+							<div id="admin-display-broadcasts" style="max-height: 350px; overflow-y: auto; padding-right: 5px;"></div>
 						</div>
 					</div>
 				</div>
@@ -728,6 +783,29 @@
 			<button id="btn-save-cal" class="btn" style="width: 100%; background: #333;" onclick="addCalendarEvent()">+ 加入</button>
 			<button id="btn-del-cal" class="btn" style="width: 100%; margin-top: 10px; background: #ffebee; color: #e74c3c; border: 1px solid #e74c3c; display: none;" onclick="deleteCalendarEventFromModal()">🗑️ 刪除此活動</button>
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeCalendarModal()">關閉</button>
+		</div>
+	</div>
+	<div id="self-study-modal" class="modal">
+		<div class="modal-content" style="text-align: left;">
+			<h3 id="modal-ss-title" style="text-align: center; margin-top:0;">🏃 新增活動紀錄</h3>
+			<div class="input-group">
+				<label>活動名稱</label>
+				<input type="text" id="input-ss-name" placeholder="例如：校園講座、志工服務">
+			</div>
+			<div class="input-group">
+				<label>活動地點</label>
+				<input type="text" id="input-ss-location" placeholder="例如：大禮堂">
+			</div>
+			<div class="input-group">
+				<label>日期</label>
+				<input type="date" id="input-ss-date">
+			</div>
+			<div class="input-group">
+				<label>獲得時數</label>
+				<input type="number" id="input-ss-hours" placeholder="例如：2">
+			</div>
+			<button id="btn-save-ss" class="btn" style="width: 100%; background: var(--primary);" onclick="addSelfStudyActivity()">+ 儲存</button>
+			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeSelfStudyModal()">取消</button>
 		</div>
 	</div>
     <div id="regular-exam-modal" class="modal">
@@ -1025,6 +1103,6 @@
 	<script src="js/lottery.js"></script>
 	<script src="js/homework.js"></script>
 	<script src="js/gradecalc.js"></script>
-
+	<script src="js/selfstudy.js"></script>
 </body>
 </html>

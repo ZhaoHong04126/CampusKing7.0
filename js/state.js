@@ -86,6 +86,9 @@ let homeworkList = [];
 // 記錄系統通知的陣列
 let systemNotifications = [];
 
+// 當前學期的自主學習活動紀錄
+let selfStudyActivities = [];
+
 
 
 /* ========================================================================== */

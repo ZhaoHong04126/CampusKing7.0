@@ -102,7 +102,8 @@ function switchTab(tabName, addToHistory = true) {
         'regular', 'midterm', 'grades',
         'exams-hub', 'grade-manager', 'accounting',
         'anniversary', 'lottery', 'homework',
-        'grade-calc','notifications', 'admin'
+        'grade-calc','notifications', 'admin',
+        'self-study'
     ];
     
     views.forEach(view => {
@@ -138,6 +139,7 @@ function switchTab(tabName, addToHistory = true) {
             case 'homework': pageTitle = "作業管理"; break;
             case 'grade-calc': pageTitle = "配分筆記"; break;
             case 'notifications': pageTitle = "通知中心"; break;
+            case 'self-study': pageTitle = "自主學習活動"; break;
             case 'admin': pageTitle = "系統管理台"; break;
         }
         if (titleEl) titleEl.innerText = pageTitle;
@@ -167,9 +169,11 @@ function switchTab(tabName, addToHistory = true) {
     if (tabName === 'lottery' && typeof renderLottery === 'function') renderLottery();
     if (tabName === 'homework' && typeof renderHomework === 'function') renderHomework();
     if (tabName === 'grade-calc' && typeof renderGradeCalc === 'function') renderGradeCalc();
+    if (tabName === 'self-study' && typeof renderSelfStudy === 'function') renderSelfStudy();
     if (tabName === 'admin') {
         if (typeof renderAdminNewsDisplay === 'function') renderAdminNewsDisplay();
         if (typeof renderAdminBroadcastDisplay === 'function') renderAdminBroadcastDisplay();
+        if (typeof renderAdminFeatureFlags === 'function') renderAdminFeatureFlags();
     }
     
     // 切換頁面後，若是手機版則自動收起側邊欄
@@ -201,6 +205,8 @@ function initUI() {
     if (typeof checkAccountingNotifications === 'function') checkAccountingNotifications();
     if (typeof checkSystemBroadcasts === 'function') checkSystemBroadcasts();
     if (typeof updateNotificationBtnUI === 'function') updateNotificationBtnUI();
+
+    checkFeatureFlags();    // 檢查全域功能開關
 }
 
 // 切換深色與淺色主題，並將設定存入 LocalStorage
@@ -856,4 +862,189 @@ window.renderAdminBroadcastDisplay = function() {
     }).catch(e => {
         displayDiv.innerHTML = '<p style="color:#e74c3c; text-align:center;">讀取失敗，請檢查網路狀態。</p>';
     });
+}
+
+/* ---- 📌 雙重功能開關系統與維護模式 (Dual Feature Flags) ---- */
+
+// 統一定義所有需要被控管的模組清單
+const moduleList = [
+    { id: 'self-study', dbKey: 'enableSelfStudy', name: '🏃 自主學習活動', default: false },
+    { id: 'grade-manager', dbKey: 'enableGradeManager', name: '💯 成績與學分', default: true },
+    { id: 'homework', dbKey: 'enableHomework', name: '🎒 作業與小考', default: true },
+    { id: 'accounting', dbKey: 'enableAccounting', name: '💰 學期記帳', default: true },
+    { id: 'calendar', dbKey: 'enableCalendar', name: '🗓️ 行事曆', default: true },
+    { id: 'grade-calc', dbKey: 'enableGradeCalc', name: '🧮 配分筆記', default: true },
+    { id: 'lottery', dbKey: 'enableLottery', name: '🎰 幸運籤筒', default: true },
+    { id: 'anniversary', dbKey: 'enableAnniversary', name: '💝 紀念日倒數', default: true }
+];
+
+// 1. 【管理台】渲染「雙重開關」介面
+window.renderAdminFeatureFlags = function() {
+    const container = document.getElementById('admin-dual-switches-container');
+    if (!container) return;
+
+    db.collection("public").doc("feature_flags").get().then(doc => {
+        let data = doc.exists ? doc.data() : {};
+        
+        // 處理維護模式按鈕
+        const isMaintenance = data.maintenanceMode === true;
+        const mBtn = document.getElementById('btn-maintenance-mode');
+        if (mBtn) {
+            if (isMaintenance) {
+                mBtn.innerText = "✅ 解除維護模式 (恢復全站通行)";
+                mBtn.style.background = "#2ecc71";
+            } else {
+                mBtn.innerText = "🚨 開啟維護模式 (封鎖一般使用者)";
+                mBtn.style.background = "#e74c3c";
+            }
+        }
+
+        // 動態生成各模組的列 (Row) 與左右兩個開關
+        let html = '';
+        moduleList.forEach(mod => {
+            // 讀取 管理員設定 (若無則取預設)、公開設定 (若無則取預設)
+            const adminChecked = data['admin_' + mod.dbKey] !== undefined ? data['admin_' + mod.dbKey] : mod.default;
+            const publicChecked = data['public_' + mod.dbKey] !== undefined ? data['public_' + mod.dbKey] : mod.default;
+
+            html += `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed #eee;">
+                <div style="flex: 1; font-weight: bold; font-size: 0.95rem; color: var(--text-main);">${mod.name}</div>
+                <div style="display: flex; gap: 15px; width: 110px; justify-content: center;">
+                    <label class="admin-toggle-switch" title="開啟/關閉管理員的使用權限">
+                        <input type="checkbox" ${adminChecked ? 'checked' : ''} onchange="handleDualToggle(this, 'admin_${mod.dbKey}', '${mod.name} (管理員端)')">
+                        <span class="admin-toggle-slider admin-mode"></span>
+                    </label>
+                    
+                    <label class="admin-toggle-switch" title="開啟/關閉一般學生的使用權限">
+                        <input type="checkbox" ${publicChecked ? 'checked' : ''} onchange="handleDualToggle(this, 'public_${mod.dbKey}', '${mod.name} (一般學生端)')">
+                        <span class="admin-toggle-slider public-mode"></span>
+                    </label>
+                </div>
+            </div>`;
+        });
+        container.innerHTML = html;
+
+    }).catch(e => console.log("讀取開關狀態失敗", e));
+}
+
+// 2. 【管理台】處理單一切換 (帶有精準的警告文字)
+window.handleDualToggle = function(checkboxElement, featureKey, featureName) {
+    const isEnabled = checkboxElement.checked;
+    let warningMsg = "";
+
+    // 依據字首判斷是改管理員還是改學生
+    if (featureKey.startsWith('admin_')) {
+        warningMsg = isEnabled 
+            ? `確定要開啟「${featureName}」嗎？\n\n開啟後，您(管理員)可以在側邊欄看到並測試此模組。`
+            : `確定要關閉「${featureName}」嗎？\n\n關閉後，此模組會從您的側邊欄消失。`;
+    } else {
+        warningMsg = isEnabled 
+            ? `⚠️ 上線確認：確定要開啟「${featureName}」嗎？\n\n開啟後，全站所有一般學生都能開始使用此功能！`
+            : `⚠️ 下線警告：確定要關閉「${featureName}」嗎？\n\n關閉後，一般學生將無法再看到此功能，使用中的人會被踢回首頁。`;
+    }
+
+    showConfirm(warningMsg, "⚙️ 權限變更確認").then(ok => {
+        if (ok) {
+            db.collection("public").doc("feature_flags").set({
+                [featureKey]: isEnabled,
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true }).then(() => {
+                showAlert(`「${featureName}」 已成功${isEnabled ? '開啟' : '關閉'}！`, "設定套用");
+                checkFeatureFlags(); // 即時更新自己左側的選單
+            }).catch(error => showAlert("更新失敗：" + error.message, "錯誤"));
+        } else {
+            checkboxElement.checked = !isEnabled; // 復原勾選狀態
+        }
+    });
+}
+
+// 3. 【管理台】開關「維護模式」的大按鈕
+window.toggleMaintenanceMode = function() {
+    db.collection("public").doc("feature_flags").get().then(doc => {
+        let isMaintenance = doc.exists && doc.data().maintenanceMode === true;
+        let newState = !isMaintenance;
+        
+        const warningMsg = newState 
+            ? "⚠️ 極度危險操作！\n\n確定要「開啟」全站維護模式嗎？\n開啟後，除了您之外的所有學生將被強制鎖在門外！"
+            : "確定要「解除」維護模式嗎？\n解除後，所有學生將恢復正常登入與使用。";
+
+        showConfirm(warningMsg, "🚨 維護模式切換").then(ok => {
+            if (ok) {
+                db.collection("public").doc("feature_flags").set({
+                    maintenanceMode: newState,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true }).then(() => {
+                    showAlert(`全站維護模式已成功${newState ? '開啟' : '解除'}！`, "設定套用");
+                    renderAdminFeatureFlags(); 
+                });
+            }
+        });
+    });
+}
+
+// 4. 【一般使用者/管理員】檢查雙開關狀態並控制 UI 顯示
+window.checkFeatureFlags = function() {
+    db.collection("public").doc("feature_flags").get().then(doc => {
+        let data = doc.exists ? doc.data() : {};
+        
+        const ADMIN_UID = '8OeziUfXrKXot4l60U2keePhOwS2'; // 您的專屬管理員 UID
+        const isCurrentUserAdmin = currentUser && currentUser.uid === ADMIN_UID;
+
+        // --- 🛡️ 第一層防護：檢查維護模式 ---
+        let maintenanceMode = false; // 強制無視雲端維護狀態
+        // let maintenanceMode = data.maintenanceMode === true;
+        if (maintenanceMode && !isCurrentUserAdmin) {
+            let overlay = document.getElementById('system-maintenance-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'system-maintenance-overlay';
+                overlay.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:#f4f7f6; z-index:99999; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; text-align:center;';
+                overlay.innerHTML = `
+                    <div style="font-size:5rem; margin-bottom:20px;">🚧</div>
+                    <h1 style="color:var(--primary); margin-bottom:10px; font-size:2rem;">系統維護中</h1>
+                    <p style="color:#666; font-size:1.1rem; line-height:1.6;">管理員正在進行系統升級與除錯作業。<br>請稍候片刻再回來喔！</p>
+                    <button onclick="performLogout()" class="btn" style="margin-top:40px; background:#e74c3c; padding:12px 30px; font-size:1.1rem; border-radius:30px; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); cursor: pointer;">登出帳號</button>
+                `;
+                document.body.appendChild(overlay);
+            }
+            overlay.style.display = 'flex';
+            return; // 🛑 鎖死在這裡
+        } else {
+            const overlay = document.getElementById('system-maintenance-overlay');
+            if (overlay) overlay.style.display = 'none';
+        }
+
+        // --- 🛠️ 第二層控制：雙重開關身分判定 ---
+        const toggleNavBtn = (btnId, isVisible) => {
+            const btn = document.getElementById(btnId);
+            if (btn) btn.style.display = isVisible ? 'flex' : 'none';
+        };
+
+        const flags = {};
+
+        // 走訪模組清單，根據目前登入者的身分，決定要看哪一把鑰匙
+        moduleList.forEach(mod => {
+            const adminKey = 'admin_' + mod.dbKey;
+            const publicKey = 'public_' + mod.dbKey;
+            
+            // 取得資料庫設定，若無則拿預設值
+            const adminFlag = data[adminKey] !== undefined ? data[adminKey] : mod.default;
+            const publicFlag = data[publicKey] !== undefined ? data[publicKey] : mod.default;
+
+            // 核心邏輯：我是管理員就看藍色設定，我是學生就看綠色設定
+            const isVisible = isCurrentUserAdmin ? adminFlag : publicFlag;
+            flags[mod.id] = isVisible;
+            
+            // 操作 DOM 隱藏或顯示左側選單
+            toggleNavBtn('btn-' + mod.id, isVisible);
+        });
+
+        // --- 🚪 如果目前停留在被強制關閉的頁面，踢回首頁 ---
+        const currentPage = document.body.getAttribute('data-page');
+        if (flags[currentPage] === false) {
+            switchTab('schedule');
+            showAlert("此功能目前正在進行維護或尚未開放喔！\n已將您引導回首頁。", "功能維護中");
+        }
+
+    }).catch(e => console.log("讀取 Feature Flags 失敗", e));
 }

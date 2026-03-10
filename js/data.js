@@ -123,6 +123,7 @@ function loadSemesterData(sem) {
     anniversaryList = allData[sem].anniversaries || []; 
     homeworkList = allData[sem].homework || [];         
     gradeCalcNotes = allData[sem].gradeCalcNotes || []; 
+    selfStudyActivities = allData[sem].selfStudyActivities || [];
     lotteryList = allData[sem].lottery || JSON.parse(JSON.stringify(defaultLotteryData));
     semesterStartDate = allData[sem].startDate || "";
     semesterEndDate = allData[sem].endDate || "";
@@ -133,18 +134,19 @@ function saveData() {
     if (!currentUser) return;
     
     allData[currentSemester] = { 
-        schedule: weeklySchedule,                   
-        lottery: lotteryList,                       
-        grades: gradeList,                          
-        regularExams: regularExams,                 
-        midtermExams: midtermExams,                 
-        calendarEvents: calendarEvents,             
-        accounting: accountingList,                 
-        anniversaries: anniversaryList,             
-        startDate: semesterStartDate,               
-        endDate: semesterEndDate,                   
-        homework: homeworkList,                     
-        gradeCalcNotes: gradeCalcNotes,             
+        schedule: weeklySchedule,
+        lottery: lotteryList,
+        grades: gradeList,
+        regularExams: regularExams,
+        midtermExams: midtermExams,
+        calendarEvents: calendarEvents,
+        accounting: accountingList,
+        anniversaries: anniversaryList,
+        startDate: semesterStartDate,
+        endDate: semesterEndDate,
+        homework: homeworkList,
+        gradeCalcNotes: gradeCalcNotes,
+        selfStudyActivities: selfStudyActivities,
     };
 
     const storageObj = {
@@ -197,13 +199,16 @@ function syncFromCloud(uid) {
 
             refreshUI();
             if(statusBtn) {
-                statusBtn.innerText = (uid === '8OeziUfXrKXot4l60U2keePhOwS2') ? '👑 管理員' : '學生';
+                
+                statusBtn.innerText = (uid === '8OeziUfXrKXot4l60U2keePhOwS2') ? '👑 管理員' : '學生';// 在開發時把這行註解掉並替換成這行
+                // statusBtn.innerText = '👑 管理員 (測試中)';
             }
         } else {
             console.log("☁️ 此帳號尚無雲端資料，將自動上傳本地資料...");
             saveData();
             if(statusBtn) {
-                statusBtn.innerText = (uid === '8OeziUfXrKXot4l60U2keePhOwS2') ? '👑 管理員' : '學生';
+                statusBtn.innerText = (uid === '8OeziUfXrKXot4l60U2keePhOwS2') ? '👑 管理員' : '學生';// 在開發時把這行註解掉並替換成這行
+                // statusBtn.innerText = '👑 管理員 (測試中)';
             }
         }
     }).catch((error) => {
@@ -244,6 +249,7 @@ function refreshUI() {
     if (typeof renderHomework === 'function') renderHomework();                             
     if (typeof renderGradeCalc === 'function') renderGradeCalc();                           
     if (typeof updateGradeCategoryOptions === 'function') updateGradeCategoryOptions();
+    if (typeof renderSelfStudy === 'function') renderSelfStudy();
 
     const settingSchool = document.getElementById('setting-school-info');
     if (settingSchool) {
