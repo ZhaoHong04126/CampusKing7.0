@@ -991,8 +991,8 @@ window.checkFeatureFlags = function() {
         const isCurrentUserAdmin = currentUser && currentUser.uid === ADMIN_UID;
 
         // --- 🛡️ 第一層防護：檢查維護模式 ---
-        let maintenanceMode = false; // 強制無視雲端維護狀態
-        // let maintenanceMode = data.maintenanceMode === true;
+        // let maintenanceMode = false; // 強制無視雲端維護狀態
+        let maintenanceMode = data.maintenanceMode === true;
         if (maintenanceMode && !isCurrentUserAdmin) {
             let overlay = document.getElementById('system-maintenance-overlay');
             if (!overlay) {
@@ -1003,9 +1003,10 @@ window.checkFeatureFlags = function() {
                     <div style="font-size:5rem; margin-bottom:20px;">🚧</div>
                     <h1 style="color:var(--primary); margin-bottom:10px; font-size:2rem;">系統維護中</h1>
                     <p style="color:#666; font-size:1.1rem; line-height:1.6;">管理員正在進行系統升級與除錯作業。<br>請稍候片刻再回來喔！</p>
-                    <button onclick="performLogout()" class="btn" style="margin-top:40px; background:#e74c3c; padding:12px 30px; font-size:1.1rem; border-radius:30px; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); cursor: pointer;">登出帳號</button>
+                    <button onclick="performLogout()" class="btn" style="margin-top:40px; background:#e74c3c; padding:12px 30px; font-size:1.1rem; border-radius:30px; cursor:pointer; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);">登出帳號</button>
                 `;
-                document.body.appendChild(overlay);
+                    document.body.appendChild(overlay);
+                    // <button onclick="performLogout()" class="btn" style="margin-top:40px; background:#e74c3c; padding:12px 30px; font-size:1.1rem; border-radius:30px; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); cursor: pointer;">登出帳號</button>
             }
             overlay.style.display = 'flex';
             return; // 🛑 鎖死在這裡
