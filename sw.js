@@ -1,4 +1,4 @@
-const CACHE_NAME = 'CampusKing_v3.5.0-beta_'; 
+const CACHE_NAME = 'CampusKing_v3.5.1_'; 
 
 const ASSETS_TO_CACHE = [
     './',
@@ -13,6 +13,7 @@ const ASSETS_TO_CACHE = [
 	'./css/dashboard.css',
 	'./css/calendar.css',
 	'./css/settings.css',
+    '/css/feedback-admin.css',
 	'./js/firebase.js',
 	'./js/state.js',
 	'./js/ui.js',
@@ -29,6 +30,7 @@ const ASSETS_TO_CACHE = [
 	'./js/homework.js',
 	'./js/gradecalc.js',
     './js/selfstudy.js',
+    './js/feedback.js'
 ];
 
 self.addEventListener('install', (e) => {
