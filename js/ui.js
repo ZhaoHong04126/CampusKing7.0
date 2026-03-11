@@ -102,8 +102,8 @@ function switchTab(tabName, addToHistory = true) {
         'regular', 'midterm', 'grades',
         'exams-hub', 'grade-manager', 'accounting',
         'anniversary', 'lottery', 'homework',
-        'grade-calc','notifications', 'admin',
-        'self-study'
+        'grade-calc', 'notifications', 'admin',
+        'self-study', 'admin-feedback'
     ];
     
     views.forEach(view => {

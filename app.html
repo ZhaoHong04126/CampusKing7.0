@@ -70,10 +70,12 @@
                 <button class="nav-item" id="btn-anniversary" onclick="switchTab('anniversary')">💝 紀念日倒數</button>
 
                 <div style="font-size: 0.75rem; color: #999; margin: 15px 0 5px 10px; font-weight: bold;">系統</div>
+				<button onclick="document.getElementById('feedback-modal').style.display='block'">回報問題</button>
                 <button class="nav-item" id="btn-settings" onclick="switchTab('settings')">⚙️ 個人設定</button>
 				<div id="admin-nav-section" style="display: none;">
 					<div style="font-size: 0.75rem; color: #e74c3c; margin: 15px 0 5px 10px; font-weight: bold;">管理者</div>
 					<button class="nav-item" id="btn-admin" onclick="switchTab('admin')">👑 系統管理台</button>
+					<button class="nav-item" id="btn-admin-feedback" onclick="switchTab('admin-feedback'); loadAdminFeedbacks();">💬 回饋管理</button>
 				</div>
             </nav>
         </aside>
@@ -576,6 +578,28 @@
 					</div>
 				</div>
 			</div>
+			<div id="view-admin-feedback" class="view-section" style="display: none;">
+				<h2>💬 使用者回饋管理台</h2>
+				<div class="admin-controls">
+					<button class="btn-secondary" onclick="loadAdminFeedbacks()">🔄 重新載入列表</button>
+				</div>
+				
+				<div class="table-container">
+					<table class="data-table">
+						<thead>
+							<tr>
+							<th>時間</th>
+							<th>發送者 UID</th>
+							<th>類型</th>
+							<th>內容</th>
+							<th>狀態</th>
+							<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="admin-feedback-list"> </tbody>
+					</table>
+				</div>
+			</div>
 
 			<div id="view-admin" style="display: none;">
 				<style>
@@ -1021,6 +1045,25 @@
 			<div id="custom-modal-actions" style="display: flex; gap: 15px; justify-content: center; margin-top: 25px;"> </div>
 		</div>
 	</div>
+	<div id="feedback-modal" class="modal" style="display: none;">
+		<div class="modal-content">
+			<span class="close-btn" onclick="document.getElementById('feedback-modal').style.display='none'">&times;</span>
+			<h2>💡 意見回饋 / 🐞 問題回報</h2>
+			<div class="form-group">
+				<label>類型：</label>
+				<select id="feedback-type">
+					<option value="bug">🐞 系統 Bug 回報</option>
+					<option value="suggestion">💡 新功能建議</option>
+					<option value="other">💬 其他想說的話</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label>詳細內容：</label>
+				<textarea id="feedback-content" rows="4" placeholder="請詳細描述您遇到的問題或建議..."></textarea>
+			</div>
+			<button class="btn-primary" onclick="submitFeedback()">送出回饋</button>
+		</div>
+	</div>
 
 	<div id="news-manager-modal" class="modal">
 		<div class="modal-content" style="text-align: left; max-width: 400px;">
@@ -1104,5 +1147,6 @@
 	<script src="js/homework.js"></script>
 	<script src="js/gradecalc.js"></script>
 	<script src="js/selfstudy.js"></script>
+	<script src="js/feedback.js"></script>
 </body>
 </html>
