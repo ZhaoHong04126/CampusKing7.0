@@ -613,7 +613,7 @@ window.toggleMobileMenu = function() {
 /* ========================================================================== */
 
 let publicNewsList = [];
-// 管理員前置作業(輸入密碼認證)
+// 管理員前置作業(輸入密碼認證)(需)
 window.openNewsManagerModal = function() {
     showPrompt("請輸入管理員密碼：", "", "🔒 權限驗證").then(password => {
         if (password === null) return; 
@@ -721,7 +721,7 @@ window.deletePublicNews = function(index) {
 
 /* ---- 📌 全域推播廣播系統 (System Broadcast)---- */
 
-// 【管理員專用】開啟廣播視窗
+// 【管理員專用】開啟廣播視窗(需)
 window.openBroadcastModal = function() {
     showPrompt("請輸入管理員密碼：", "", "🔒 權限驗證").then(password => {
         if (password === null) return; 
@@ -982,14 +982,14 @@ window.toggleMaintenanceMode = function() {
     });
 }
 
-// 4. 【一般使用者/管理員】檢查雙開關狀態並控制 UI 顯示
+// 4. 【一般使用者/管理員】檢查雙開關狀態並控制 UI 顯示(需)
 window.checkFeatureFlags = function() {
     db.collection("public").doc("feature_flags").get().then(doc => {
         let data = doc.exists ? doc.data() : {};
         
         const ADMIN_UID = '8OeziUfXrKXot4l60U2keePhOwS2'; // 您的專屬管理員 UID
         const isCurrentUserAdmin = currentUser && currentUser.uid === ADMIN_UID;
-
+        // const isCurrentUserAdmin = true;
         // --- 🛡️ 第一層防護：檢查維護模式 ---
         // let maintenanceMode = false; // 強制無視雲端維護狀態
         let maintenanceMode = data.maintenanceMode === true;

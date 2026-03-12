@@ -102,13 +102,13 @@ async function loadAdminFeedbacks() {
             // --- 渲染 HTML (使用優化後的標籤結構) ---
             listContainer.innerHTML += `
                 <tr>
-                    <td style="color: white;">${date}</td>
+                    <td style="color: black;">${date}</td>
                     
                     <td style="font-size: 0.8em; color: gray;" title="${fullUid}">${shortUid}...</td> 
                     
                     <td><span class="${typeBadgeClass}">${typeIcon} ${typeText}</span></td> 
                     
-                    <td style="max-width: 300px; word-wrap: break-word; color: white;">${data.content}</td>
+                    <td style="max-width: 300px; word-wrap: break-word; color: black;">${data.content}</td>
                     
                     <td><span class="${statusBadgeClass}">${statusText}</span></td> 
                     
