@@ -58,8 +58,30 @@ async function loadAdminFeedbacks() {
         snapshot.forEach(doc => {
             const data = doc.data();
             const id = doc.id;
-            const date = data.timestamp ? data.timestamp.toDate().toLocaleString() : "未知時間";
-            
+            // const date = data.timestamp ? data.timestamp.toDate().toLocaleString() : "未知時間";
+            // --- 安全解析時間 ---
+            let date = "未知時間";
+            if (data.timestamp) {
+                try {
+                    if (typeof data.timestamp.toDate === 'function') {
+                        // 情況 1：正常的 Firestore Timestamp 物件
+                        date = data.timestamp.toDate().toLocaleString('zh-TW', { hour12: false });
+                    } else if (data.timestamp.seconds) {
+                        // 情況 2：某些快取狀態下只有 seconds 屬性
+                        date = new Date(data.timestamp.seconds * 1000).toLocaleString('zh-TW', { hour12: false });
+                    } else {
+                        // 情況 3：字串或數字 (通常是在 Firebase 後台手動建立測試資料時發生的)
+                        const parsedDate = new Date(data.timestamp);
+                        if (!isNaN(parsedDate)) {
+                            date = parsedDate.toLocaleString('zh-TW', { hour12: false });
+                        }
+                    }
+                } catch (e) {
+                    console.warn("時間解析失敗:", e, data.timestamp);
+                    date = "時間格式錯誤";
+                }
+            }
+            // --------------------
             // --- 狀態標籤 (使用 CSS Badge Class) ---
             let statusBadgeClass = "badge badge-status-pending";
             let statusText = "待處理";
