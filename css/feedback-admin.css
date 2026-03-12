@@ -185,3 +185,39 @@
     border-color: var(--primary, #3498db);
     box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
+
+
+
+/* 針對小螢幕 (例如手機、平板) 的表格滑動設定 */
+@media screen and (max-width: 768px) {
+    
+    /* 1. 設定外層容器，使其可以水平滑動 */
+    #view-admin-feedback .table-container {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        
+        /* 視覺優化：可以在滑動區域加一點陰影或邊界，讓使用者知道可以滑動 (非必要) */
+        border: 1px solid #eee; 
+        border-radius: 8px;
+    }
+
+    /* 2. 確保表格不會被強行擠壓，設定一個安全的最小寬度 */
+    #view-admin-feedback .data-table {
+        min-width: 700px;
+        width: 100%;
+    }
+
+    /* 3. 防止短資料欄位不自然換行 (例如時間、狀態、操作) */
+    #view-admin-feedback .data-table th,
+    #view-admin-feedback .data-table td {
+        white-space: nowrap; 
+    }
+
+    /* 4. 特別處理「內容」欄位 (第4欄)：因為回饋內容可能很長，允許它換行並設定最小寬度 */
+    #view-admin-feedback .data-table td:nth-child(4),
+    #view-admin-feedback .data-table th:nth-child(4) {
+        white-space: normal;
+        min-width: 250px;
+    }
+}
