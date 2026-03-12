@@ -9,10 +9,10 @@ auth.onAuthStateChanged((user) => {
         loadData();
         initUI();
             
-        // if (user.uid === '8OeziUfXrKXot4l60U2keePhOwS2') {
+        if (user.uid === '8OeziUfXrKXot4l60U2keePhOwS2') {
             const adminNav = document.getElementById('admin-nav-section'); // 新增的左側選單
             if (adminNav) adminNav.style.display = 'block';
-        // }
+        }
 
         const hash = window.location.hash.replace('#', '');
         
