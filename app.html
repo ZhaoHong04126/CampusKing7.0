@@ -623,6 +623,31 @@
 						<p style="font-size: 0.9rem; color: #e74c3c; line-height: 1.5; margin-bottom: 15px;">開啟後，除了您的管理員帳號外，所有學生將被強制阻擋在「系統維護中」的畫面，無法操作任何功能。</p>
 						<button id="btn-maintenance-mode" class="btn" style="background: #e74c3c; width: 100%; font-weight: bold; font-size: 1.05rem;" onclick="toggleMaintenanceMode()">載入狀態中...</button>
 					</div>
+					<div class="card" style="border: 2px solid #f39c12; background: #fffcf3; margin-top: 20px; margin-bottom: 20px;">
+						<h3 style="color: #d35400; margin: 0 0 10px 0; font-size: 1.2rem;">⏱️ 預定停機維護公告</h3>
+						<p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">設定未來要關閉系統的時間區段。設定後，學生登入時會跳出提醒視窗，時間超過後自動隱藏。</p>
+						<div style="display: flex; gap: 10px; margin-bottom: 10px;">
+							<div class="input-group" style="flex: 1;">
+								<label>開始時間</label>
+								<input type="datetime-local" id="maintenance-start" class="login-input" style="background:white;">
+							</div>
+							<div class="input-group" style="flex: 1;">
+								<label>結束時間</label>
+								<input type="datetime-local" id="maintenance-end" class="login-input" style="background:white;">
+							</div>
+						</div>
+						<div class="input-group">
+							<label>公告內容</label>
+							<input type="text" id="maintenance-msg" class="login-input" placeholder="例如：系統將於此時段進行升級，期間將無法登入..." style="background:white;">
+						</div>
+						<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+							<label style="display:flex; align-items:center; cursor:pointer; font-weight: bold; color: #d35400;">
+								<input type="checkbox" id="maintenance-enabled" style="width:auto; margin-right:8px; transform: scale(1.2);">
+								啟用此維護公告
+							</label>
+							<button class="btn" style="background: #f39c12; width: auto; padding: 8px 20px;" onclick="saveMaintenanceSettings()">💾 發布設定</button>
+						</div>
+					</div>
 					<div style="display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
 						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; background: #fafafa;">
 							<h3 style="color: #2ecc71; margin: 0 0 10px 0; font-size: 1.1rem;">📊 系統狀態</h3>
@@ -1116,6 +1141,19 @@
 			</div>
 			<button class="btn" style="width: 100%; background: #9b59b6;" onclick="sendBroadcast()">🚀 立即發送全域推播</button>
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeBroadcastModal()">取消</button>
+		</div>
+	</div>
+	<div id="maintenance-alert-modal" class="modal" style="z-index: 99999;">
+		<div class="modal-content" style="max-width: 400px; text-align: center; border-top: 6px solid #f39c12;">
+			<h2 style="margin-top: 0; color: #d35400; font-size: 1.5rem;">⚠️ 系統維護預告</h2>
+			<p id="alert-modal-msg" style="margin: 15px 0; color: #555; line-height: 1.6; font-size: 1rem; font-weight: bold;"></p>
+			<div style="background: #fffcf3; border-radius: 8px; padding: 15px; margin: 15px 0; text-align: left; border: 1px dashed #f39c12;">
+				<div style="font-size: 0.85rem; color: #888; margin-bottom: 5px;">🕒 預計維護時間：</div>
+				<div style="color: #d35400; font-weight: bold; font-size: 0.95rem;">
+					<span id="alert-modal-start"></span><br>至<br><span id="alert-modal-end"></span>
+				</div>
+			</div>
+			<button class="btn" style="width: 100%; background: #f39c12; font-size: 1.1rem; margin-top: 10px;" onclick="closeMaintenanceAlert()">我知道了</button>
 		</div>
 	</div>
 
