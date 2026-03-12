@@ -102,10 +102,19 @@ async function loadAdminFeedbacks() {
             // --- 渲染 HTML (使用優化後的標籤結構) ---
             listContainer.innerHTML += `
                 <tr>
-                    <td>${date}</td>
-                    <td style="font-size: 0.8em; color: gray;" title="${fullUid}">${shortUid}...</td> <td><span class="${typeBadgeClass}">${typeIcon} ${typeText}</span></td> <td style="max-width: 300px; word-wrap: break-word;">${data.content}</td>
-                    <td><span class="${statusBadgeClass}">${statusText}</span></td> <td>
-                        <select class="feedback-status-select" onchange="updateFeedbackStatus('${id}', this.value)"> <option value="pending" ${data.status === 'pending' ? 'selected' : ''}>設為待處理</option>
+                    <td style="color: white;">${date}</td>
+                    
+                    <td style="font-size: 0.8em; color: gray;" title="${fullUid}">${shortUid}...</td> 
+                    
+                    <td><span class="${typeBadgeClass}">${typeIcon} ${typeText}</span></td> 
+                    
+                    <td style="max-width: 300px; word-wrap: break-word; color: white;">${data.content}</td>
+                    
+                    <td><span class="${statusBadgeClass}">${statusText}</span></td> 
+                    
+                    <td>
+                        <select class="feedback-status-select" onchange="updateFeedbackStatus('${id}', this.value)"> 
+                            <option value="pending" ${data.status === 'pending' ? 'selected' : ''}>設為待處理</option>
                             <option value="processing" ${data.status === 'processing' ? 'selected' : ''}>設為處理中</option>
                             <option value="resolved" ${data.status === 'resolved' ? 'selected' : ''}>設為已解決</option>
                         </select>
