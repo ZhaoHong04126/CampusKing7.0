@@ -91,7 +91,7 @@ async function loadAdminFeedbacks() {
     }
 
     // 第三次驗證防護機制：問答題一
-    const ans1 = await showPrompt("管理者最喜歡吃什麼？", "", "🛡️ 第三次驗證防護 (2/3)");
+    const ans1 = await showPrompt("管理者最喜歡吃什麼？", "", "🛡️ 第二次驗證防護 (2/3)");
     if (ans1 === null || ans1.trim() !== "鳳梨湯") {
         if (typeof showAlert === 'function') showAlert("答案錯誤，拒絕存取！", "❌ 拒絕存取");
         else alert("❌ 答案錯誤，拒絕存取！");
