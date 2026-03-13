@@ -702,8 +702,8 @@ function renderAccAccounts() {
                 : `<span style="font-size:0.75rem; color:#aaa;">(預設不可刪)</span>`;
 
             catHtml += `
-            <div style="display:flex; justify-content:space-between; align-items:center; padding: 10px 0; border-bottom: 1px solid #f9f9f9;">
-                <div style="font-size: 0.95rem; color: #555;">${cat}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding: 10px 0; border-bottom: 1px solid var(--border-color, #f9f9f9);">
+                <div style="font-size: 0.95rem; color: var(--text-main);">${cat}</div>
                 <div style="display: ${btnDisplay};">
                     ${deleteBtnHtml}
                 </div>
