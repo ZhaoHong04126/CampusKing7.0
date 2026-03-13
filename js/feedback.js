@@ -43,10 +43,37 @@ async function submitFeedback() {
 // ==========================================
 async function loadAdminFeedbacks() {
     const listContainer = document.getElementById('admin-feedback-list');
+    const adminView = document.getElementById('view-admin-feedback');
+
+    // --- 啟動紅色背景安全防護模式 (隱藏內容) ---
+    const children = Array.from(adminView.children);
+    const originalDisplays = children.map(child => child.style.display);
+    children.forEach(child => child.style.display = 'none');
+
+    const originalBg = adminView.style.backgroundColor;
+    const originalMinHeight = adminView.style.minHeight;
+    adminView.style.backgroundColor = '#8b0000'; // 暗紅色
+    adminView.style.minHeight = '80vh';
+
+    const warningDiv = document.createElement('div');
+    warningDiv.style.textAlign = 'center';
+    warningDiv.style.paddingTop = '100px';
+    warningDiv.style.color = 'white';
+    warningDiv.innerHTML = '<h2>🚨 系統安全防護已啟動</h2><p>此專區包含高度隱私資料<br>請先完成身分驗證程序。</p>';
+    adminView.appendChild(warningDiv);
+
+    const restoreView = () => {
+        warningDiv.remove();
+        children.forEach((child, i) => child.style.display = originalDisplays[i]);
+        adminView.style.backgroundColor = originalBg;
+        adminView.style.minHeight = originalMinHeight;
+    };
+    // ----------------------------------------
 
     // 添加二次驗證保護：管理員密碼
     const psw = await showPrompt("請輸入管理員密碼以存取使用者回饋：", "", "🔒 權限驗證 (1/3)");
     if (psw === null) {
+        restoreView();
         if (typeof switchTab === 'function') switchTab('schedule');
         return;
     }
@@ -57,6 +84,7 @@ async function loadAdminFeedbacks() {
         } else {
             alert("❌ 密碼錯誤，拒絕存取！");
         }
+        restoreView();
         listContainer.innerHTML = "<tr><td colspan='6' style='color: red; font-weight: bold; text-align: center;'>驗證失敗，為保護使用者隱私，拒絕顯示資料。</td></tr>";
         if (typeof switchTab === 'function') switchTab('schedule');
         return;
@@ -68,6 +96,7 @@ async function loadAdminFeedbacks() {
         if (typeof showAlert === 'function') showAlert("答案錯誤，拒絕存取！", "❌ 拒絕存取");
         else alert("❌ 答案錯誤，拒絕存取！");
         
+        restoreView();
         listContainer.innerHTML = "<tr><td colspan='6' style='color: red; font-weight: bold; text-align: center;'>驗證失敗，為保護使用者隱私，拒絕顯示資料。</td></tr>";
         if (typeof switchTab === 'function') switchTab('schedule');
         return;
@@ -79,11 +108,14 @@ async function loadAdminFeedbacks() {
         if (typeof showAlert === 'function') showAlert("答案錯誤，拒絕存取！", "❌ 拒絕存取");
         else alert("❌ 答案錯誤，拒絕存取！");
 
+        restoreView();
         listContainer.innerHTML = "<tr><td colspan='6' style='color: red; font-weight: bold; text-align: center;'>驗證失敗，為保護使用者隱私，拒絕顯示資料。</td></tr>";
         if (typeof switchTab === 'function') switchTab('schedule');
         return;
     }
 
+    // 驗證全數通過，還原畫面並開始載入
+    restoreView();
     listContainer.innerHTML = "<tr><td colspan='6'>載入中...</td></tr>";
 
     try {
