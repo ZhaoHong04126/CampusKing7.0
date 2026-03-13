@@ -104,6 +104,7 @@ function addSelfStudyActivity() {
     saveData();
     closeSelfStudyModal();
     renderSelfStudy();
+    if (typeof renderCalendar === 'function') renderCalendar();
 }
 
 // 編輯活動
@@ -131,9 +132,40 @@ function deleteSelfStudy(index) {
             selfStudyActivities.splice(index, 1);
             saveData();
             renderSelfStudy();
+            if (typeof renderCalendar === 'function') renderCalendar();
         }
     });
 }
+
+// 支援從行事曆點擊編輯 (自動切換至自主學習頁籤並開啟 Modal)
+window.editSelfStudyEventFromCalendar = function(event, index) {
+    if (event) event.stopPropagation();
+    if (typeof switchTab === 'function') switchTab('self-study');
+    
+    // 給一點延遲讓頁面切換完畢再開啟 Modal
+    setTimeout(() => {
+        editSelfStudy(index);
+    }, 100);
+};
+
+// 支援從行事曆刪除
+window.deleteSelfStudyEventFromCalendar = function(index) {
+    if (!isCalendarEditMode) {
+        if (window.showAlert) showAlert("目前為「🔒 唯讀模式」\n若要刪除活動，請先切換至編輯狀態。");
+        return;
+    }
+    
+    if (window.showConfirm) {
+        showConfirm("確定刪除這筆自主學習活動紀錄嗎？").then(ok => {
+            if (ok) {
+                selfStudyActivities.splice(index, 1);
+                saveData();
+                renderSelfStudy();
+                if (typeof renderCalendar === 'function') renderCalendar();
+            }
+        });
+    }
+};
 
 // 核心功能：同步時數轉換的學分至成績單
 function syncSelfStudyToGrades() {
@@ -191,6 +223,7 @@ window.saveSelfStudyRate = function() {
         selfStudyConversionRate = newRate;
         saveData();
         renderSelfStudy();
+        if (typeof renderCalendar === 'function') renderCalendar();
         closeSelfStudyRateModal();
         if (window.showAlert) showAlert("已成功更新自主學習學分兌換率！", "設定成功");
     } else {

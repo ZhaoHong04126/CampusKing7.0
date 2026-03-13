@@ -127,7 +127,17 @@ function renderCalendarList() {
     if (!listDiv) return;
 
     const userEventsWithFlag = calendarEvents.map((e, i) => ({...e, _originalIndex: i, isUserEvent: true}));
-    const allEvents = [...userEventsWithFlag];
+    
+    // 將自學活動格式化為行事曆 event
+    const selfStudyEvents = (typeof selfStudyActivities !== 'undefined' ? selfStudyActivities : []).map((e, i) => ({
+        date: e.date,
+        title: `🏃 ${e.name}${e.location ? ` (${e.location})` : ''}`,
+        isAllDay: true,
+        isSelfStudyEvent: true,
+        _selfStudyIndex: i
+    }));
+
+    const allEvents = [...userEventsWithFlag, ...selfStudyEvents];
 
     allEvents.sort((a, b) => {
         const dateA = new Date(a.date + (a.startTime && !a.isAllDay ? 'T' + a.startTime : 'T00:00'));
@@ -162,9 +172,11 @@ function renderCalendarList() {
             }
 
             // 系統假日不可刪除與編輯
-            const deleteBtnDisplay = (isCalendarEditMode && event.isUserEvent) ? 'block' : 'none';
-            const clickAction = event.isUserEvent ? `onclick="editCalendarEvent(event, ${event._originalIndex})"` : '';
-            const cursorStyle = event.isUserEvent ? 'cursor:pointer;' : 'cursor:default;';
+            const deleteBtnDisplay = (isCalendarEditMode && (event.isUserEvent || event.isSelfStudyEvent)) ? 'block' : 'none';
+            const clickAction = event.isUserEvent 
+                ? `onclick="editCalendarEvent(event, ${event._originalIndex})"` 
+                : (event.isSelfStudyEvent ? `onclick="editSelfStudyEventFromCalendar(event, ${event._selfStudyIndex})"` : '');
+            const cursorStyle = (event.isUserEvent || event.isSelfStudyEvent) ? 'cursor:pointer;' : 'cursor:default;';
             const titleColor = event.isSystemHoliday ? 'color:#1565c0; font-weight:bold;' : '';
 
             html += `
@@ -178,7 +190,7 @@ function renderCalendarList() {
                         <span>${event.title}</span>
                     </div>
                 </div>
-                <button class="btn-delete" onclick="deleteCalendarEvent(${event._originalIndex}); event.stopPropagation();" style="padding:4px 8px; display: ${deleteBtnDisplay};">🗑️</button>
+                <button class="btn-delete" onclick="${event.isSelfStudyEvent ? `deleteSelfStudyEventFromCalendar(${event._selfStudyIndex})` : `deleteCalendarEvent(${event._originalIndex})`}; event.stopPropagation();" style="padding:4px 8px; display: ${deleteBtnDisplay};">🗑️</button>
             </div>`;
         });
     }
@@ -229,7 +241,17 @@ function renderMonthGrid() {
 
     // 👇 月曆視圖同樣進行陣列合併與排序
     const userEventsWithIndex = calendarEvents.map((e, i) => ({ ...e, _originalIndex: i, isUserEvent: true }));
-    const allEvents = [...userEventsWithIndex, ...taiwanHolidays];
+    
+    // 將自學活動加入月曆視圖
+    const selfStudyGridEvents = (typeof selfStudyActivities !== 'undefined' ? selfStudyActivities : []).map((e, i) => ({
+        date: e.date,
+        title: `🏃 ${e.name}`,
+        isAllDay: true,
+        isSelfStudyEvent: true,
+        _selfStudyIndex: i
+    }));
+
+    const allEvents = [...userEventsWithIndex, ...selfStudyGridEvents, ...taiwanHolidays];
     
     allEvents.sort((a, b) => {
         const dateA = new Date(a.date);
@@ -261,7 +283,12 @@ function renderMonthGrid() {
             const isEnd = (!e.endDate || e.endDate === currentDateStr || e.endDate < currentDateStr);
             
             // 決定點擊行為 (系統假日不可點擊修改)
-            const clickAction = e.isUserEvent ? `onclick="editCalendarEvent(event, ${e._originalIndex})"` : `onclick="event.stopPropagation();"`;
+            let clickAction = `onclick="event.stopPropagation();"`;
+            if (e.isUserEvent) {
+                clickAction = `onclick="editCalendarEvent(event, ${e._originalIndex})"`;
+            } else if (e.isSelfStudyEvent) {
+                clickAction = `onclick="editSelfStudyEventFromCalendar(event, ${e._selfStudyIndex})"`;
+            }
             
             if (e.isAllDay || e.endDate) {
                 let classes = "cal-event-bar ";
@@ -539,7 +566,21 @@ function deleteCalendarEvent(index) {
 /* ========================================================================== */
 
 window.checkCalendarNotifications = function() {
-    if (typeof calendarEvents === 'undefined' || calendarEvents.length === 0) return;
+    let allCheckEvents = [];
+    if (typeof calendarEvents !== 'undefined') {
+        allCheckEvents = allCheckEvents.concat(calendarEvents);
+    }
+    if (typeof selfStudyActivities !== 'undefined') {
+        // 將自學活動格式化為與行事曆相同的結構來統一檢查
+        const ssEvents = selfStudyActivities.map(e => ({
+            date: e.date,
+            title: `🏃 ${e.name}`,
+            isAllDay: true
+        }));
+        allCheckEvents = allCheckEvents.concat(ssEvents);
+    }
+
+    if (allCheckEvents.length === 0) return;
 
     // 取得今天與明天的日期字串 (格式: YYYY-MM-DD)
     const today = new Date();
@@ -549,7 +590,7 @@ window.checkCalendarNotifications = function() {
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowStr = tomorrow.getFullYear() + '-' + String(tomorrow.getMonth() + 1).padStart(2, '0') + '-' + String(tomorrow.getDate()).padStart(2, '0');
 
-    calendarEvents.forEach(event => {
+    allCheckEvents.forEach(event => {
         // 判斷是否為「今天」的活動 (包含單日活動，或是跨日活動且今天在期間內)
         const isToday = event.date === todayStr || (event.endDate && event.date <= todayStr && event.endDate >= todayStr);
         // 判斷是否為「明天」才開始的活動
