@@ -354,7 +354,10 @@
 						</div>
 					</div>
 					<button class="btn" onclick="syncSelfStudyToGrades()" style="background:#e8f5e9; color:#2e7d32; font-weight:bold;">🔄 結算並同步至成績單</button>
-					<p style="font-size: 0.8rem; color: #999; margin-top: 10px;">(每滿 18 小時可兌換 1 學分)</p>
+					<div style="font-size: 0.8rem; color: #999; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px;">
+						(每滿 <span id="text-self-study-rate">18</span> 小時可兌換 1 學分)
+						<button onclick="editSelfStudyRate()" style="background:#f0f0f0; border:1px solid #ddd; border-radius:4px; cursor:pointer; font-size:0.8rem; padding: 4px 8px; position:relative; z-index:999; transition:all 0.2s;" onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f0f0f0'" title="編輯兌換率">✏️ 編輯</button>
+					</div>
 				</div>
 				<div class="card">
 					<h2>📝 活動紀錄</h2>
@@ -1154,6 +1157,20 @@
 				</div>
 			</div>
 			<button class="btn" style="width: 100%; background: #f39c12; font-size: 1.1rem; margin-top: 10px;" onclick="closeMaintenanceAlert()">我知道了</button>
+		</div>
+	</div>
+
+	<!-- 新增：自訂學分兌換率設定 Modal -->
+	<div id="self-study-rate-modal" class="modal">
+		<div class="modal-content" style="text-align: left; max-width: 400px;">
+			<h3 style="text-align: center; margin-top:0;">⚙️ 自訂學分兌換率</h3>
+			<p style="text-align: center; color: #888; font-size: 0.85rem; margin-bottom: 15px;">設定每獲得多少小時，可以兌換 1 學分。</p>
+			<div class="input-group">
+				<label>兌換 1 學分所需時數</label>
+				<input type="number" id="input-ss-rate" class="login-input" placeholder="例如：18" min="1" step="0.5">
+			</div>
+			<button class="btn" style="width: 100%; background: var(--primary);" onclick="saveSelfStudyRate()">💾 儲存設定</button>
+			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeSelfStudyRateModal()">取消</button>
 		</div>
 	</div>
 

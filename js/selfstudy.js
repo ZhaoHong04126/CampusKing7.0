@@ -47,13 +47,17 @@ function renderSelfStudy() {
 
     listDiv.innerHTML = html;
 
-    // 計算 18 小時換 1 學分
-    const credits = Math.floor(totalHours / 18);
-    const hoursLeft = 18 - (totalHours % 18);
+    // 計算自訂時數換 1 學分 (預設 18)
+    const rate = selfStudyConversionRate || 18;
+    const credits = Math.floor(totalHours / rate);
+    const hoursLeft = rate - (totalHours % rate);
 
     document.getElementById('self-study-total-hours').innerText = totalHours;
     document.getElementById('self-study-credits').innerText = credits;
     document.getElementById('self-study-hours-left').innerText = hoursLeft;
+    
+    const rateText = document.getElementById('text-self-study-rate');
+    if (rateText) rateText.innerText = rate;
 }
 
 // 開啟新增視窗
@@ -135,10 +139,12 @@ function deleteSelfStudy(index) {
 function syncSelfStudyToGrades() {
     let totalHours = 0;
     selfStudyActivities.forEach(item => totalHours += (parseFloat(item.hours) || 0));
-    const credits = Math.floor(totalHours / 18);
+    
+    const rate = selfStudyConversionRate || 18;
+    const credits = Math.floor(totalHours / rate);
 
     if (credits === 0) {
-        showAlert("目前累計時數不足以兌換學分（需滿18小時）。\n繼續加油去參加活動吧！", "時數不足");
+        showAlert(`目前累計時數不足以兌換學分（需滿 ${rate} 小時）。\n繼續加油去參加活動吧！`, "時數不足");
         return;
     }
 
@@ -162,3 +168,32 @@ function syncSelfStudyToGrades() {
     saveData();
     if (typeof loadGrades === 'function') loadGrades();
 }
+
+// 編輯學分兌換率設定
+// 開啟學分兌換率設定 Modal
+window.editSelfStudyRate = function() {
+    const currentRate = selfStudyConversionRate || 18;
+    document.getElementById('input-ss-rate').value = currentRate;
+    document.getElementById('self-study-rate-modal').style.display = 'flex';
+}
+
+// 關閉學分兌換率設定 Modal
+window.closeSelfStudyRateModal = function() {
+    document.getElementById('self-study-rate-modal').style.display = 'none';
+}
+
+// 儲存學分兌換率設定
+window.saveSelfStudyRate = function() {
+    const newRateStr = document.getElementById('input-ss-rate').value;
+    const newRate = parseFloat(newRateStr);
+    
+    if (!isNaN(newRate) && newRate > 0) {
+        selfStudyConversionRate = newRate;
+        saveData();
+        renderSelfStudy();
+        closeSelfStudyRateModal();
+        if (window.showAlert) showAlert("已成功更新自主學習學分兌換率！", "設定成功");
+    } else {
+        if (window.showAlert) showAlert("請輸入大於 0 的有效數字！", "輸入錯誤");
+    }
+}

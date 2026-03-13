@@ -89,6 +89,9 @@ let systemNotifications = [];
 // 當前學期的自主學習活動紀錄
 let selfStudyActivities = [];
 
+// 自主學習活動學分兌換率 (預設 18 小時兌換 1 學分)
+let selfStudyConversionRate = 18;
+
 
 
 /* ========================================================================== */

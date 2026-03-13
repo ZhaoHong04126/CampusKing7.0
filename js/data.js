@@ -39,6 +39,7 @@ function parseAndApplyData(parsed) {
     
     currentSemester = parsed.currentSemester || semesterList[0];
     graduationTarget = parsed.graduationTarget || 128;
+    selfStudyConversionRate = parsed.selfStudyConversionRate || 18;
     periodTimesConfig = parsed.periodTimesConfig || {};
 
     if (parsed.paymentMethods) paymentMethods = parsed.paymentMethods;
@@ -169,6 +170,7 @@ function saveData() {
         semesterList: semesterList,
         currentSemester: currentSemester,
         graduationTarget: graduationTarget,
+        selfStudyConversionRate: selfStudyConversionRate,
         categoryTargets: categoryTargets,
         userSchoolInfo: userSchoolInfo,
         periodConfig: periodConfig,
@@ -342,6 +344,7 @@ function exportDataToFile() {
         semesterList: semesterList,
         currentSemester: currentSemester,
         graduationTarget: graduationTarget,
+        selfStudyConversionRate: selfStudyConversionRate,
         categoryTargets: categoryTargets,
         userSchoolInfo: userSchoolInfo,
         periodConfig: periodConfig,
