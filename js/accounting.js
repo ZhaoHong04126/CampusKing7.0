@@ -544,7 +544,7 @@ function renderCategoryChart() {
         if (cat === "糊塗帳") {
             return '#7f8c8d';
         }
-        return defaultColors[index % defaultColors.length];
+        return backgroundColors[index % backgroundColors.length];
     });
 
     if (categoryChartInstance) categoryChartInstance.destroy();

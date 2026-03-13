@@ -51,14 +51,13 @@ async function loadAdminFeedbacks() {
         listContainer.innerHTML = "";
 
         if (snapshot.empty) {
-            listContainer.innerHTML = "<tr><td colspan='6'>目前沒有任何回饋資料。</td></tr>";
+            listContainer.innerHTML = "<tr><td colspan='6' style='color: gray;'>目前沒有任何回饋資料。</td></tr>";
             return;
         }
 
         snapshot.forEach(doc => {
             const data = doc.data();
             const id = doc.id;
-            // const date = data.timestamp ? data.timestamp.toDate().toLocaleString() : "未知時間";
             // --- 安全解析時間 ---
             let date = "未知時間";
             if (data.timestamp) {

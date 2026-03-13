@@ -49,7 +49,7 @@ async function saveMaintenanceSettings() {
 
     try {
         // 寫入 Firebase
-        await db.collection("settings").doc("maintenance").set({
+        await db.collection("public").doc("maintenance").set({
             enabled: enabled,
             startTime: startTime,
             endTime: endTime,
@@ -66,7 +66,7 @@ async function saveMaintenanceSettings() {
 // 2. 學生端檢查公告 (登入時呼叫)
 async function checkMaintenanceAlert() {
     try {
-        const docSnap = await db.collection("settings").doc("maintenance").get();
+        const docSnap = await db.collection("public").doc("maintenance").get();
 
         if (docSnap.exists) {
             const data = docSnap.data();
