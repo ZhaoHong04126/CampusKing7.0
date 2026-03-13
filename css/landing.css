@@ -1,25 +1,19 @@
-/* ========================================================================== */
-/* 📌 基礎重置與全域設定 (Base & Global)                                       */
-/* ========================================================================== */
-
 /* 確保所有元素的寬高計算包含 padding 與 border，並清除預設內外邊距 */
-* { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 /* 網頁主體設定：設定字體、背景色、鎖定高度為螢幕高度並隱藏全域滾動條 */
-body, html {
+body,
+html {
     font-family: "PingFang TC", "Microsoft JhengHei", -apple-system, sans-serif;
-    background-color: var(--bg-light); /* 依賴 base.css 的全域變數 */
+    background-color: var(--bg-light);
+    /* 依賴 base.css 的全域變數 */
     height: 100vh;
     overflow: hidden;
 }
-
-/* ========================================================================== */
-/* 📌 主佈局架構 (Split Layout)                                                 */
-/* ========================================================================== */
 
 /* 左右分割佈局主容器，使用 Flexbox 讓左右區塊並排，佔滿全螢幕 */
 .split-layout {
@@ -30,20 +24,23 @@ body, html {
 
 /* 左側面板：品牌視覺與文案展示區。設定漸層疊加背景圖，字體為白色 */
 .left-panel {
-    flex: 1.2; /* 佔據比例稍微大於右側 */
-    background: linear-gradient(135deg, rgba(74, 144, 226, 0.9) 0%, rgba(44, 62, 80, 0.9) 100%), 
-                url('https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80') center/cover;
+    flex: 1.2;
+    /* 佔據比例稍微大於右側 */
+    background: linear-gradient(135deg, rgba(74, 144, 226, 0.9) 0%, rgba(44, 62, 80, 0.9) 100%),
+        url('https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80') center/cover;
     color: white;
     padding: 60px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* 讓內容上下分散對齊 */
+    justify-content: space-between;
+    /* 讓內容上下分散對齊 */
     position: relative;
 }
 
 /* 右側面板：乾淨的登入表單區。背景純白，內容置中對齊 */
 .right-panel {
-    flex: 1; /* 佔據比例稍小 */
+    flex: 1;
+    /* 佔據比例稍小 */
     background: #f4f6f9;
     display: flex;
     flex-direction: column;
@@ -52,10 +49,6 @@ body, html {
     padding: 40px;
 }
 
-/* ========================================================================== */
-/* 📌 左側：品牌視覺與動態公告 (Left Panel Elements)                             */
-/* ========================================================================== */
-
 /* 品牌 Logo 文字與圖標的排版設定 */
 .brand-logo {
     font-size: 1.8rem;
@@ -63,7 +56,8 @@ body, html {
     letter-spacing: 1px;
     display: flex;
     align-items: center;
-    gap: 10px; /* 圖標與文字之間的間距 */
+    gap: 10px;
+    /* 圖標與文字之間的間距 */
 }
 
 /* 左側主視覺標語 (痛點直擊文案) 設定 */
@@ -82,8 +76,6 @@ body, html {
     line-height: 1.5;
 }
 
-/* --- 收納版迷你動態公告 (降低干擾) --- */
-
 /* 預設顯示的橢圓形迷你公告按鈕 (毛玻璃效果) */
 .news-widget-mini {
     background: rgba(255, 255, 255, 0.15);
@@ -98,7 +90,8 @@ body, html {
     font-size: 0.95rem;
     font-weight: bold;
     transition: all 0.3s ease;
-    align-self: flex-start; /* 靠左對齊 */
+    align-self: flex-start;
+    /* 靠左對齊 */
 }
 
 /* 迷你公告按鈕的懸停效果 (稍微放大與變亮) */
@@ -114,14 +107,26 @@ body, html {
     background-color: #2ecc71;
     border-radius: 50%;
     box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
-    animation: pulse 1.5s infinite; /* 綁定呼吸動畫 */
+    animation: pulse 1.5s infinite;
+    /* 綁定呼吸動畫 */
 }
 
 /* 呼吸燈動畫關鍵影格 (向外擴散淡出效果) */
 @keyframes pulse {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(46, 204, 113, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 8px rgba(46, 204, 113, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+    }
 }
 
 /* 點擊展開後的動態公告面板基礎樣式 (毛玻璃) */
@@ -133,10 +138,16 @@ body, html {
     border-radius: 20px;
     max-width: 500px;
 }
-.news-widget h3 { font-size: 1.1rem; margin-bottom: 10px; }
+
+.news-widget h3 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
 
 /* 狀態類別：隱藏展開的面板 */
-.news-widget.hidden { display: none; }
+.news-widget.hidden {
+    display: none;
+}
 
 /* 狀態類別：顯示展開的面板，並加入彈出動畫 */
 .news-widget.show {
@@ -144,17 +155,24 @@ body, html {
     animation: popIn 0.3s ease-out forwards;
     margin-top: 15px;
 }
+
 @keyframes popIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* ========================================================================== */
-/* 📌 右側：登入表單區塊 (Right Panel - Login Form)                             */
-/* ========================================================================== */
-
 /* 登入區塊的外層容器，限制最大寬度 */
-.login-wrapper { width: 100%; max-width: 320px; }
+.login-wrapper {
+    width: 100%;
+    max-width: 320px;
+}
 
 /* 登入區主標題 ("歡迎回來...") */
 .login-wrapper h2 {
@@ -203,6 +221,7 @@ body, html {
     border: 2px solid #e0e0e0;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
+
 .btn-google-massive:hover {
     border-color: var(--primary);
     box-shadow: 0 6px 20px rgba(74, 144, 226, 0.15);
@@ -215,6 +234,7 @@ body, html {
     color: #2c3e50;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
+
 .btn-guest-massive:hover {
     background: linear-gradient(135deg, #e4e9f2 0%, #b2c2d9 100%);
     transform: translateY(-2px);
@@ -229,13 +249,21 @@ body, html {
     font-size: 0.85rem;
     margin: 25px 0;
 }
-.divider::before, .divider::after {
+
+.divider::before,
+.divider::after {
     content: '';
     flex: 1;
     border-bottom: 1px solid #eee;
 }
-.divider::before { margin-right: 10px; } 
-.divider::after { margin-left: 10px; }
+
+.divider::before {
+    margin-right: 10px;
+}
+
+.divider::after {
+    margin-left: 10px;
+}
 
 /* --- 次要視覺焦點：傳統信箱登入區 (Secondary Login) --- */
 
@@ -248,7 +276,10 @@ body, html {
 }
 
 /* 輸入框容器 */
-.input-group { margin-bottom: 15px; text-align: left; }
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
 
 /* 輸入框本體樣式 */
 .input-group input {
@@ -278,13 +309,17 @@ body, html {
     margin-bottom: 20px;
     color: var(--text-muted);
 }
+
 .login-options a {
     color: var(--primary);
     text-decoration: none;
     font-weight: 600;
     cursor: pointer;
 }
-.login-options a:hover { text-decoration: underline; }
+
+.login-options a:hover {
+    text-decoration: underline;
+}
 
 /* 傳統信箱登入按鈕 (空心線條樣式，降低視覺比重) */
 .btn-main-outline {
@@ -299,7 +334,11 @@ body, html {
     cursor: pointer;
     transition: background 0.3s, color 0.3s;
 }
-.btn-main-outline:hover { background: var(--primary); color: white; }
+
+.btn-main-outline:hover {
+    background: var(--primary);
+    color: white;
+}
 
 /* 底部切換註冊/登入的文字連結區 */
 .toggle-mode {
@@ -308,68 +347,126 @@ body, html {
     font-size: 0.95rem;
     color: var(--text-muted);
 }
+
 .toggle-mode span {
     color: var(--primary);
     font-weight: bold;
     cursor: pointer;
 }
 
-/* ========================================================================== */
-/* 📱 手機版 RWD 適應 (改為 Modal 彈窗模式)                                     */
-/* ========================================================================== */
-
 /* 桌面版預設隱藏手機專用元素 */
-.mobile-header { display: none; }
-.btn-close-modal { display: none; }
+.mobile-header {
+    display: none;
+}
+
+.btn-close-modal {
+    display: none;
+}
 
 @media (max-width: 900px) {
+
     /* 解除鎖定高度，允許手機版滾動 */
-    .split-layout { flex-direction: column; overflow-y: auto; height: auto; }
-    
+    .split-layout {
+        flex-direction: column;
+        overflow-y: auto;
+        height: auto;
+    }
+
     /* 顯示手機版頂部導航列 (包含 Logo 與登入按鈕) */
     .mobile-header {
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 20px; width: 100%; position: absolute; top: 0; left: 0; z-index: 100;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
     }
-    
+
     /* 手機版頂部的「登入」觸發按鈕 */
     .btn-login-trigger {
-        background: white; color: var(--primary); border: none; padding: 8px 20px;
-        border-radius: 20px; font-weight: bold; font-size: 0.95rem; cursor: pointer;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: 0.2s;
+        background: white;
+        color: var(--primary);
+        border: none;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.95rem;
+        cursor: pointer;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: 0.2s;
     }
-    .btn-login-trigger:active { transform: scale(0.95); }
+
+    .btn-login-trigger:active {
+        transform: scale(0.95);
+    }
 
     /* 隱藏左側面板原本的 Logo (避免與 mobile-header 重複) */
-    .desktop-logo { display: none !important; }
-    
+    .desktop-logo {
+        display: none !important;
+    }
+
     /* 左側面板改為佔滿整個手機螢幕高度 */
-    .left-panel { padding: 90px 20px 40px 20px; min-height: 100vh; justify-content: center; gap: 30px; }
-    .hero-text h1 { font-size: 2.5rem; }
-    
+    .left-panel {
+        padding: 90px 20px 40px 20px;
+        min-height: 100vh;
+        justify-content: center;
+        gap: 30px;
+    }
+
+    .hero-text h1 {
+        font-size: 2.5rem;
+    }
+
     /* 將右側面板改造為滿版的黑色半透明 Modal 彈出視窗 (預設隱藏) */
     .right-panel {
-        display: none; 
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-        background: rgba(0, 0, 0, 0.6); padding: 20px; z-index: 2000;
-        justify-content: center; align-items: center; backdrop-filter: blur(5px);
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 20px;
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
     }
-    
+
     /* JavaScript 觸發時加入此 class 以顯示手機版登入彈窗 */
-    .right-panel.show-modal { display: flex; }
-    
+    .right-panel.show-modal {
+        display: flex;
+    }
+
     /* 登入區塊在手機版變為置中的白色浮動卡片 */
     .login-wrapper {
-        background: white; padding: 30px; border-radius: 16px;
-        position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        max-width: 350px; width: 100%;
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        position: relative;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        max-width: 350px;
+        width: 100%;
     }
 
     /* 顯示手機版專屬的右上角關閉按鈕 (X) */
     .btn-close-modal {
-        display: block; position: absolute; top: 15px; right: 15px;
-        background: transparent; border: none; font-size: 1.2rem;
-        color: #999; cursor: pointer; transition: 0.2s;
+        display: block;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: transparent;
+        border: none;
+        font-size: 1.2rem;
+        color: #999;
+        cursor: pointer;
+        transition: 0.2s;
     }
-    .btn-close-modal:hover { color: #333; }
+
+    .btn-close-modal:hover {
+        color: #333;
+    }
 }
