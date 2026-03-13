@@ -44,8 +44,8 @@ async function submitFeedback() {
 async function loadAdminFeedbacks() {
     const listContainer = document.getElementById('admin-feedback-list');
 
-    // 添加二次驗證保護
-    const psw = await showPrompt("請輸入管理員密碼以存取使用者回饋：", "", "🔒 權限驗證");
+    // 添加二次驗證保護：管理員密碼
+    const psw = await showPrompt("請輸入管理員密碼以存取使用者回饋：", "", "🔒 權限驗證 (1/3)");
     if (psw === null) {
         if (typeof switchTab === 'function') switchTab('schedule');
         return;
@@ -57,6 +57,28 @@ async function loadAdminFeedbacks() {
         } else {
             alert("❌ 密碼錯誤，拒絕存取！");
         }
+        listContainer.innerHTML = "<tr><td colspan='6' style='color: red; font-weight: bold; text-align: center;'>驗證失敗，為保護使用者隱私，拒絕顯示資料。</td></tr>";
+        if (typeof switchTab === 'function') switchTab('schedule');
+        return;
+    }
+
+    // 第三次驗證防護機制：問答題一
+    const ans1 = await showPrompt("管理者最喜歡吃什麼？", "", "🛡️ 第三次驗證防護 (2/3)");
+    if (ans1 === null || ans1.trim() !== "鳳梨湯") {
+        if (typeof showAlert === 'function') showAlert("答案錯誤，拒絕存取！", "❌ 拒絕存取");
+        else alert("❌ 答案錯誤，拒絕存取！");
+        
+        listContainer.innerHTML = "<tr><td colspan='6' style='color: red; font-weight: bold; text-align: center;'>驗證失敗，為保護使用者隱私，拒絕顯示資料。</td></tr>";
+        if (typeof switchTab === 'function') switchTab('schedule');
+        return;
+    }
+
+    // 第三次驗證防護機制：問答題二
+    const ans2 = await showPrompt("管理者人生中的第一個老師是誰？", "", "🛡️ 第三次驗證防護 (3/3)");
+    if (ans2 === null || ans2.trim() !== "施淑惠老師") {
+        if (typeof showAlert === 'function') showAlert("答案錯誤，拒絕存取！", "❌ 拒絕存取");
+        else alert("❌ 答案錯誤，拒絕存取！");
+
         listContainer.innerHTML = "<tr><td colspan='6' style='color: red; font-weight: bold; text-align: center;'>驗證失敗，為保護使用者隱私，拒絕顯示資料。</td></tr>";
         if (typeof switchTab === 'function') switchTab('schedule');
         return;
