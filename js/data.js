@@ -2,8 +2,11 @@
 /* 📌 資料讀寫與初始化 (Data Initialization & Storage)                            */
 /* ========================================================================== */
 
-// 應用程式啟動時載入資料的主函式
-function loadData() {
+// 🌟 新增防呆變數：作為「安全鎖」，確保資料完全解析與載入後，才允許執行存檔動作
+let isDataLoaded = false;
+
+// 🌟 將 loadData 加上 async，使其成為非同步函式，以便阻擋後續執行
+async function loadData() {
     if (!currentUser) return;
     const uid = currentUser.uid;
     const dbKey = 'CampusKing_v3.2.0_' + uid;
@@ -14,12 +17,13 @@ function loadData() {
         parseAndApplyData(JSON.parse(savedData));
         refreshUI();
         if (navigator.onLine) {
+            // 背景同步，不需要 await 阻擋 UI，但會確保雲端最新資料蓋過本地
             syncFromCloud(uid);
         }
     } else {
-        // 本地沒資料 (換專案或換電腦)：優先從雲端下載
+        // 🌟 本地沒資料 (換電腦、清除快取、或被維護模式踢出)：必須強制等待雲端下載完成！
         if (navigator.onLine) {
-            syncFromCloud(uid); // 注意：syncFromCloud 裡面原本就有寫 refreshUI()，所以等待它執行即可
+            await syncFromCloud(uid); // 🌟 加上 await 阻斷後續程式執行，直到下載完畢
         } else {
             // 完全離線且無資料才初始化
             initDefaultData();
@@ -80,14 +84,17 @@ function parseAndApplyData(parsed) {
     }
 
     loadSemesterData(currentSemester);
+    
+    // 🌟 資料解析與指派完全結束後，解開安全鎖，允許 saveData() 運作
+    isDataLoaded = true;
 }
 
 // 若完全無資料時，初始化預設的學期與結構
 function initDefaultData() {
     semesterList = ["114-1"];
-    currentSemester = "114-1"; // 👈 將這裡統一改為 114-1，避免與 semesterList 衝突
+    currentSemester = "114-1"; 
     allData = {
-        "114-1": { // 👈 這裡也改為 114-1
+        "114-1": { 
             schedule: JSON.parse(JSON.stringify(defaultSchedule)),
             grades: [],
             regularExams: {},
@@ -96,6 +103,9 @@ function initDefaultData() {
         }
     };
     loadSemesterData(currentSemester);
+    
+    // 🌟 即使是初始化空資料，也要解開安全鎖
+    isDataLoaded = true;
 }
 
 // 根據指定的學期代號，將該學期資料載入到當下操作的全域變數中
@@ -131,7 +141,12 @@ function loadSemesterData(sem) {
 
 // 將目前的所有全域變數打包，儲存至 LocalStorage 並同步至 Firebase 雲端
 function saveData() {
-    if (!currentUser) return;
+    // 🌟 極度重要的防禦機制：如果尚未登入，或資料「還沒載入完畢」，絕對禁止存檔！
+    // 這樣可以防止空資料（剛初始化的空陣列）不小心被上傳覆蓋掉雲端的真實資料
+    if (!currentUser || !isDataLoaded) {
+        console.warn("⚠️ 系統攔截了一次危險的存檔：資料尚未載入完成，防止空資料覆寫雲端。");
+        return; 
+    }
     
     allData[currentSemester] = { 
         schedule: weeklySchedule,
@@ -187,7 +202,8 @@ function syncFromCloud(uid) {
     const statusBtn = document.getElementById('user-badge');
     if(statusBtn) statusBtn.innerText = "同步中...";
 
-    db.collection("users").doc(uid).get().then((doc) => {
+    // 🌟 加上 return，將這個 Firebase 請求轉為可被 await 等待的 Promise
+    return db.collection("users").doc(uid).get().then((doc) => {
         if (doc.exists) {
             const cloudData = doc.data();
             console.log("🔥 雲端資料已下載");
@@ -199,16 +215,15 @@ function syncFromCloud(uid) {
 
             refreshUI();
             if(statusBtn) {
-                
-                statusBtn.innerText = (uid === '8OeziUfXrKXot4l60U2keePhOwS2') ? '👑 管理員' : '學生';// 在開發時把這行註解掉並替換成這行
-                // statusBtn.innerText = '👑 管理員 (測試中)';
+                statusBtn.innerText = (uid === '8OeziUfXrKXot4l60U2keePhOwS2') ? '👑 管理員' : '學生';
             }
         } else {
             console.log("☁️ 此帳號尚無雲端資料，將自動上傳本地資料...");
+            // 如果雲端真的沒資料，先解開安全鎖，然後再觸發存檔上傳
+            isDataLoaded = true;
             saveData();
             if(statusBtn) {
-                statusBtn.innerText = (uid === '8OeziUfXrKXot4l60U2keePhOwS2') ? '👑 管理員' : '學生';// 在開發時把這行註解掉並替換成這行
-                // statusBtn.innerText = '👑 管理員 (測試中)';
+                statusBtn.innerText = (uid === '8OeziUfXrKXot4l60U2keePhOwS2') ? '👑 管理員' : '學生';
             }
         }
     }).catch((error) => {

@@ -2,11 +2,17 @@
 /* 📌 應用程式進入點與狀態監聽 (App Entry Point & Auth Listener)             */
 /* ========================================================================== */
 
-auth.onAuthStateChanged((user) => {
+// 🌟 將監聽回呼函式加上 async，讓內部可以使用 await 來排隊執行
+auth.onAuthStateChanged(async (user) => {
     if (user) {
         currentUser = user;
         updateLoginUI(true);
-        loadData();
+        
+        // 🌟 核心修復：強制等待 loadData() 完全執行完畢 (包含等待雲端下載)
+        // 這樣能保證在執行下一行的 initUI() 前，資料絕對已經被填好！
+        await loadData();
+        
+        // 🌟 資料準備好後，才開始初始化畫面、抓取推播 (原本觸發覆寫的元兇)
         initUI();
             
         if (user.uid === '8OeziUfXrKXot4l60U2keePhOwS2') {
@@ -22,7 +28,7 @@ auth.onAuthStateChanged((user) => {
             switchTab('schedule', false); 
         }
 
-        // ⭐ 新增：使用者登入成功後，延遲 1 秒檢查是否有維護公告
+        // 使用者登入成功後，延遲 1 秒檢查是否有維護公告
         setTimeout(checkMaintenanceAlert, 1000);
 
     } else {
