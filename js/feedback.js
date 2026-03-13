@@ -43,6 +43,25 @@ async function submitFeedback() {
 // ==========================================
 async function loadAdminFeedbacks() {
     const listContainer = document.getElementById('admin-feedback-list');
+
+    // 添加二次驗證保護
+    const psw = await showPrompt("請輸入管理員密碼以存取使用者回饋：", "", "🔒 權限驗證");
+    if (psw === null) {
+        if (typeof switchTab === 'function') switchTab('schedule');
+        return;
+    }
+
+    if (psw !== "zhao20261150304") {
+        if (typeof showAlert === 'function') {
+            showAlert("密碼錯誤，拒絕存取！", "❌ 拒絕存取");
+        } else {
+            alert("❌ 密碼錯誤，拒絕存取！");
+        }
+        listContainer.innerHTML = "<tr><td colspan='6' style='color: red; font-weight: bold; text-align: center;'>驗證失敗，為保護使用者隱私，拒絕顯示資料。</td></tr>";
+        if (typeof switchTab === 'function') switchTab('schedule');
+        return;
+    }
+
     listContainer.innerHTML = "<tr><td colspan='6'>載入中...</td></tr>";
 
     try {
@@ -58,6 +77,7 @@ async function loadAdminFeedbacks() {
         snapshot.forEach(doc => {
             const data = doc.data();
             const id = doc.id;
+            // const date = data.timestamp ? data.timestamp.toDate().toLocaleString() : "未知時間";
             // --- 安全解析時間 ---
             let date = "未知時間";
             if (data.timestamp) {
