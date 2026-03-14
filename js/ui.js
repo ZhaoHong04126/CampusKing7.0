@@ -793,6 +793,103 @@ window.checkSystemBroadcasts = function() {
     }).catch(e => console.log("讀取系統廣播失敗 (可忽略):", e));
 }
 
+/* ---- 📌 系統更新顯示框管理 (Update Log Manager)---- */
+
+let updateLogDraftsList = [];
+
+// 【管理員專用】開啟更新顯示框管理視窗
+window.openUpdateLogManagerModal = function() {
+    showPrompt("請輸入管理員密碼：", "", "🔒 權限驗證").then(password => {
+        if (password === null) return; 
+        if (password !== "zhao20261150304") { 
+            showAlert("密碼錯誤，您沒有權限存取！", "❌ 拒絕存取");
+            return;
+        }
+        
+        document.getElementById('update-log-manager-modal').style.display = 'flex';
+        loadUpdateLogDrafts();
+    });
+}
+
+function loadUpdateLogDrafts() {
+    db.collection("public").doc("update_logs_drafts").get().then((doc) => {
+        if (doc.exists && doc.data().items) {
+            updateLogDraftsList = doc.data().items;
+        } else {
+            updateLogDraftsList = [];
+        }
+        renderUpdateLogDrafts();
+    });
+}
+
+function renderUpdateLogDrafts() {
+    const listDiv = document.getElementById('update-log-drafts-list');
+    if (updateLogDraftsList.length === 0) {
+        listDiv.innerHTML = '<p style="color:#999; text-align:center;">目前沒有儲存的草稿</p>';
+        return;
+    }
+    let html = '';
+    updateLogDraftsList.forEach((item, index) => {
+        const timeStr = new Date(item.time).toLocaleString('zh-TW');
+        html += `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding: 10px 0; border-bottom: 1px solid #eee;">
+            <div style="flex: 1; padding-right: 10px;">
+                <div style="font-weight: bold; font-size: 1rem; color: var(--primary);">${item.version}</div>
+                <div style="font-size: 0.8rem; color: #888;">${timeStr}</div>
+            </div>
+            <button onclick="deleteUpdateLogDraft(${index})" style="background:transparent; border:none; color:#e74c3c; cursor:pointer; font-size: 1.1rem; padding: 5px;" title="刪除草稿">🗑️</button>
+        </div>`;
+    });
+    listDiv.innerHTML = html;
+}
+
+window.deleteUpdateLogDraft = function(index) {
+    showConfirm("確定要刪除這個草稿嗎？").then(ok => {
+        if (ok) {
+            updateLogDraftsList.splice(index, 1);
+            db.collection("public").doc("update_logs_drafts").set({
+                items: updateLogDraftsList
+            }).then(() => {
+                renderUpdateLogDrafts();
+            });
+        }
+    });
+}
+
+// 【管理員專用】關閉更新顯示框管理視窗
+window.closeUpdateLogManagerModal = function() {
+    document.getElementById('update-log-manager-modal').style.display = 'none';
+}
+
+// 【管理員專用】儲存設定至 Firebase 草稿區
+window.saveUpdateLogDraft = function() {
+    const version = document.getElementById('input-update-version').value.trim();
+    const content = document.getElementById('input-update-content').value.trim();
+
+    if (!version || !content) {
+        showAlert("請輸入版本號與內容！");
+        return;
+    }
+
+    updateLogDraftsList.unshift({
+        version: version,
+        content: content,
+        time: new Date().toISOString()
+    });
+
+    db.collection("public").doc("update_logs_drafts").set({
+        items: updateLogDraftsList
+    }).then(() => {
+        document.getElementById('input-update-version').value = '';
+        document.getElementById('input-update-content').value = '';
+        renderUpdateLogDrafts();
+        showAlert(`✨ 版本 ${version} 的日誌已儲存至草稿！\n在解除系統維護時，您可以選擇發布。`, "儲存成功");
+    }).catch(error => {
+        console.error("更新日誌儲存失敗：", error);
+        showAlert("❌ 儲存失敗，請檢查權限：" + error.message, "系統錯誤");
+    });
+}
+
 /* ---- 📌 管理台：渲染 首頁動態 與 系統推播 展示區 ---- */
 
 window.renderAdminNewsDisplay = function() {
@@ -964,21 +1061,75 @@ window.toggleMaintenanceMode = function() {
         let isMaintenance = doc.exists && doc.data().maintenanceMode === true;
         let newState = !isMaintenance;
         
-        const warningMsg = newState 
-            ? "⚠️ 極度危險操作！\n\n確定要「開啟」全站維護模式嗎？\n開啟後，除了您之外的所有學生將被強制鎖在門外！"
-            : "確定要「解除」維護模式嗎？\n解除後，所有學生將恢復正常登入與使用。";
+        if (newState) {
+            // 開啟維護模式
+            const warningMsg = "⚠️ 極度危險操作！\n\n確定要「開啟」全站維護模式嗎？\n開啟後，除了您之外的所有學生將被強制鎖在門外！";
+            showConfirm(warningMsg, "🚨 維護模式切換").then(ok => {
+                if (ok) {
+                    db.collection("public").doc("feature_flags").set({
+                        maintenanceMode: true,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true }).then(() => {
+                        showAlert(`全站維護模式已成功開啟！`, "設定套用");
+                        renderAdminFeatureFlags(); 
+                    });
+                }
+            });
+        } else {
+            // 解除維護模式，開啟選擇日誌的對話框
+            openMaintenanceUnlockModal();
+        }
+    });
+}
 
-        showConfirm(warningMsg, "🚨 維護模式切換").then(ok => {
-            if (ok) {
-                db.collection("public").doc("feature_flags").set({
-                    maintenanceMode: newState,
-                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true }).then(() => {
-                    showAlert(`全站維護模式已成功${newState ? '開啟' : '解除'}！`, "設定套用");
-                    renderAdminFeatureFlags(); 
-                });
-            }
-        });
+window.openMaintenanceUnlockModal = function() {
+    db.collection("public").doc("update_logs_drafts").get().then((doc) => {
+        const selectEl = document.getElementById('unlock-update-log-select');
+        selectEl.innerHTML = '<option value="">無 (不發布任何更新日誌)</option>';
+        if (doc.exists && doc.data().items && doc.data().items.length > 0) {
+            window._updateLogDrafts = doc.data().items;
+            doc.data().items.forEach((item, index) => {
+                const dateStr = new Date(item.time).toLocaleString('zh-TW', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
+                selectEl.innerHTML += `<option value="${index}">${item.version} (${dateStr})</option>`;
+            });
+        } else {
+            window._updateLogDrafts = [];
+        }
+        document.getElementById('maintenance-unlock-modal').style.display = 'flex';
+    });
+}
+
+window.closeMaintenanceUnlockModal = function() {
+    document.getElementById('maintenance-unlock-modal').style.display = 'none';
+}
+
+window.confirmUnlockMaintenance = function() {
+    const selectEl = document.getElementById('unlock-update-log-select');
+    const selectedIdx = selectEl.value;
+    
+    // 關閉維護模式
+    db.collection("public").doc("feature_flags").set({
+        maintenanceMode: false,
+        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true }).then(() => {
+        
+        if (selectedIdx !== "") {
+            // 有選擇日誌 -> 發布
+            const selectedLog = window._updateLogDrafts[selectedIdx];
+            db.collection("public").doc("system_update_log").set({
+                version: selectedLog.version,
+                content: selectedLog.content,
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                showAlert(`全站維護模式已解除！\n並且已成功發布版本：${selectedLog.version}`, "✅ 系統已開放");
+                renderAdminFeatureFlags(); 
+                localStorage.removeItem('appVersion'); // 測試用，管理員自己也會跳出
+            });
+        } else {
+            showAlert(`全站維護模式已解除！(未發布新日誌)`, "✅ 系統已開放");
+            renderAdminFeatureFlags(); 
+        }
+        closeMaintenanceUnlockModal();
     });
 }
 
