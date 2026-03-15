@@ -15,10 +15,10 @@ auth.onAuthStateChanged(async (user) => {
         // 🌟 資料準備好後，才開始初始化畫面、抓取推播 (原本觸發覆寫的元兇)
         initUI();
 
-        // if (user.uid === '8OeziUfXrKXot4l60U2keePhOwS2') {
+        if (user.uid === '8OeziUfXrKXot4l60U2keePhOwS2') {
         const adminNav = document.getElementById('admin-nav-section'); // 新增的左側選單
         if (adminNav) adminNav.style.display = 'block';
-        // }
+        }
 
         const hash = window.location.hash.replace('#', '');
 
