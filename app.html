@@ -87,6 +87,7 @@
 			</nav>
 		</aside>
 		<main class="main-content" id="main-content-area">
+			<!-- 使用者 -->
 			<div id="view-schedule" style="display: none;">
 				<div class="week-tabs" style="margin-bottom: 20px;">
 					<button class="tab-btn active" onclick="switchScheduleMode('daily')" id="btn-sch-daily">📅 本日課程</button>
@@ -583,6 +584,7 @@
 					</div>
 				</div>
 			</div>
+			<!-- 管理者 -->
 			<div id="view-admin-feedback" class="view-section" style="display: none;">
 				<h2>💬 使用者回饋管理台</h2>
 				<div class="admin-controls">
@@ -604,7 +606,6 @@
 					</table>
 				</div>
 			</div>
-
 			<div id="view-admin" style="display: none;">
 				<style>
 					.admin-toggle-switch {
@@ -744,6 +745,25 @@
 		</main>
 	</div>
 
+<!-- 使用者 -->
+	<!-- 🎉 系統更新通知 -->
+	<div id="update-modal" class="update-modal-overlay" style="display: none;">
+		<div class="update-modal-content">
+			<div class="update-modal-header">
+				<h2>🎉 系統更新通知 (v<span id="update-version-text"></span>)</h2>
+				<button class="close-update-btn" onclick="closeUpdateModal()">&times;</button>
+			</div>
+			<div class="update-modal-body">
+				<ul id="update-notes-list">
+				
+				</ul>
+			</div>
+			<div class="update-modal-footer">
+				<button class="btn-primary" onclick="closeUpdateModal()">我知道了</button>
+			</div>
+		</div>
+	</div>
+	<!-- 周課表使用 -->
 	<div id="schedule-modal" class="modal">
 		<div class="modal-content" style="width: 95%; max-width: 800px; height: 90vh; overflow-y: auto;">
 			<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
@@ -774,6 +794,7 @@
 			<p style="text-align: center; color: #888; font-size: 0.9rem; margin-top: 10px;">點擊格子可編輯課程</p>
 		</div>
 	</div>
+	<!-- 自訂節次與時程 -->
 	<div id="period-time-modal" class="modal">
 		<div class="modal-content" style="text-align: left;">
 			<h3 style="text-align: center; margin-top:0;">⏱️ 節次與時程設定</h3>
@@ -799,6 +820,7 @@
 			</div>
 		</div>
 	</div>
+	<!-- ✏️ 編輯課程 -->
 	<div id="course-modal" class="modal">
 		<div class="modal-content" style="text-align: left;">
 			<h3 style="text-align: center; margin-top:0;">✏️ 編輯課程</h3>
@@ -844,6 +866,7 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeEditModal()">關閉</button>
 		</div>
 	</div>
+	<!-- 📅 新增活動 -->
 	<div id="calendar-modal" class="modal">
 		<div class="modal-content" style="text-align: left;">
 			<h3 id="cal-modal-title" style="text-align: center; margin-top:0;">📅 新增活動</h3>
@@ -885,6 +908,7 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeCalendarModal()">關閉</button>
 		</div>
 	</div>
+	<!-- 🏃 新增活動紀錄(自主活動) -->
 	<div id="self-study-modal" class="modal">
 		<div class="modal-content" style="text-align: left;">
 			<h3 id="modal-ss-title" style="text-align: center; margin-top:0;">🏃 新增活動紀錄</h3>
@@ -908,6 +932,7 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeSelfStudyModal()">取消</button>
 		</div>
 	</div>
+	<!-- 📝 新增平常考 -->
 	<div id="regular-exam-modal" class="modal">
 		<div class="modal-content" style="text-align: left;">
 			<h3 style="text-align: center; margin-top:0;">📝 新增平常考</h3>
@@ -926,6 +951,7 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeRegularModal()">關閉</button>
 		</div>
 	</div>
+	<!-- 🏆 新增段考 -->
 	<div id="midterm-exam-modal" class="modal">
 		<div class="modal-content" style="text-align: left;">
 			<h3 style="text-align: center; margin-top:0;">🏆 新增段考</h3>
@@ -944,6 +970,7 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeMidtermModal()">關閉</button>
 		</div>
 	</div>
+	<!-- 📊 編輯成績 -->
 	<div id="grade-modal" class="modal">
 		<div class="modal-content" style="text-align: left;">
 			<h3 style="text-align: center; margin-top:0;">📊 編輯成績</h3>
@@ -991,6 +1018,7 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeGradeModal()">關閉</button>
 		</div>
 	</div>
+	<!-- ➕ 新增計算筆記 -->
 	<div id="grade-calc-modal" class="modal">
 		<div class="modal-content" style="text-align: left;">
 			<h3 id="grade-calc-modal-title" style="text-align: center; margin-top:0;">➕ 新增計算筆記</h3>
@@ -1022,6 +1050,7 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeGradeCalcModal()">取消</button>
 		</div>
 	</div>
+	<!-- 🎒 新增作業 -->
 	<div id="homework-modal" class="modal">
 		<div class="modal-content" style="text-align: left;">
 			<h3 id="modal-hw-title" style="text-align: center; margin-top:0;">🎒 新增作業</h3>
@@ -1057,6 +1086,7 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;"onclick="closeHomeworkModal()">取消</button>
 		</div>
 	</div>
+	<!-- 💰 新增收支紀錄 -->
 	<div id="accounting-modal" class="modal">
 		<div class="modal-content" style="text-align: left;">
 			<h3 style="text-align: center; margin-top:0;">💰 新增收支紀錄</h3>
@@ -1094,6 +1124,7 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeAccountingModal()">關閉</button>
 		</div>
 	</div>
+	<!-- 📅 新增紀念日 -->
 	<div id="anniversary-modal" class="modal">
 		<div class="modal-content">
 			<h3 style="text-align: center; margin-top:0;">📅 新增紀念日</h3>
@@ -1109,16 +1140,7 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeAnniversaryModal()">取消</button>
 		</div>
 	</div>
-	<div id="custom-modal" class="modal" style="z-index: 9999;">
-		<div class="modal-content" style="max-width: 320px; text-align: center; padding: 25px;">
-			<h3 id="custom-modal-title" style="margin-top: 0; color: var(--primary); font-size: 1.3rem;">提示</h3>
-			<p id="custom-modal-message" style="margin: 20px 0; color: #555; line-height: 1.6; font-size: 1rem;"></p>
-			<div id="custom-modal-input-container" style="display:none; margin-top:15px; margin-bottom: 20px;">
-				<input type="text" id="custom-modal-input" class="login-input" style="width:100%; text-align: center;">
-			</div>
-			<div id="custom-modal-actions" style="display: flex; gap: 15px; justify-content: center; margin-top: 25px;"> </div>
-		</div>
-	</div>
+	<!-- 回饋/回報 表 -->
 	<div id="feedback-modal" class="modal" style="display: none;">
 		<div class="modal-content">
 			<span class="close-btn" onclick="document.getElementById('feedback-modal').style.display='none'">&times;</span>
@@ -1138,6 +1160,7 @@
 			<button class="btn-primary" onclick="submitFeedback()">送出回饋</button>
 		</div>
 	</div>
+	<!-- ⚙️ 自訂學分兌換率(自主學習) -->
 	<div id="self-study-rate-modal" class="modal">
 		<div class="modal-content" style="text-align: left; max-width: 400px;">
 			<h3 style="text-align: center; margin-top:0;">⚙️ 自訂學分兌換率</h3>
@@ -1151,7 +1174,20 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeSelfStudyRateModal()">取消</button>
 		</div>
 	</div>
+	<!-- 提示框 -->
+	<div id="custom-modal" class="modal" style="z-index: 9999;">
+		<div class="modal-content" style="max-width: 320px; text-align: center; padding: 25px;">
+			<h3 id="custom-modal-title" style="margin-top: 0; color: var(--primary); font-size: 1.3rem;">提示</h3>
+			<p id="custom-modal-message" style="margin: 20px 0; color: #555; line-height: 1.6; font-size: 1rem;"></p>
+			<div id="custom-modal-input-container" style="display:none; margin-top:15px; margin-bottom: 20px;">
+				<input type="text" id="custom-modal-input" class="login-input" style="width:100%; text-align: center;">
+			</div>
+			<div id="custom-modal-actions" style="display: flex; gap: 15px; justify-content: center; margin-top: 25px;"> </div>
+		</div>
+	</div>
 
+<!-- 管理員 -->
+	<!-- 📢 管理首頁動態 -->
 	<div id="news-manager-modal" class="modal">
 		<div class="modal-content" style="text-align: left; max-width: 400px;">
 			<h3 style="text-align: center; margin-top:0;">📢 管理首頁動態</h3>
@@ -1179,6 +1215,7 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeNewsManagerModal()">關閉</button>
 		</div>
 	</div>
+	<!-- 📡 發送系統推播 -->
 	<div id="broadcast-manager-modal" class="modal">
 		<div class="modal-content" style="text-align: left; max-width: 400px;">
 			<h3 style="text-align: center; margin-top:0;">📡 發送系統推播</h3>
@@ -1204,8 +1241,7 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeBroadcastModal()">取消</button>
 		</div>
 	</div>
-
-	<!-- 管理員編輯更新日誌 Modal (改為草稿管理) -->
+	<!-- 🚀 更新日誌草稿管理 -->
 	<div id="update-log-manager-modal" class="modal" style="z-index: 99999;">
 		<div class="modal-content" style="max-width: 500px; text-align: left;">
 			<h3 style="text-align: center; margin-top:0; color: var(--primary);">🚀 更新日誌草稿管理</h3>
@@ -1226,6 +1262,7 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeUpdateLogManagerModal()">關閉</button>
 		</div>
 	</div>
+	<!-- ✅ 解除系統維護模式 -->
 	<div id="maintenance-unlock-modal" class="modal" style="z-index: 99999;">
 		<div class="modal-content" style="max-width: 400px; text-align: left;">
 			<h3 style="text-align: center; margin-top:0; color: #2ecc71;">✅ 解除系統維護模式</h3>
@@ -1240,6 +1277,7 @@
 			<button class="btn" style="width: 100%; margin-top: 10px; background: transparent; color: #666; border: 1px solid #ddd;" onclick="closeMaintenanceUnlockModal()">取消</button>
 		</div>
 	</div>
+	<!-- ⚠️ 系統維護預告 -->
 	<div id="maintenance-alert-modal" class="modal" style="z-index: 99999;">
 		<div class="modal-content" style="max-width: 400px; text-align: center; border-top: 6px solid #f39c12;">
 			<h2 style="margin-top: 0; color: #d35400; font-size: 1.5rem;">⚠️ 系統維護預告</h2>
@@ -1253,10 +1291,7 @@
 			<button class="btn" style="width: 100%; background: #f39c12; font-size: 1.1rem; margin-top: 10px;" onclick="closeMaintenanceAlert()">我知道了</button>
 		</div>
 	</div>
-
-	
-
-	<!-- 更新日誌顯示框 (Update Log Modal) -->
+	<!-- 🚀 系統更新通知 -->
 	<div id="update-log-modal" class="modal" style="z-index: 99999;">
 		<div class="modal-content" style="max-width: 500px; text-align: left; border-top: 6px solid var(--primary); max-height: 80vh; overflow-y: auto;">
 			<h2 style="margin-top: 0; color: var(--primary); font-size: 1.5rem; text-align: center;">🚀 系統更新通知</h2>
@@ -1264,22 +1299,6 @@
 				<!-- 更新內容將透過 JS 動態載入 -->
 			</div>
 			<button class="btn" style="width: 100%; background: var(--primary); font-size: 1.1rem; margin-top: 10px;" onclick="closeUpdateLogModal()">太棒了，開始使用！</button>
-		</div>
-	</div>
-	<div id="update-modal" class="update-modal-overlay" style="display: none;">
-		<div class="update-modal-content">
-			<div class="update-modal-header">
-				<h2>🎉 系統更新通知 (v<span id="update-version-text"></span>)</h2>
-				<button class="close-update-btn" onclick="closeUpdateModal()">&times;</button>
-			</div>
-			<div class="update-modal-body">
-				<ul id="update-notes-list">
-				
-				</ul>
-			</div>
-			<div class="update-modal-footer">
-				<button class="btn-primary" onclick="closeUpdateModal()">我知道了</button>
-			</div>
 		</div>
 	</div>
 
