@@ -123,3 +123,90 @@
 @media (min-width: 768px) {
     .home-widgets-container { padding: 0 40px; margin-top: 20px; }
 }
+
+
+/* =========================================
+   管理員後台功能網格排版 (左 4 右 1 佈局)
+   ========================================= */
+.admin-dashboard-grid {
+    display: grid;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* --- 💻 電腦版排版 (大螢幕)：左側 2x2，右側 1 長條 --- */
+@media (min-width: 1024px) {
+    .admin-dashboard-grid {
+        /* 將畫面切分為 3 欄：前兩欄給左側 4 個功能，第 3 欄稍微寬一點給右側模組開關 */
+        grid-template-columns: 1fr 1fr 1.3fr;
+    }
+    
+    /* 透過定位，將第 5 個「模組開關」強制鎖定在右邊 (第 3 欄)，並向下延伸佔用 2 列的高度 */
+    .admin-dashboard-grid .card-module {
+        grid-column: 3;
+        grid-row: 1 / span 2;
+    }
+}
+
+/* --- 📱 平板與手機版排版：空間不夠時，自動變成上下排列 --- */
+@media (max-width: 1023px) {
+    .admin-dashboard-grid {
+        /* 平板顯示 2 欄，手機顯示 1 欄 */
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    
+    /* 螢幕較小時，讓模組開關掉到最下方並佔滿整寬度，避免文字擠在一起 */
+    .admin-dashboard-grid .card-module {
+        grid-column: 1 / -1; 
+    }
+}
+
+/* =========================================
+   以下為卡片基礎外觀 (維持不變)
+   ========================================= */
+.admin-feature-card {
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.admin-feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.06);
+    background: #ffffff;
+    border-color: #e0e0e0;
+}
+
+.admin-feature-card h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    margin: 0 0 10px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #eee;
+}
+
+.admin-feature-card p {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* 針對不同功能的專屬配色 */
+.card-status h3 { color: #2ecc71; } 
+.card-update h3 { color: #3498db; } 
+.card-news h3 { color: #e67e22; }   
+.card-push h3 { color: #9b59b6; }   
+
+/* 模組功能開關特別醒目顯示 */
+.card-module { background: #fffcf3; border-color: #fdebd0; cursor: default; }
+.card-module h3 { color: #f39c12; border-bottom-style: solid; }
+.card-module:hover { transform: none; box-shadow: none; background: #fffcf3; }

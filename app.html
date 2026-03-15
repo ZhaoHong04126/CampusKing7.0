@@ -695,49 +695,62 @@
 							<button class="btn" style="background: #f39c12; width: auto; padding: 8px 20px;" onclick="saveMaintenanceSettings()">💾 發布設定</button>
 						</div>
 					</div>
-					<div style="display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
-						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; background: #fafafa;">
-							<h3 style="color: #2ecc71; margin: 0 0 10px 0; font-size: 1.1rem;">📊 系統狀態</h3>
+					<div class="admin-dashboard-grid">
+						<div class="admin-feature-card card-status">
+							<h3>📊 系統狀態</h3>
 							<div style="font-size: 0.85rem; color: #666; line-height: 1.6;">
 								<div>⚙️ 前端版本：<b>v3.8.0</b></div>
 								<div>🔥 Firebase 連線：<span style="color:#2ecc71; font-weight:bold;">正常</span></div>
 							</div>
 						</div>
-						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; cursor: pointer; background: #fafafa; transition: 0.2s;" onclick="openUpdateLogManagerModal()" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
-							<h3 style="color: var(--primary); margin: 0 0 10px 0; font-size: 1.1rem;">🚀 更新顯示框管理</h3>
-							<p style="font-size: 0.85rem; color: #666; line-height: 1.4;">編輯讓使用者重啟系統時看到的更新內容與版本號。</p>
+						<div class="admin-feature-card card-update" onclick="openUpdateLogManagerModal()">
+							<h3>🚀 更新顯示框管理</h3>
+							<p>編輯讓使用者重啟系統時看到的更新內容與版本號草稿。</p>
 						</div>
-						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; cursor: pointer; background: #fafafa; transition: 0.2s;" onclick="openNewsManagerModal()" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
-							<h3 style="color: var(--primary); margin: 0 0 10px 0; font-size: 1.1rem;">📢 首頁動態發布</h3>
-							<p style="font-size: 0.85rem; color: #666; line-height: 1.4;">新增或刪除在登入頁面顯示的最新更新、系統公告。</p>
+						<div class="admin-feature-card card-news" onclick="openNewsManagerModal()">
+							<h3>📢 首頁動態發布</h3>
+							<p>新增或刪除在登入頁面顯示的最新系統公告與校園更新。</p>
 						</div>
-						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; cursor: pointer; background: #fafafa; transition: 0.2s;" onclick="openBroadcastModal()" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
-							<h3 style="color: #9b59b6; margin: 0 0 10px 0; font-size: 1.1rem;">📡 發送系統推播</h3>
-							<p style="font-size: 0.85rem; color: #666; line-height: 1.4;">發送全域通知給所有使用者。直接推播至通知中心。</p>
+						<div class="admin-feature-card card-push" onclick="openBroadcastModal()">
+							<h3>📡 發送系統推播</h3>
+							<p>發送全域通知給所有使用者。此訊息會直接推播至通知中心。</p>
 						</div>
-						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; background: #fffcf3; width: 100%;">
-							<h3 style="color: #f39c12; margin: 0 0 10px 0; font-size: 1.1rem;">🔧 模組功能開關 (分階段發布)</h3>
-							<p style="font-size: 0.85rem; color: #666; line-height: 1.4; margin-bottom: 5px;">【① 藍色】僅控制您自己(管理員)是否能使用。<br>【② 綠色】控制全站一般學生是否能使用。</p>
+						<div class="admin-feature-card card-module full-width-card">
+							<h3>🔧 模組功能開關 (分階段發布)</h3>
+							<p style="margin-bottom: 12px;">
+								【① 藍色開關】僅控制您自己(管理員)是否能看到並測試。<br>
+								【② 綠色開關】控制全站一般學生是否能正式使用。
+							</p>
 							<div style="border-top: 1px dashed #ddd; padding-top: 5px;">
 								<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0 5px 0; border-bottom: 2px solid #eee; font-size: 0.85rem; color: #888; font-weight: bold; text-align: center;">
 									<div style="flex: 1; text-align: left;">模組名稱</div>
 									<div style="display: flex; gap: 15px; width: 110px; justify-content: center;">
-										<div style="width: 46px; color: #3498db;">① 管理員</div>
-										<div style="width: 46px; color: #2ecc71;">② 全公開</div>
+										<div style="width: 46px; color: #3498db;">① 測試</div>
+										<div style="width: 46px; color: #2ecc71;">② 公開</div>
 									</div>
 								</div>
-								<div id="admin-dual-switches-container"> </div>
+								<div id="admin-dual-switches-container"></div>
 							</div>
 						</div>
 					</div>
-					<div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
-						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; background: #fafafa; box-shadow: none;">
-							<h3 style="color: var(--primary); margin: 0 0 10px 0; font-size: 1.05rem; border-bottom: 2px dashed #ddd; padding-bottom: 8px;"> 📢 目前的首頁動態</h3>
-							<div id="admin-display-news" style="max-height: 350px; overflow-y: auto; padding-right: 5px;"></div>
+					<div class="admin-dashboard-grid" style="margin-top: 25px;">
+						<div class="card" style="display: flex; flex-direction: column; border: 1px solid #eee; background: #fafafa; box-shadow: none;">
+							<h3 style="color: var(--primary); margin: 0 0 10px 0; font-size: 1.05rem; border-bottom: 2px dashed #ddd; padding-bottom: 8px;">
+								📢 目前的首頁動態
+							</h3>
+							<div id="admin-display-news" style="flex: 1; max-height: 350px; overflow-y: auto; padding-right: 5px;"></div>
 						</div>
-						<div class="card" style="flex: 1; min-width: 250px; border: 1px solid #eee; background: #fafafa; box-shadow: none;">
-							<h3 style="color: #9b59b6; margin: 0 0 10px 0; font-size: 1.05rem; border-bottom: 2px dashed #ddd; padding-bottom: 8px;"> 📡 已發送的系統推播</h3>
-							<div id="admin-display-broadcasts" style="max-height: 350px; overflow-y: auto; padding-right: 5px;"></div>
+						<div class="card" style="display: flex; flex-direction: column; border: 1px solid #eee; background: #fafafa; box-shadow: none;">
+							<h3 style="color: #9b59b6; margin: 0 0 10px 0; font-size: 1.05rem; border-bottom: 2px dashed #ddd; padding-bottom: 8px;">
+								📡 已發送的系統推播
+							</h3>
+							<div id="admin-display-broadcasts" style="flex: 1; max-height: 350px; overflow-y: auto; padding-right: 5px;"></div>
+						</div>
+						<div class="card" style="display: flex; flex-direction: column; border: 1px solid #eee; background: #fafafa; box-shadow: none;">
+							<h3 style="color: #f39c12; margin: 0 0 10px 0; font-size: 1.05rem; border-bottom: 2px dashed #ddd; padding-bottom: 8px;">
+								🚀 更新顯示草稿
+							</h3>
+							<div id="admin-display-drafts" style="flex: 1; max-height: 350px; overflow-y: auto; padding-right: 5px;"></div>
 						</div>
 					</div>
 				</div>
