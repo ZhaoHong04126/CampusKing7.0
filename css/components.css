@@ -507,3 +507,99 @@ tr.period-time-row:last-child { border-bottom: none; }
   margin: 16px 0;
   color: #d84315;
 }
+
+/* 更新提示框的背景遮罩 */
+.update-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* 確保在最上層 */
+  backdrop-filter: blur(2px);
+}
+
+/* 提示框主體 */
+.update-modal-content {
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 450px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: slideUpFade 0.3s ease-out forwards;
+}
+
+/* 頭部區域 */
+.update-modal-header {
+  background-color: #4a90e2; /* 可改成你的主色調 */
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.update-modal-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.close-update-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* 內容區域 */
+.update-modal-body {
+  padding: 20px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.update-modal-body ul {
+  padding-left: 20px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.update-modal-body li {
+  margin-bottom: 8px;
+  color: #333;
+}
+
+/* 底部按鈕區域 */
+.update-modal-footer {
+  padding: 16px 20px;
+  text-align: right;
+  border-top: 1px solid #eee;
+}
+
+.update-modal-footer .btn-primary {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* 動畫效果 */
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

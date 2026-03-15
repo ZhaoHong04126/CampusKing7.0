@@ -1200,3 +1200,63 @@ window.checkFeatureFlags = function() {
 
     }).catch(e => console.log("讀取 Feature Flags 失敗", e));
 }
+
+// 1. 定義目前的系統版本與更新內容
+const SYSTEM_CONFIG = {
+  version: "1.1.0", // 每次發布新功能時，請更新這個版號
+  updateNotes: [
+    "✨ 新增了 OOO 功能，讓操作更便利",
+    "🐛 修復了在部分手機上顯示異常的問題",
+    "🚀 優化了系統載入速度",
+    "📝 介面微調與使用者體驗升級"
+  ]
+};
+
+// 2. 檢查是否需要顯示更新提示
+function checkSystemUpdate() {
+  const savedVersion = localStorage.getItem('campusking_version');
+  
+  // 如果沒有紀錄，或是紀錄的版本號與目前版本號不同
+  if (savedVersion !== SYSTEM_CONFIG.version) {
+    showUpdateModal();
+  }
+}
+
+// 3. 顯示更新提示框
+function showUpdateModal() {
+  const modal = document.getElementById('update-modal');
+  const versionText = document.getElementById('update-version-text');
+  const notesList = document.getElementById('update-notes-list');
+
+  if (!modal) return;
+
+  // 設定版號文字
+  versionText.textContent = SYSTEM_CONFIG.version;
+
+  // 動態生成更新列表
+  notesList.innerHTML = '';
+  SYSTEM_CONFIG.updateNotes.forEach(note => {
+    const li = document.createElement('li');
+    li.textContent = note;
+    notesList.appendChild(li);
+  });
+
+  // 顯示 Modal
+  modal.style.display = 'flex';
+}
+
+// 4. 關閉提示框並記錄版本號
+function closeUpdateModal() {
+  const modal = document.getElementById('update-modal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+  // 將最新版號存入 localStorage，下次就不會再跳出
+  localStorage.setItem('campusking_version', SYSTEM_CONFIG.version);
+}
+
+// 5. 在網頁載入完成後執行檢查
+document.addEventListener('DOMContentLoaded', () => {
+  // 可以稍微延遲一下再顯示，避免與載入畫面衝突
+  setTimeout(checkSystemUpdate, 500); 
+});
