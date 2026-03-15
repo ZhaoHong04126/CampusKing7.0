@@ -126,7 +126,7 @@
 
 
 /* =========================================
-   管理員後台功能網格排版 (左 4 右 1 佈局)
+   管理員後台功能網格排版 (左 1~4 垂直直排，右 5 佔滿)
    ========================================= */
 .admin-dashboard-grid {
     display: grid;
@@ -134,30 +134,57 @@
     margin-top: 20px;
 }
 
-/* --- 💻 電腦版排版 (大螢幕)：左側 2x2，右側 1 長條 --- */
+/* --- 💻 電腦版排版 (大螢幕) --- */
 @media (min-width: 1024px) {
-    .admin-dashboard-grid {
-        /* 將畫面切分為 3 欄：前兩欄給左側 4 個功能，第 3 欄稍微寬一點給右側模組開關 */
-        grid-template-columns: 1fr 1fr 1.3fr;
+    /* 判斷是上方的 1~5 區塊 (有包含模組開關) */
+    .admin-dashboard-grid:has(.card-module) {
+        /* 將畫面切為兩欄：左邊放 1~4，右邊放 5 (右邊稍微寬一點點) */
+        grid-template-columns: 1fr 1.2fr; 
     }
     
-    /* 透過定位，將第 5 個「模組開關」強制鎖定在右邊 (第 3 欄)，並向下延伸佔用 2 列的高度 */
+    /* 強制將 1~4 項全部塞進左邊「第 1 欄」，它們會自動往下疊成 4 個 */
+    .admin-dashboard-grid:has(.card-module) > :not(.card-module) {
+        grid-column: 1;
+    }
+
+    /* 強制將第 5 個「模組開關」放在右邊「第 2 欄」，並讓它向下跨越 4 行的高度 */
     .admin-dashboard-grid .card-module {
-        grid-column: 3;
-        grid-row: 1 / span 2;
+        grid-column: 2;
+        grid-row: 1 / span 4;
+        height: 100%; /* 讓它高度填滿右側 */
+    }
+
+    /* 判斷是下方的 6~8 區塊 (沒有模組開關)，維持 3 欄並排 */
+    .admin-dashboard-grid:not(:has(.card-module)) {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
-/* --- 📱 平板與手機版排版：空間不夠時，自動變成上下排列 --- */
-@media (max-width: 1023px) {
-    .admin-dashboard-grid {
-        /* 平板顯示 2 欄，手機顯示 1 欄 */
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+/* --- 📱 平板版排版 --- */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .admin-dashboard-grid:has(.card-module) {
+        grid-template-columns: 1fr 1fr; /* 平板一半一半 */
     }
-    
-    /* 螢幕較小時，讓模組開關掉到最下方並佔滿整寬度，避免文字擠在一起 */
+    .admin-dashboard-grid:has(.card-module) > :not(.card-module) {
+        grid-column: 1;
+    }
     .admin-dashboard-grid .card-module {
-        grid-column: 1 / -1; 
+        grid-column: 2;
+        grid-row: 1 / span 4;
+    }
+    .admin-dashboard-grid:not(:has(.card-module)) {
+        grid-template-columns: 1fr; /* 平板的 6~8 區塊改為上下排列比較清楚 */
+    }
+}
+
+/* --- 📱 手機版排版 --- */
+@media (max-width: 767px) {
+    .admin-dashboard-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .admin-dashboard-grid > div {
+        grid-column: 1 !important;
+        grid-row: auto !important;
     }
 }
 
