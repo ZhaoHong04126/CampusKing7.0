@@ -135,8 +135,12 @@ function checkUpdateModal() {
             // 如果沒有儲存的版本號，或者是舊版本，就跳出更新提示
             if (savedVersion !== CURRENT_VERSION) {
                 const modalContent = document.getElementById('update-log-content');
+                const versionSpan = document.getElementById('update-log-version');
                 if (modalContent) {
                     modalContent.innerHTML = UPDATE_LOG;
+                    if (versionSpan) {
+                        versionSpan.textContent = CURRENT_VERSION;
+                    }
                     document.getElementById('update-log-modal').style.display = 'flex';
                 }
                 // 暫存最新版本號，等待使用者點擊關閉按鈕時寫入 localStorage
