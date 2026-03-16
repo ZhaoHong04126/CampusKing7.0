@@ -220,10 +220,12 @@ function syncFromCloud(uid) {
                 statusBtn.innerText = (uid === '8OeziUfXrKXot4l60U2keePhOwS2') ? '👑 管理員' : '學生';
             }
         } else {
-            console.log("☁️ 此帳號尚無雲端資料，將自動上傳本地資料...");
-            // 如果雲端真的沒資料，先解開安全鎖，然後再觸發存檔上傳
-            isDataLoaded = true;
-            saveData();
+            console.log("☁️ 此帳號尚無雲端資料，將在此裝置上初始化。");
+            // 雲端沒資料，就在此裝置上初始化一套新的預設資料
+            // 重要：不要在這裡自動觸發 saveData()！
+            // 應該讓使用者手動產生第一筆資料後，由互動操作去觸發存檔。
+            initDefaultData();
+            refreshUI();
             if(statusBtn) {
                 statusBtn.innerText = (uid === '8OeziUfXrKXot4l60U2keePhOwS2') ? '👑 管理員' : '學生';
             }

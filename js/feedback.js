@@ -16,7 +16,7 @@ async function submitFeedback() {
 
     try {
         // 假設 currentUser 已經在 auth.js 中定義
-        const uid = firebase.auth().currentUser ? firebase.auth().currentUser.uid : "anonymous";
+        const uid = currentUser ? currentUser.uid : "anonymous";
         
         await db.collection("feedbacks").add({
             uid: uid,
@@ -177,7 +177,7 @@ async function loadAdminFeedbacks() {
                 <tr>
                     <td style="color: black;">${date}</td>
                     
-                    <td style="font-size: 0.8em; color: gray;" title="${fullUid}">${shortUid}...</td> 
+                    <td style="color: black; font-family: monospace;">${data.uid || "anonymous"}</td> 
                     
                     <td><span class="${typeBadgeClass}">${typeIcon} ${typeText}</span></td> 
                     
