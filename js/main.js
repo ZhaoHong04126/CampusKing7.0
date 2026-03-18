@@ -132,8 +132,25 @@ function checkUpdateModal() {
 
             const savedVersion = localStorage.getItem('appVersion');
 
-            // 如果沒有儲存的版本號，或者是舊版本，就跳出更新提示
+            // 判斷是否為新用戶 (建立時間與最後登入時間相差小於 10 秒)
+            let isNewUser = false;
+            if (currentUser && currentUser.metadata) {
+                const creationTime = new Date(currentUser.metadata.creationTime).getTime();
+                const lastSignInTime = new Date(currentUser.metadata.lastSignInTime).getTime();
+                if (Math.abs(lastSignInTime - creationTime) < 10000) {
+                    isNewUser = true;
+                }
+            }
+
+            // 如果沒有儲存的版本號，或者是舊版本
             if (savedVersion !== CURRENT_VERSION) {
+                
+                // 🛑 若為新用戶，直接記錄最新版本號並跳過顯示
+                if (isNewUser) {
+                    localStorage.setItem('appVersion', CURRENT_VERSION);
+                    return;
+                }
+
                 const modalContent = document.getElementById('update-log-content');
                 const versionSpan = document.getElementById('update-log-version');
                 if (modalContent) {
