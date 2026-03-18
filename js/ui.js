@@ -1218,6 +1218,29 @@ function checkSystemUpdate() {
   
   // 如果沒有紀錄，或是紀錄的版本號與目前版本號不同
   if (savedVersion !== SYSTEM_CONFIG.version) {
+    
+    // 防呆：如果 Firebase Auth 還沒載入完畢，延遲 500 毫秒後再次檢查
+    if (typeof currentUser === 'undefined' || !currentUser) {
+        setTimeout(checkSystemUpdate, 500);
+        return;
+    }
+
+    // 判斷是否為新用戶
+    let isNewUser = false;
+    if (currentUser && currentUser.metadata) {
+        const creationTime = new Date(currentUser.metadata.creationTime).getTime();
+        const lastSignInTime = new Date(currentUser.metadata.lastSignInTime).getTime();
+        if (Math.abs(lastSignInTime - creationTime) < 10000) {
+            isNewUser = true;
+        }
+    }
+
+    // 🛑 若為新用戶，直接設定為最新版本並跳過顯示更新提示框
+    if (isNewUser) {
+        localStorage.setItem('campusking_version', SYSTEM_CONFIG.version);
+        return;
+    }
+
     showUpdateModal();
   }
 }
