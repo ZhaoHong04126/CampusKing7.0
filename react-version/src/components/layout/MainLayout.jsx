@@ -1,6 +1,8 @@
 import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { db } from '../../lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import '../../assets/css/layout.css';
 import '../../assets/css/components.css';
 
@@ -8,7 +10,38 @@ function MainLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const [feedbackType, setFeedbackType] = useState('bug');
+  const [feedbackContent, setFeedbackContent] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const submitFeedback = async () => {
+    if (!feedbackContent.trim()) {
+      alert("請輸入回饋內容！");
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      const uid = user ? user.uid : "anonymous";
+      await addDoc(collection(db, "feedbacks"), {
+        uid: uid,
+        type: feedbackType,
+        content: feedbackContent,
+        status: "pending",
+        timestamp: serverTimestamp()
+      });
+      alert("感謝您的回饋！我們已經收到囉。");
+      setFeedbackContent("");
+      setIsFeedbackModalOpen(false);
+    } catch (error) {
+      console.error("送出回饋失敗:", error);
+      alert("送出失敗，請稍後再試。");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -83,7 +116,7 @@ function MainLayout() {
             <NavLink to="/app/anniversary" className={navLinkClass}>💝 紀念日倒數</NavLink>
 
             <div style={{ fontSize: '0.75rem', color: '#999', margin: '15px 0 5px 10px', fontWeight: 'bold' }}>系統</div>
-            <button className="nav-item" onClick={() => alert('開啟回報視窗')}>回應問題</button>
+            <button className="nav-item" onClick={() => setIsFeedbackModalOpen(true)}>回應問題</button>
             <NavLink to="/app/settings" className={navLinkClass}>⚙️ 個人設定</NavLink>
             <button className="nav-item" onClick={async () => {
               await logout();
@@ -102,6 +135,56 @@ function MainLayout() {
           <Outlet />
         </main>
       </div>
+
+      {/* 意見回饋 / 問題回報 Modal */}
+      {isFeedbackModalOpen && (
+        <div className="modal" style={{ display: 'flex' }}>
+          <div className="modal-content" style={{ width: '90%', maxWidth: '500px', textAlign: 'left' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+              <h2 style={{ margin: 0, padding: 0, border: 'none' }}>💡 意見回饋 / 🐞 問題回報</h2>
+              <span 
+                onClick={() => setIsFeedbackModalOpen(false)} 
+                style={{ cursor: 'pointer', fontSize: '1.5rem', color: '#888' }}
+              >
+                &times;
+              </span>
+            </div>
+            
+            <div className="input-group" style={{ marginBottom: '15px' }}>
+              <label>類型：</label>
+              <select 
+                value={feedbackType} 
+                onChange={(e) => setFeedbackType(e.target.value)}
+                style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ddd', background: 'white' }}
+              >
+                <option value="bug">🐞 系統 Bug 回報</option>
+                <option value="suggestion">💡 新功能建議</option>
+                <option value="other">💬 其他想說的話</option>
+              </select>
+            </div>
+            
+            <div className="input-group" style={{ marginBottom: '15px' }}>
+              <label>詳細內容：</label>
+              <textarea 
+                rows="4" 
+                placeholder="請詳細描述您遇到的問題或建議..."
+                value={feedbackContent}
+                onChange={(e) => setFeedbackContent(e.target.value)}
+                style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ddd', resize: 'vertical' }}
+              />
+            </div>
+            
+            <button 
+              className="btn" 
+              onClick={submitFeedback} 
+              disabled={isSubmitting}
+              style={{ width: '100%', background: 'var(--primary)' }}
+            >
+              {isSubmitting ? '送出中...' : '送出回饋'}
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
