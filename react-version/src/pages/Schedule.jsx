@@ -1,16 +1,9 @@
 import { useState, useEffect } from 'react';
 
-// 模擬從 Firebase 載入的全局配置與課表資料
+// 初始化空課表資料
 const customPeriods = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D'];
 const initialMockSchedule = {
-  1: [
-    { period: '2', time: '09:10', subject: '微積分', room: 'A201', teacher: '王大明', nature: '必修', color: '#ffebee' },
-    { period: '3', time: '10:10', subject: '微積分', room: 'A201', teacher: '王大明', nature: '必修', color: '#ffebee' }
-  ],
-  2: [
-    { period: '5', time: '13:10', subject: '資料結構', room: 'B302', teacher: '李四', nature: '必修', color: '#e3f2fd' }
-  ],
-  3: [], 4: [], 5: [], 6: [], 0: []
+  1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 0: []
 };
 
 // 色彩預設值

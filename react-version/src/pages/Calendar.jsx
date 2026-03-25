@@ -6,11 +6,8 @@ export default function Calendar() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 事件資料 (Mock)
-  const [events, setEvents] = useState([
-    { id: 1, title: '期中考週', startDate: '2026-03-24', endDate: '2026-03-26', isAllDay: true },
-    { id: 2, title: '專題開會', startDate: '2026-03-28', endDate: '', isAllDay: false, startTime: '14:00', endTime: '16:00' }
-  ]);
+  // 真實事件資料
+  const [events, setEvents] = useState([]);
 
   // 表單資料
   const [editingEventId, setEditingEventId] = useState(null);

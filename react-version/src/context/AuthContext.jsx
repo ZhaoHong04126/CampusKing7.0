@@ -9,7 +9,7 @@ import {
   signInAnonymously,
   sendPasswordResetEmail,
   setPersistence,
-  sessionPersistence,
+  browserSessionPersistence,
   browserLocalPersistence
 } from 'firebase/auth';
 
@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = (email, password, remember) => {
-    const persistence = remember ? browserLocalPersistence : sessionPersistence;
+    const persistence = remember ? browserLocalPersistence : browserSessionPersistence;
     return setPersistence(auth, persistence).then(() => {
       return signInWithEmailAndPassword(auth, email, password);
     });

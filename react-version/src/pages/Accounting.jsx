@@ -5,12 +5,8 @@ export default function Accounting() {
   const [activeTab, setActiveTab] = useState('summary');
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  // 假資料交易紀錄
-  const [transactions, setTransactions] = useState([
-    { id: 1, date: '2026-03-24', type: 'expense', category: '飲食', desc: '午餐麥當勞', method: '現金', amount: 150 },
-    { id: 2, date: '2026-03-23', type: 'income', category: '打工', desc: '家教薪水', method: '銀行轉帳', amount: 3000 },
-    { id: 3, date: '2026-03-22', type: 'expense', category: '交通', desc: '加油', method: '悠遊卡', amount: 100 }
-  ]);
+  // 真實交易紀錄
+  const [transactions, setTransactions] = useState([]);
 
   // Modal 表單狀態
   const [accType, setAccType] = useState('expense');
@@ -51,10 +47,11 @@ export default function Accounting() {
         // 渲染趨勢圖 (Mock Data)
         if (trendChartRef.current) {
           if (trendChartInstance.current) trendChartInstance.current.destroy();
+          const currentMonthLabel = (new Date().getMonth() + 1) + '月';
           trendChartInstance.current = new Chart(trendChartRef.current, {
             type: 'bar',
             data: {
-              labels: ['三月'],
+              labels: [currentMonthLabel],
               datasets: [
                 { type: 'bar', label: '收入', data: [incomeTotal], backgroundColor: '#2ecc71' },
                 { type: 'bar', label: '支出', data: [expenseTotal], backgroundColor: '#e74c3c' },
