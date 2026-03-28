@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -18,6 +19,7 @@
             gap: 15px;
             max-width: 400px;
         }
+
         .feature-item {
             display: flex;
             align-items: center;
@@ -29,16 +31,29 @@
             border-radius: 16px;
             transition: transform 0.3s ease, background 0.3s ease;
         }
-        .feature-item:hover { transform: translateX(10px); background: rgba(255, 255, 255, 0.25); }
-        .feature-icon { font-size: 1.8rem; }
+
+        .feature-item:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .feature-icon {
+            font-size: 1.8rem;
+        }
+
         .feature-text strong {
             display: block;
             font-size: 1.05rem;
             margin-bottom: 4px;
         }
-        .feature-text small { font-size: 0.85rem; opacity: 0.85; }
+
+        .feature-text small {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
     </style>
 </head>
+
 <body>
     <div class="split-layout" id="landing-page" style="opacity: 0; transition: opacity 0.3s;">
         <div class="mobile-header">
@@ -55,16 +70,11 @@
             </div>
             <div class="hero-text">
                 <h1>你的專屬校園導航系統</h1>
-                <p class="hero-subtitle" style="font-size: 1.15rem; margin-top: 15px; font-weight: 500;">你的課表、社團、校園生活，一站搞定</p>
+                <p class="hero-subtitle" style="font-size: 1.15rem; margin-top: 15px; font-weight: 500;">
+                    你的課表、社團、校園生活，一站搞定
+                </p>
             </div>
             <div class="feature-highlights">
-                <div class="feature-item">
-                    <span class="feature-icon">🛡️</span>
-                    <div class="feature-text">
-                        <strong>選課避雷指南</strong>
-                        <small>學長姐真實評價，輕鬆避開雷課拿高分</small>
-                    </div>
-                </div>
                 <div class="feature-item">
                     <span class="feature-icon">📅</span>
                     <div class="feature-text">
@@ -80,7 +90,8 @@
                     </div>
                 </div>
             </div>
-            <div style="position: absolute; bottom: 20px; left: 0; width: 100%; text-align: center; font-size: 0.85rem; opacity: 0.6; pointer-events: none;">
+            <div
+                style="position: absolute; bottom: 20px; left: 0; width: 100%; text-align: center; font-size: 0.85rem; opacity: 0.6; pointer-events: none;">
                 &copy; 2026 大學神隊友 All rights reserved.
             </div>
         </div>
@@ -108,7 +119,9 @@
                     </div>
                     <div class="login-options">
                         <label style="display:flex; align-items:center; cursor:pointer;">
-                            <input type="checkbox" id="chk-remember" style="margin-right: 8px; width:16px; height:16px; accent-color: var(--primary);" checked> 保持登入
+                            <input type="checkbox" id="chk-remember"
+                                style="margin-right: 8px; width:16px; height:16px; accent-color: var(--primary);"
+                                checked> 保持登入
                         </label>
                         <a onclick="forgotPassword()">忘記密碼？</a>
                     </div>
@@ -121,7 +134,7 @@
             </div>
         </div>
     </div>
-    
+
     <script src="js/firebase.js"></script>
     <script>
         auth.onAuthStateChanged((user) => {
@@ -190,4 +203,5 @@
         }
     </script>
 </body>
+
 </html>
