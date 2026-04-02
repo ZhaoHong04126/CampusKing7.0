@@ -130,3 +130,6 @@ CampusKing/
 - 這是我在校園生活中，為了解決自己與身邊同學的痛點而誕生的心血結晶。
 
 - Produced by **Huang Zhaohong**
+
+
+Simple Browser: Show
